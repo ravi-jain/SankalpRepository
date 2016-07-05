@@ -10,9 +10,15 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.CursorAdapter;
+import android.view.ActionMode;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
+import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -56,9 +62,17 @@ public class SpDashboardFragment extends Fragment {
         tyagListView = (ListView) rootView.findViewById(R.id.tyagListview_dashboard);
         tyagListView.setAdapter(tyagAdapter);
 
+        SpMultiNodeChoiceListener listener = new SpMultiNodeChoiceListener();
+        tyagListView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
+        tyagListView.setMultiChoiceModeListener(listener);
+
+
         niyamAdapter = new ListViewAdapter(getContext(), null, 0);
         niyamListView = (ListView) rootView.findViewById(R.id.niyamListview_dashboard);
         niyamListView.setAdapter(niyamAdapter);
+
+        niyamListView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
+        niyamListView.setMultiChoiceModeListener(listener);
 
         FloatingActionButton fab = (FloatingActionButton) rootView.findViewById(R.id.addSankalpButton);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -94,12 +108,12 @@ public class SpDashboardFragment extends Fragment {
         @Override
         public void bindView(View view, Context context, Cursor cursor) {
             // Find fields to populate in inflated template
-            TextView tvCategory = (TextView) view.findViewById(R.id.list_item_category_textview);
+//            TextView tvCategory = (TextView) view.findViewById(R.id.list_item_category_textview);
             TextView tvItem = (TextView) view.findViewById(R.id.list_item_item_textview);
             TextView tvPeriod = (TextView) view.findViewById(R.id.list_item_period_textview);
             // Extract properties from cursor
-            int categoryId = cursor.getInt(cursor.getColumnIndexOrThrow(SpTableContract.SpSankalpTable.COLUMN_CATEGORY_ID));
-            SpCategory category = _categories.get(categoryId);
+//            int categoryId = cursor.getInt(cursor.getColumnIndexOrThrow(SpTableContract.SpSankalpTable.COLUMN_CATEGORY_ID));
+//            SpCategory category = _categories.get(categoryId);
             int itemId = cursor.getInt(cursor.getColumnIndexOrThrow(SpTableContract.SpSankalpTable.COLUMN_ITEM_ID));
             SpCategoryItem item = _categoryItems.get(itemId);
             int isLifetime = cursor.getInt(cursor.getColumnIndexOrThrow(SpTableContract.SpSankalpTable.COLUMN_ISLIFETIME));
@@ -117,7 +131,7 @@ public class SpDashboardFragment extends Fragment {
 
 
             // Populate fields with extracted properties
-            tvCategory.setText(category.getCategoryName());
+//            tvCategory.setText(category.getCategoryName());
             tvItem.setText(item.getCategoryItemName());
             tvPeriod.setText(String.valueOf(period));
         }
@@ -131,7 +145,7 @@ public class SpDashboardFragment extends Fragment {
         @Override
         protected Boolean doInBackground(Void... params) {
             SpContentProvider provider = SpContentProvider.getInstance(getContext());
-            _categories = provider.getAllCategories();
+//            _categories = provider.getAllCategories();
             _categoryItems = provider.getAllCategoryItems();
             _tyagCursor = provider.getTyagCursor();
             _niyamCursor = provider.getNiyamCursor();
@@ -146,9 +160,72 @@ public class SpDashboardFragment extends Fragment {
             if (success) {
                 tyagAdapter.swapCursor(_tyagCursor);
                 niyamAdapter.swapCursor(_niyamCursor);
+
+                ListUtils.setDynamicHeight(tyagListView);
+                ListUtils.setDynamicHeight(niyamListView);
             } else {
                 // Error
             }
+        }
+    }
+
+    private static class ListUtils {
+        public static void setDynamicHeight(ListView mListView) {
+            ListAdapter mListAdapter = mListView.getAdapter();
+            if (mListAdapter == null) {
+                // when adapter is null
+                return;
+            }
+            int height = 0;
+            int desiredWidth = View.MeasureSpec.makeMeasureSpec(mListView.getWidth(), View.MeasureSpec.UNSPECIFIED);
+            for (int i = 0; i < mListAdapter.getCount(); i++) {
+                View listItem = mListAdapter.getView(i, null, mListView);
+                listItem.measure(desiredWidth, View.MeasureSpec.UNSPECIFIED);
+                height += listItem.getMeasuredHeight();
+            }
+            ViewGroup.LayoutParams params = mListView.getLayoutParams();
+            params.height = height + (mListView.getDividerHeight() * (mListAdapter.getCount() - 1));
+            mListView.setLayoutParams(params);
+            mListView.requestLayout();
+        }
+    }
+
+    private class SpMultiNodeChoiceListener implements AbsListView.MultiChoiceModeListener
+    {
+
+        @Override
+        public void onItemCheckedStateChanged(ActionMode actionMode, int i, long l, boolean b) {
+
+        }
+
+        @Override
+        public boolean onCreateActionMode(ActionMode actionMode, Menu menu) {
+            MenuInflater inflater = actionMode.getMenuInflater();
+            inflater.inflate(R.menu.menu_dashboard_context, menu);
+            return true;
+        }
+
+        @Override
+        public boolean onPrepareActionMode(ActionMode actionMode, Menu menu) {
+            return false;
+        }
+
+        @Override
+        public boolean onActionItemClicked(ActionMode actionMode, MenuItem menuItem) {
+
+            switch (menuItem.getItemId()) {
+                case R.id.action_db_deleteSankalp:
+                    //deleteSelectedItems();
+                    actionMode.finish(); // Action picked, so close the CAB
+                    return true;
+                default:
+                    return false;
+            }
+        }
+
+        @Override
+        public void onDestroyActionMode(ActionMode actionMode) {
+
         }
     }
 

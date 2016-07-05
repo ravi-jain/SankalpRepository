@@ -43,6 +43,16 @@ public class SpDateUtils {
         return cal.getTime();
     }
 
+    public static Calendar previousDate(Calendar cal) {
+        cal.add(Calendar.DAY_OF_YEAR, -1);
+        return cal;
+    }
+
+    public static Calendar nextDate(Calendar cal) {
+        cal.add(Calendar.DAY_OF_YEAR, 1);
+        return cal;
+    }
+
     public static String getDayString(Calendar cal)
     {
         SimpleDateFormat shortenedDateFormat = new SimpleDateFormat("EEE MMM dd");

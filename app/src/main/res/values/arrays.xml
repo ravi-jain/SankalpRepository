@@ -3,7 +3,7 @@
 
     <string-array name="rangeLabelsList">
         <item>@string/thisDay</item>
-        <item>@string/thisWeek</item>
+        <item>@string/tomorrow</item>
         <item>@string/thisMonth</item>
         <item>@string/thisYear</item>
         <item>@string/Lifetime</item>

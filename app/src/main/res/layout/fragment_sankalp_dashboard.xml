@@ -1,7 +1,12 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:fillViewport="true" >
+<RelativeLayout
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:orientation="vertical"
     android:id="@+id/sankalpListFrame"
     android:paddingBottom="@dimen/activity_vertical_margin"
@@ -10,55 +15,48 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".fragments.SpDashboardFragment">
 
-    <TextView
-        android:text = "@string/tyag"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-    <!--<ImageView
-        android:layout_gravity="center_horizontal"
-        android:paddingTop="10px"
-        android:paddingBottom="5px"
-        android:layout_height="wrap_content"
-        android:layout_width="fill_parent"
-        android:src="@android:drawable/divider_horizontal_dark" />-->
-    <View
-        android:layout_width="fill_parent"
-        android:layout_height="1dip"
-        android:background="#000000" />
-    <ListView
-        android:id="@+id/tyagListview_dashboard"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:divider="@null" />
-
-    <TextView
-        android:text = "@string/niyam"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-    <!--<ImageView
-        android:layout_gravity="center_horizontal"
-        android:paddingTop="10px"
-        android:paddingBottom="5px"
-        android:layout_height="wrap_content"
-        android:layout_width="fill_parent"
-        android:src="@android:drawable/divider_horizontal_dark" />-->
-    <View
-        android:layout_width="fill_parent"
-        android:layout_height="1dip"
-        android:background="#000000" />
-    <ListView
-        android:id="@+id/niyamListview_dashboard"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:divider="@null" />
-
-
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/addSankalpButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_gravity="end|bottom"
         android:src="@android:drawable/ic_input_add" />
 
-</LinearLayout>
+    <TextView
+        android:id="@+id/db_tv_1"
+        android:text = "@string/tyag"
+        style="@style/SpLabel" />
+    <View
+        android:id="@+id/db_v_1"
+        android:layout_below="@id/db_tv_1"
+        style="@style/SpHorizontalDivider" />
+    <ListView
+        android:id="@+id/tyagListview_dashboard"
+        android:layout_below="@id/db_v_1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <TextView
+        android:id="@+id/db_tv_2"
+        android:layout_below="@id/tyagListview_dashboard"
+        android:text = "@string/niyam"
+        style="@style/SpLabel" />
+    <View
+        android:id="@+id/db_v_2"
+        android:layout_below="@id/db_tv_2"
+       style="@style/SpHorizontalDivider" />
+    <ListView
+        android:id="@+id/niyamListview_dashboard"
+        android:layout_below="@id/db_v_2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+
+
+
+</RelativeLayout>
+</ScrollView>

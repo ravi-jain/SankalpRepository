@@ -40,6 +40,15 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.ravijain.sankalp.activities.SpMainActivity" />
         </activity>
+        <activity
+            android:name=".activities.SpSankalpList"
+            android:label="@string/title_activity_sp_sankalp_list"
+            android:parentActivityName=".activities.SpMainActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.ravijain.sankalp.activities.SpMainActivity" />
+        </activity>
     </application>
 
 </manifest>

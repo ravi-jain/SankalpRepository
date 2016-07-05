@@ -6,6 +6,9 @@ import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -47,7 +50,7 @@ public class SpAddSankalpActivityFragment extends Fragment {
     private EditText _toDateTextView;
     private EditText _descriptionView;
     private TextView _rangeValueTextView;
-    private Button _addSankalpButton;
+    private View _fromToDateContainer;
 
     private DatePickerDialog _fromDatePickerDialog;
     private DatePickerDialog _toDatePickerDialog;
@@ -67,6 +70,7 @@ public class SpAddSankalpActivityFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View fragmentView = inflater.inflate(R.layout.fragment_sp_add_sankalp, container, false);
+        setHasOptionsMenu(true);
 
         _categoriesTable = new Hashtable<Integer, Hashtable<String, SpCategory>>();
         _categoryItemsTable = new Hashtable<Integer, Hashtable<String, SpCategoryItem>>();
@@ -100,6 +104,26 @@ public class SpAddSankalpActivityFragment extends Fragment {
         //_populateData();
 
         return fragmentView;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_sp_add_sankalp, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.action_addSankalp) {
+            _addSankalp();
+            return true;
+        }
+        else if (id == R.id.action_discardSankalp) {
+            _discardSankalp();
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     private void _populateData() {
@@ -163,6 +187,7 @@ public class SpAddSankalpActivityFragment extends Fragment {
 
         });
 
+        _fromToDateContainer = view.findViewById(R.id.fromToDateContainer);
         _rangeValueTextView = (TextView) view.findViewById(R.id.rangeValue_textView);
         _rangeLabelsSpinnerView = (Spinner) view.findViewById(R.id.rangeLabels_spinner);
         ArrayAdapter adapter = ArrayAdapter.createFromResource(getContext(), R.array.rangeLabelsList, R.layout.spinner_item);
@@ -174,39 +199,41 @@ public class SpAddSankalpActivityFragment extends Fragment {
                 String label = (String) parentView.getSelectedItem();
                 Calendar today = Calendar.getInstance();
                 if (label.equals(getString(R.string.Range))) {
-
-//                    _rangeValueTextView.setVisibility(View.INVISIBLE);
-//                    _fromDateTextView.setVisibility(View.VISIBLE);
-//                    _toDateTextView.setVisibility(View.VISIBLE);
-
+                    _togglePeriodViewVisibility(false);
                     _setDate(_fromDateTextView, SpDateUtils.beginOfDate(today));
                     _setDate(_toDateTextView, SpDateUtils.endOfDate(today));
-
                 }
                 else if (label.equals(getString(R.string.thisDay))) {
                     _setDate(_fromDateTextView, SpDateUtils.beginOfDate(today));
                     _setDate(_toDateTextView, SpDateUtils.endOfDate(today));
+                    _togglePeriodViewVisibility(true);
                     _rangeValueTextView.setText(SpDateUtils.getDayString(today));
 
                 }
-//                else if (label.equals(getString(R.string.thisWeek))) {
-//                    _setDate(_fromDateTextView, today);
-//                    _setDate(_toDateTextView, today);
-//                }
+                else if (label.equals(getString(R.string.tomorrow))) {
+                    _togglePeriodViewVisibility(true);
+                    Calendar nextDate = SpDateUtils.nextDate(today);
+                    _setDate(_fromDateTextView, SpDateUtils.beginOfDate(nextDate));
+                    _setDate(_toDateTextView, SpDateUtils.endOfDate(nextDate));
+                    _rangeValueTextView.setText(SpDateUtils.getDayString(nextDate));
+                }
                 else if (label.equals(getString(R.string.thisMonth))) {
+                    _togglePeriodViewVisibility(true);
                     _setDate(_fromDateTextView, SpDateUtils.beginOfMonth(today));
                     _setDate(_toDateTextView, SpDateUtils.endOfMonth(today));
                     _rangeValueTextView.setText(SpDateUtils.getMonthString(today));
                 }
                 else if (label.equals(getString(R.string.thisYear))) {
+                    _togglePeriodViewVisibility(true);
                     _setDate(_fromDateTextView, SpDateUtils.beginOfYear(today));
                     _setDate(_toDateTextView, SpDateUtils.endOfYear(today));
                     _rangeValueTextView.setText(SpDateUtils.yearOfDate(today));
                 }
                 else if (label.equals(getString(R.string.Lifetime))) {
+                    _togglePeriodViewVisibility(true);
                     _fromDateTextView.setText(getString(R.string.Lifetime));
                     _toDateTextView.setText(getString(R.string.Lifetime));
-                    _rangeValueTextView.setText("");
+                    _rangeValueTextView.setText(R.string.Lifetime);
                 }
             }
 
@@ -229,39 +256,53 @@ public class SpAddSankalpActivityFragment extends Fragment {
 
         _descriptionView = (EditText) view.findViewById(R.id.sankalpDescription);
 
-        _addSankalpButton = (Button) view.findViewById(R.id.addSankalp_button);
-        _addSankalpButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //_registerUser();
-                int id = _sankalpRGView.getCheckedRadioButtonId();
-                int sankalpType = -1;
-                switch (id) {
-                    case R.id.radio_tyag:
-                        sankalpType = SpDataConstants.SANKALP_TYPE_TYAG;
-                        break;
-                    case R.id.radio_niyam:
-                        sankalpType = SpDataConstants.SANKALP_TYPE_NIYAM;
-                        break;
-                }
+    }
 
-                int categoryId = ((SpCategory)_categoriesSpinnerView.getSelectedItem()).getId();
-                int itemId = ((SpCategoryItem)_itemsSpinnerView.getSelectedItem()).getId();
+    private void _addSankalp()
+    {
+        int id = _sankalpRGView.getCheckedRadioButtonId();
+        int sankalpType = -1;
+        switch (id) {
+            case R.id.radio_tyag:
+                sankalpType = SpDataConstants.SANKALP_TYPE_TYAG;
+                break;
+            case R.id.radio_niyam:
+                sankalpType = SpDataConstants.SANKALP_TYPE_NIYAM;
+                break;
+        }
 
-                SpSankalp sankalp = SpSankalpFactory.getNewSankalp(sankalpType, categoryId, itemId);
-                if (_fromDate != null && _toDate != null) {
-                    sankalp.setFromDate(_fromDate);
-                    sankalp.setToDate(_toDate);
-                }
-                else if (_fromDateTextView.getText().equals(getString(R.string.Lifetime))) {
-                    sankalp.setLifetime(SpDataConstants.SANKALP_IS_LIFTIME_TRUE);
-                }
-                sankalp.setDescription(_descriptionView.getText().toString());
+        int categoryId = ((SpCategory)_categoriesSpinnerView.getSelectedItem()).getId();
+        int itemId = ((SpCategoryItem)_itemsSpinnerView.getSelectedItem()).getId();
 
-                SpContentProvider.getInstance(getContext()).addSankalp(sankalp);
-                NavUtils.navigateUpFromSameTask(getActivity());
-            }
-        });
+        SpSankalp sankalp = SpSankalpFactory.getNewSankalp(sankalpType, categoryId, itemId);
+        if (_fromDate != null && _toDate != null) {
+            sankalp.setFromDate(_fromDate);
+            sankalp.setToDate(_toDate);
+        }
+        else if (_fromDateTextView.getText().equals(getString(R.string.Lifetime))) {
+            sankalp.setLifetime(SpDataConstants.SANKALP_IS_LIFTIME_TRUE);
+        }
+        sankalp.setDescription(_descriptionView.getText().toString());
+
+        SpContentProvider.getInstance(getContext()).addSankalp(sankalp);
+        NavUtils.navigateUpFromSameTask(getActivity());
+    }
+
+    private void _discardSankalp()
+    {
+        NavUtils.navigateUpFromSameTask(getActivity());
+    }
+
+    private void _togglePeriodViewVisibility(boolean isLabelVisible)
+    {
+        if (isLabelVisible) {
+            _rangeValueTextView.setVisibility(View.VISIBLE);
+            _fromToDateContainer.setVisibility(View.INVISIBLE);
+        }
+        else {
+            _rangeValueTextView.setVisibility(View.INVISIBLE);
+            _fromToDateContainer.setVisibility(View.VISIBLE);
+        }
 
     }
 
@@ -384,4 +425,6 @@ public class SpAddSankalpActivityFragment extends Fragment {
             }
         }
     }
+
+
 }
