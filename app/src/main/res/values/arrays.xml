@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="rangeLabelsList">
+        <item>@string/thisDay</item>
+        <item>@string/thisWeek</item>
+        <item>@string/thisMonth</item>
+        <item>@string/thisYear</item>
+        <item>@string/Lifetime</item>
+        <item>@string/Range</item>
+    </string-array>
+
+</resources>
