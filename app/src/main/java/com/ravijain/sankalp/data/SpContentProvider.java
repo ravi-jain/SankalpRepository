@@ -5,7 +5,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.text.TextUtils;
 
+import com.ravijain.sankalp.R;
+
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Hashtable;
 import java.util.Iterator;
@@ -83,8 +87,7 @@ public class SpContentProvider {
         return cursor;
     }
 
-    public Hashtable<Integer, SpCategory> getAllCategories()
-    {
+    public Hashtable<Integer, SpCategory> getAllCategories() {
         Hashtable<Integer, SpCategory> categories = new Hashtable<Integer, SpCategory>();
         SQLiteDatabase db = _dbHelper.getReadableDatabase();
         String query = "SELECT * FROM " + SpTableContract.SpCategoryTable.TABLE_NAME;
@@ -221,52 +224,97 @@ public class SpContentProvider {
 
     }
 
-    public void addSankalp(SpSankalp sankalp)
-    {
+    public void addSankalp(SpSankalp sankalp) {
+        ContentValues values = new ContentValues();
+        values.put(SpTableContract.SpSankalpTable.COLUMN_CREATION_DATE, new Date().getTime());
+        values.put(SpTableContract.SpSankalpTable.COLUMN_CATEGORY_ID, sankalp.getCategoryID());
+        values.put(SpTableContract.SpSankalpTable.COLUMN_ITEM_ID, sankalp.getItemId());
+        values.put(SpTableContract.SpSankalpTable.COLUMN_ISLIFETIME, sankalp.isLifetime());
+        values.put(SpTableContract.SpSankalpTable.COLUMN_FROM_DATE, sankalp.getFromDate().getTime());
+        if (sankalp.getToDate() != null) {
+            values.put(SpTableContract.SpSankalpTable.COLUMN_TO_DATE, sankalp.getToDate().getTime());
+        }
+        values.put(SpTableContract.SpSankalpTable.COLUMN_EXCEPTION_FREQUENCY_ID, sankalp.getExceptionFrequencyId());
+        values.put(SpTableContract.SpSankalpTable.COLUMN_EXCEPTION_FREQUENCY_COUNT, sankalp.getExceptionFrequencyCount());
+        values.put(SpTableContract.SpSankalpTable.COLUMN_DESCRIPTION, sankalp.getDescription());
+
+        String tableName = null;
         if (sankalp instanceof SpTyag) {
-            addTyag((SpTyag)sankalp);
+            addAdditionalTyagValues((SpTyag) sankalp, values);
+            tableName = SpTableContract.SpTyagTable.TABLE_NAME;
+        } else if (sankalp instanceof SpNiyam) {
+            addAdditionalNiyamValues((SpNiyam) sankalp, values);
+            tableName = SpTableContract.SpNiyamTable.TABLE_NAME;
         }
-        else if (sankalp instanceof SpNiyam) {
-            addNiyam((SpNiyam)sankalp);
+
+        if (tableName != null) {
+            SQLiteDatabase db = _dbHelper.getWritableDatabase();
+            // Inserting Row
+            db.insert(tableName, null, values);
+            db.close(); // Closing database connection
         }
     }
 
-    public void addTyag(SpTyag tyag)
-    {
-        SQLiteDatabase db = _dbHelper.getWritableDatabase();
-        ContentValues values = new ContentValues();
-        values.put(SpTableContract.SpTyagTable.COLUMN_CREATION_DATE, new Date().getTime());
-        values.put(SpTableContract.SpTyagTable.COLUMN_CATEGORY_ID, tyag.getCategoryID());
-        values.put(SpTableContract.SpTyagTable.COLUMN_ITEM_ID, tyag.getItemId());
-        values.put(SpTableContract.SpTyagTable.COLUMN_ISLIFETIME, tyag.isLifetime());
-        if (tyag.isLifetime() == SpDataConstants.SANKALP_IS_LIFTIME_FALSE) {
-            values.put(SpTableContract.SpTyagTable.COLUMN_FROM_DATE, tyag.getFromDate().getTime());
-            values.put(SpTableContract.SpTyagTable.COLUMN_TO_DATE, tyag.getToDate().getTime());
-        }
-        values.put(SpTableContract.SpTyagTable.COLUMN_DESCRIPTION, tyag.getDescription());
-
-        // Inserting Row
-        db.insert(SpTableContract.SpTyagTable.TABLE_NAME, null, values);
-        db.close(); // Closing database connection
+    public void addAdditionalTyagValues(SpTyag tyag, ContentValues values) {
     }
 
-    public void addNiyam(SpNiyam niyam)
-    {
-        SQLiteDatabase db = _dbHelper.getWritableDatabase();
-        ContentValues values = new ContentValues();
-        values.put(SpTableContract.SpNiyamTable.COLUMN_CREATION_DATE, new Date().getTime());
-        values.put(SpTableContract.SpNiyamTable.COLUMN_CATEGORY_ID, niyam.getCategoryID());
-        values.put(SpTableContract.SpNiyamTable.COLUMN_ITEM_ID, niyam.getItemId());
-        values.put(SpTableContract.SpNiyamTable.COLUMN_ISLIFETIME, niyam.isLifetime());
-        if (niyam.isLifetime() == SpDataConstants.SANKALP_IS_LIFTIME_FALSE) {
-            values.put(SpTableContract.SpNiyamTable.COLUMN_FROM_DATE, niyam.getFromDate().getTime());
-            values.put(SpTableContract.SpNiyamTable.COLUMN_TO_DATE, niyam.getToDate().getTime());
-        }
-        values.put(SpTableContract.SpNiyamTable.COLUMN_DESCRIPTION, niyam.getDescription());
-
-        // Inserting Row
-        db.insert(SpTableContract.SpNiyamTable.TABLE_NAME, null, values);
-        db.close(); // Closing database connection
+    public void addAdditionalNiyamValues(SpNiyam niyam, ContentValues values) {
     }
 
+    public ArrayList<SpSankalp> getSankalps(int sankalpType, int listFilter) {
+        SQLiteDatabase db = _dbHelper.getReadableDatabase();
+        String tableName = sankalpType == SpDataConstants.SANKALP_TYPE_NIYAM ? SpTableContract.SpNiyamTable.TABLE_NAME : SpTableContract.SpTyagTable.TABLE_NAME;
+        String userQuery = "SELECT  * FROM " + tableName;
+
+        Cursor cursor = db.rawQuery(userQuery, null);
+
+        ArrayList<SpSankalp> sankalps = new ArrayList<SpSankalp>();
+        if (cursor != null) {
+            cursor.moveToFirst();
+            while (cursor.isAfterLast() == false) {
+                int categoryId = cursor.getInt(cursor.getColumnIndexOrThrow(SpTableContract.SpSankalpTable.COLUMN_CATEGORY_ID));
+                int itemId = cursor.getInt(cursor.getColumnIndexOrThrow(SpTableContract.SpSankalpTable.COLUMN_ITEM_ID));
+                SpSankalp sankalp = SpSankalpFactory.getNewSankalp(sankalpType, categoryId, itemId);
+
+                int id = cursor.getInt(cursor.getColumnIndexOrThrow(SpTableContract.SpSankalpTable._ID));
+                sankalp.setId(id);
+                int isLifetime = cursor.getInt(cursor.getColumnIndexOrThrow(SpTableContract.SpSankalpTable.COLUMN_ISLIFETIME));
+                sankalp.setLifetime(isLifetime);
+
+                long fromDate = cursor.getLong(cursor.getColumnIndexOrThrow(SpTableContract.SpSankalpTable.COLUMN_FROM_DATE));
+                sankalp.setFromDate(new Date(fromDate));
+                int toDateColIndex = cursor.getColumnIndexOrThrow(SpTableContract.SpSankalpTable.COLUMN_TO_DATE);
+                if (!cursor.isNull(toDateColIndex)) {
+                    long toDate = cursor.getLong(toDateColIndex);
+                    sankalp.setToDate(new Date(toDate));
+                }
+
+                String description = cursor.getString(cursor.getColumnIndexOrThrow(SpTableContract.SpSankalpTable.COLUMN_DESCRIPTION));
+                sankalp.setDescription(description);
+
+                sankalps.add(sankalp);
+                cursor.moveToNext();
+            }
+            cursor.close();
+        }
+
+        cursor.close();
+        db.close();
+        return sankalps;
+    }
+
+    public void deleteSankalps(ArrayList<SpSankalp> sankalpsToBeDeleted, int sankalpType) {
+        int size = sankalpsToBeDeleted.size();
+        if (size > 0) {
+            String[] ids = new String[size];
+            for (int i = 0; i < size; i++) {
+                ids[i] = String.valueOf(sankalpsToBeDeleted.get(i).getId());
+            }
+            String args = TextUtils.join(" , ", ids);
+            String tableName = sankalpType == SpDataConstants.SANKALP_TYPE_NIYAM ? SpTableContract.SpNiyamTable.TABLE_NAME : SpTableContract.SpTyagTable.TABLE_NAME;
+            SQLiteDatabase db = _dbHelper.getWritableDatabase();
+            db.execSQL(String.format("DELETE FROM " + tableName + " WHERE _ID IN (%s);", args));
+            db.close();
+        }
+    }
 }

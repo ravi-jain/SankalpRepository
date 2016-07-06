@@ -10,7 +10,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 public class SpDBHelper extends SQLiteOpenHelper {
 
     // If you change the database schema, you must increment the database version.
-    private static final int DATABASE_VERSION = 4;
+    private static final int DATABASE_VERSION = 8;
 
     static final String DATABASE_NAME = "sankalp.db";
 
@@ -42,37 +42,26 @@ public class SpDBHelper extends SQLiteOpenHelper {
             SpTableContract.SpCategoryTable.TABLE_NAME + " (" + SpTableContract.SpCategoryTable._ID + ")" +
             " );";
 
-    final String SQL_CREATE_TYAG_TABLE = "CREATE TABLE " + SpTableContract.SpTyagTable.TABLE_NAME + " (" +
-            SpTableContract.SpTyagTable._ID + " INTEGER PRIMARY KEY," +
-            SpTableContract.SpTyagTable.COLUMN_CREATION_DATE + " INTEGER NOT NULL, " +
-            SpTableContract.SpTyagTable.COLUMN_FROM_DATE + " INTEGER, " +
-            SpTableContract.SpTyagTable.COLUMN_TO_DATE + " INTEGER, " +
-            SpTableContract.SpTyagTable.COLUMN_ITEM_ID + " INTEGER NOT NULL, " +
-            SpTableContract.SpTyagTable.COLUMN_DESCRIPTION + " TEXT, " +
-            SpTableContract.SpTyagTable.COLUMN_CATEGORY_ID + " INTEGER NOT NULL, " +
-            SpTableContract.SpTyagTable.COLUMN_ISLIFETIME + " INTEGER NOT NULL, " +
+    final String PARTIAL_SQL_CREATE_SANKALP_TABLE = " (" +
+            SpTableContract.SpSankalpTable._ID + " INTEGER PRIMARY KEY," +
+            SpTableContract.SpSankalpTable.COLUMN_CREATION_DATE + " INTEGER NOT NULL, " +
+            SpTableContract.SpSankalpTable.COLUMN_FROM_DATE + " INTEGER NOT NULL, " +
+            SpTableContract.SpSankalpTable.COLUMN_TO_DATE + " INTEGER, " +
+            SpTableContract.SpSankalpTable.COLUMN_ITEM_ID + " INTEGER NOT NULL, " +
+            SpTableContract.SpSankalpTable.COLUMN_DESCRIPTION + " TEXT, " +
+            SpTableContract.SpSankalpTable.COLUMN_CATEGORY_ID + " INTEGER NOT NULL, " +
+            SpTableContract.SpSankalpTable.COLUMN_ISLIFETIME + " INTEGER NOT NULL, " +
+            SpTableContract.SpSankalpTable.COLUMN_EXCEPTION_FREQUENCY_ID + " INTEGER, " +
+            SpTableContract.SpSankalpTable.COLUMN_EXCEPTION_FREQUENCY_COUNT + " INTEGER, " +
             // Set up the location column as a foreign key to location table.
-            " FOREIGN KEY (" + SpTableContract.SpTyagTable.COLUMN_CATEGORY_ID + ") REFERENCES " +
+            " FOREIGN KEY (" + SpTableContract.SpSankalpTable.COLUMN_CATEGORY_ID + ") REFERENCES " +
             SpTableContract.SpCategoryTable.TABLE_NAME + " (" + SpTableContract.SpCategoryTable._ID + "), " +
-            " FOREIGN KEY (" + SpTableContract.SpTyagTable.COLUMN_ITEM_ID + ") REFERENCES " +
+            " FOREIGN KEY (" + SpTableContract.SpSankalpTable.COLUMN_ITEM_ID + ") REFERENCES " +
             SpTableContract.SpItemTable.TABLE_NAME + " (" + SpTableContract.SpItemTable._ID + ")" +
             " );";
 
-    final String SQL_CREATE_NIYAM_TABLE = "CREATE TABLE " + SpTableContract.SpNiyamTable.TABLE_NAME + " (" +
-            SpTableContract.SpNiyamTable._ID + " INTEGER PRIMARY KEY," +
-            SpTableContract.SpNiyamTable.COLUMN_CREATION_DATE + " INTEGER NOT NULL, " +
-            SpTableContract.SpNiyamTable.COLUMN_FROM_DATE + " INTEGER NOT NULL, " +
-            SpTableContract.SpNiyamTable.COLUMN_TO_DATE + " INTEGER, " +
-            SpTableContract.SpNiyamTable.COLUMN_ITEM_ID + " INTEGER NOT NULL, " +
-            SpTableContract.SpNiyamTable.COLUMN_DESCRIPTION + " TEXT, " +
-            SpTableContract.SpNiyamTable.COLUMN_CATEGORY_ID + " INTEGER NOT NULL, " +
-            SpTableContract.SpNiyamTable.COLUMN_ISLIFETIME + " INTEGER NOT NULL, " +
-            // Set up the location column as a foreign key to location table.
-            " FOREIGN KEY (" + SpTableContract.SpNiyamTable.COLUMN_CATEGORY_ID + ") REFERENCES " +
-            SpTableContract.SpCategoryTable.TABLE_NAME + " (" + SpTableContract.SpCategoryTable._ID + "), " +
-            " FOREIGN KEY (" + SpTableContract.SpNiyamTable.COLUMN_ITEM_ID + ") REFERENCES " +
-            SpTableContract.SpItemTable.TABLE_NAME + " (" + SpTableContract.SpItemTable._ID + ")" +
-            " );";
+    final String SQL_CREATE_TYAG_TABLE = "CREATE TABLE " + SpTableContract.SpTyagTable.TABLE_NAME + PARTIAL_SQL_CREATE_SANKALP_TABLE;
+    final String SQL_CREATE_NIYAM_TABLE = "CREATE TABLE " + SpTableContract.SpNiyamTable.TABLE_NAME + PARTIAL_SQL_CREATE_SANKALP_TABLE;
 
     public SpDBHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -82,8 +71,8 @@ public class SpDBHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
         //sqLiteDatabase.execSQL(SQL_CREATE_USER_TABLE);
-        //_createCategoryTable(sqLiteDatabase);
-        //_createItemTable(sqLiteDatabase);
+        _createCategoryTable(sqLiteDatabase);
+        _createItemTable(sqLiteDatabase);
         sqLiteDatabase.execSQL(SQL_CREATE_NIYAM_TABLE);
         sqLiteDatabase.execSQL(SQL_CREATE_TYAG_TABLE);
     }
@@ -103,6 +92,8 @@ public class SpDBHelper extends SQLiteOpenHelper {
         //sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + SpTableContract.SpUserTable.TABLE_NAME);
         sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + SpTableContract.SpTyagTable.TABLE_NAME);
         sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + SpTableContract.SpNiyamTable.TABLE_NAME);
+        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + SpTableContract.SpCategoryTable.TABLE_NAME);
+        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + SpTableContract.SpItemTable.TABLE_NAME);
         onCreate(sqLiteDatabase);
     }
 }

@@ -1,19 +1,246 @@
 
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
-    android:fillViewport="true" >
-<RelativeLayout
-    xmlns:tools="http://schemas.android.com/tools"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:minHeight="?android:attr/listPreferredItemHeight"
     android:orientation="vertical"
-    android:id="@+id/sankalpListFrame"
+    android:weightSum="1"
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context=".fragments.SpDashboardFragment">
+    android:background="@drawable/touch_selector">
+
+    <LinearLayout
+        android:layout_weight=".5"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/db_tv_1"
+            android:text = "@string/tyag"
+            style="@style/SpLabel" />
+        <View
+            android:id="@+id/db_v_1"
+            style="@style/SpHorizontalDivider" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:clickable="true"
+            android:id="@+id/tt_ll"
+            android:background="@drawable/touch_selector"
+            android:paddingBottom="@dimen/activity_vertical_margin"
+            android:paddingLeft="@dimen/activity_horizontal_margin"
+            android:paddingRight="@dimen/activity_horizontal_margin"
+            android:paddingTop="@dimen/activity_vertical_margin"
+            android:layout_height="wrap_content">
+            <TextView
+                android:text = "@string/total"
+                style="@style/SpLabel" />
+            <TextView
+                android:id="@+id/tyag_total_tv"
+                android:paddingLeft="30dp"
+                style="@style/SpText" />
+            <!--<ImageButton
+                android:id="@+id/tyag_total_ib"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@android:drawable/ic_menu_view"/>-->
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:clickable="true"
+            android:id="@+id/tc_ll"
+            android:background="@drawable/touch_selector"
+            android:paddingBottom="@dimen/activity_vertical_margin"
+            android:paddingLeft="@dimen/activity_horizontal_margin"
+            android:paddingRight="@dimen/activity_horizontal_margin"
+            android:layout_height="wrap_content">
+            <!--android:paddingTop="@dimen/activity_vertical_margin"-->
+
+            <TextView
+                android:text = "@string/current"
+                style="@style/SpLabel" />
+            <TextView
+                android:id="@+id/tyag_current_tv"
+                android:paddingLeft="30dp"
+                style="@style/SpText" />
+            <!--<ImageButton
+                android:id="@+id/tyag_current_ib"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@android:drawable/ic_menu_view"/>-->
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:clickable="true"
+            android:id="@+id/tl_ll"
+            android:background="@drawable/touch_selector"
+            android:paddingBottom="@dimen/activity_vertical_margin"
+            android:paddingLeft="@dimen/activity_horizontal_margin"
+            android:paddingRight="@dimen/activity_horizontal_margin"
+            android:layout_height="wrap_content">
+            <!--android:paddingTop="@dimen/activity_vertical_margin"-->
+            <TextView
+                android:text = "@string/Lifetime"
+                style="@style/SpLabel" />
+            <TextView
+                android:id="@+id/tyag_lifetime_tv"
+                android:paddingLeft="30dp"
+                style="@style/SpText" />
+            <!--<ImageButton
+                android:id="@+id/tyag_lifetime_ib"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@android:drawable/ic_menu_view"/>-->
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:clickable="true"
+            android:id="@+id/tu_ll"
+            android:background="@drawable/touch_selector"
+            android:paddingBottom="@dimen/activity_vertical_margin"
+            android:paddingLeft="@dimen/activity_horizontal_margin"
+            android:paddingRight="@dimen/activity_horizontal_margin"
+            android:layout_height="wrap_content">
+            <!--android:paddingTop="@dimen/activity_vertical_margin"-->
+            <TextView
+                android:text = "@string/upcoming"
+                style="@style/SpLabel" />
+            <TextView
+                android:id="@+id/tyag_upcoming_tv"
+                android:paddingLeft="30dp"
+                style="@style/SpText" />
+            <!--<ImageButton
+                android:id="@+id/tyag_upcoming_ib"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@android:drawable/ic_menu_view"/>-->
+
+        </LinearLayout>
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_weight=".5"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/db_tv_2"
+            android:text = "@string/niyam"
+            style="@style/SpLabel" />
+        <View
+            android:id="@+id/db_v_2"
+            style="@style/SpHorizontalDivider" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:clickable="true"
+            android:id="@+id/nt_ll"
+            android:background="@drawable/touch_selector"
+            android:paddingBottom="@dimen/activity_vertical_margin"
+            android:paddingLeft="@dimen/activity_horizontal_margin"
+            android:paddingRight="@dimen/activity_horizontal_margin"
+            android:paddingTop="@dimen/activity_vertical_margin"
+            android:layout_height="wrap_content">
+            <TextView
+                android:text = "@string/total"
+                style="@style/SpLabel" />
+            <TextView
+                android:id="@+id/niyam_total_tv"
+                android:paddingLeft="30dp"
+                style="@style/SpText" />
+            <!--<ImageButton
+                android:id="@+id/niyam_total_ib"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@android:drawable/ic_menu_view"/>-->
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:clickable="true"
+            android:id="@+id/nc_ll"
+            android:background="@drawable/touch_selector"
+            android:paddingBottom="@dimen/activity_vertical_margin"
+            android:paddingLeft="@dimen/activity_horizontal_margin"
+            android:paddingRight="@dimen/activity_horizontal_margin"
+            android:layout_height="wrap_content">
+            <TextView
+                android:text = "@string/current"
+                style="@style/SpLabel" />
+            <TextView
+                android:id="@+id/niyam_current_tv"
+                android:paddingLeft="30dp"
+                style="@style/SpText" />
+            <!--<ImageButton
+                android:id="@+id/niyam_current_ib"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@android:drawable/ic_menu_view"/>-->
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:clickable="true"
+            android:id="@+id/nl_ll"
+            android:background="@drawable/touch_selector"
+            android:paddingBottom="@dimen/activity_vertical_margin"
+            android:paddingLeft="@dimen/activity_horizontal_margin"
+            android:paddingRight="@dimen/activity_horizontal_margin"
+            android:layout_height="wrap_content">
+            <TextView
+                android:text = "@string/Lifetime"
+                style="@style/SpLabel" />
+            <TextView
+                android:id="@+id/niyam_lifetime_tv"
+                android:paddingLeft="30dp"
+                style="@style/SpText" />
+            <!--<ImageButton
+                android:id="@+id/niyam_lifetime_ib"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@android:drawable/ic_menu_view"/>-->
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:clickable="true"
+            android:id="@+id/nu_ll"
+            android:background="@drawable/touch_selector"
+            android:paddingBottom="@dimen/activity_vertical_margin"
+            android:paddingLeft="@dimen/activity_horizontal_margin"
+            android:paddingRight="@dimen/activity_horizontal_margin"
+            android:layout_height="wrap_content">
+            <TextView
+                android:text = "@string/upcoming"
+                style="@style/SpLabel" />
+            <TextView
+                android:id="@+id/niyam_upcoming_tv"
+                android:paddingLeft="30dp"
+                style="@style/SpText" />
+           <!-- <ImageButton
+                android:id="@+id/niyam_upcoming_ib"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@android:drawable/ic_menu_view"/>-->
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/addSankalpButton"
@@ -26,37 +253,7 @@
         android:layout_gravity="end|bottom"
         android:src="@android:drawable/ic_input_add" />
 
-    <TextView
-        android:id="@+id/db_tv_1"
-        android:text = "@string/tyag"
-        style="@style/SpLabel" />
-    <View
-        android:id="@+id/db_v_1"
-        android:layout_below="@id/db_tv_1"
-        style="@style/SpHorizontalDivider" />
-    <ListView
-        android:id="@+id/tyagListview_dashboard"
-        android:layout_below="@id/db_v_1"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
-
-    <TextView
-        android:id="@+id/db_tv_2"
-        android:layout_below="@id/tyagListview_dashboard"
-        android:text = "@string/niyam"
-        style="@style/SpLabel" />
-    <View
-        android:id="@+id/db_v_2"
-        android:layout_below="@id/db_tv_2"
-       style="@style/SpHorizontalDivider" />
-    <ListView
-        android:id="@+id/niyamListview_dashboard"
-        android:layout_below="@id/db_v_2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
 
 
 
-
-</RelativeLayout>
-</ScrollView>
+</LinearLayout>

@@ -7,12 +7,15 @@ import java.util.Date;
  */
 public class SpSankalp {
 
+    private int _id;
     private int _categoryID;
     private int _itemId;
     private Date _fromDate;
     private Date _toDate;
     private String _description;
     private Date _creationDate;
+    private int _exceptionFrequencyId;
+    private int _exceptionFrequencyCount;
     private int _isLifetime = SpDataConstants.SANKALP_IS_LIFTIME_FALSE;
 
     public SpSankalp(int categoryId, int itemId)
@@ -24,6 +27,30 @@ public class SpSankalp {
     public SpSankalp()
     {
 
+    }
+
+    public int getExceptionFrequencyCount() {
+        return _exceptionFrequencyCount;
+    }
+
+    public void setExceptionFrequencyCount(int exceptionFrequencyCount) {
+        this._exceptionFrequencyCount = exceptionFrequencyCount;
+    }
+
+    public int getExceptionFrequencyId() {
+        return _exceptionFrequencyId;
+    }
+
+    public void setExceptionFrequencyId(int exceptionFrequencyId) {
+        this._exceptionFrequencyId = exceptionFrequencyId;
+    }
+
+    public int getId() {
+        return _id;
+    }
+
+    public void setId(int id) {
+        this._id = id;
     }
 
     public int isLifetime() {

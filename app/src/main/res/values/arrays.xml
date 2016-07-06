@@ -10,4 +10,12 @@
         <item>@string/Range</item>
     </string-array>
 
+    <string-array name="exceptionsFrequencyList">
+        <item>@string/total</item>
+        <item>@string/yearly</item>
+        <item>@string/monthly</item>
+        <item>@string/weekly</item>
+        <item>@string/daily</item>
+    </string-array>
+
 </resources>

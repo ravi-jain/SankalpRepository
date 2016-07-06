@@ -13,7 +13,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.RadioGroup;
@@ -26,16 +25,15 @@ import com.ravijain.sankalp.data.SpCategoryItem;
 import com.ravijain.sankalp.data.SpContentProvider;
 import com.ravijain.sankalp.data.SpDataConstants;
 import com.ravijain.sankalp.data.SpDateUtils;
+import com.ravijain.sankalp.data.SpExceptionFrequency;
 import com.ravijain.sankalp.data.SpSankalp;
 import com.ravijain.sankalp.data.SpSankalpFactory;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Hashtable;
-import java.util.Locale;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -46,17 +44,21 @@ public class SpAddSankalpActivityFragment extends Fragment {
     private Spinner _categoriesSpinnerView;
     private Spinner _itemsSpinnerView;
     private Spinner _rangeLabelsSpinnerView;
+    private Spinner _exceptionsFrequencySpinnerView;
     private EditText _fromDateTextView;
     private EditText _toDateTextView;
     private EditText _descriptionView;
+    private EditText _exceptionFrequencyCount;
     private TextView _rangeValueTextView;
     private View _fromToDateContainer;
+    private TextView _exceptionFrequencyTitleTextView;
 
     private DatePickerDialog _fromDatePickerDialog;
     private DatePickerDialog _toDatePickerDialog;
 
     private ArrayAdapter<SpCategory> _categoriesAdapter;
     private ArrayAdapter<SpCategoryItem> _itemsAdapter;
+    private ArrayAdapter<SpExceptionFrequency> _exceptionsFrequencyAdapter;
 
     private Hashtable<Integer, Hashtable<String, SpCategory>> _categoriesTable;
     private Hashtable<Integer, Hashtable<String, SpCategoryItem>> _categoryItemsTable;
@@ -136,15 +138,19 @@ public class SpAddSankalpActivityFragment extends Fragment {
     }
 
     private void _populateAndBindFormFields(View view) {
+
+        _exceptionFrequencyTitleTextView = (TextView) view.findViewById(R.id.spExceptionFrequencyTitle);
         _sankalpRGView = (RadioGroup) view.findViewById(R.id.radioGroup_sankalp);
         _sankalpRGView.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 switch (checkedId) {
                     case R.id.radio_tyag:
+                        _exceptionFrequencyTitleTextView.setText(R.string.tyagExceptions);
                         _populateCategories(SpDataConstants.SANKALP_TYPE_TYAG);
                         break;
                     case R.id.radio_niyam:
+                        _exceptionFrequencyTitleTextView.setText(R.string.niyamFrequency);
                         _populateCategories(SpDataConstants.SANKALP_TYPE_NIYAM);
                         break;
                 }
@@ -231,10 +237,14 @@ public class SpAddSankalpActivityFragment extends Fragment {
                 }
                 else if (label.equals(getString(R.string.Lifetime))) {
                     _togglePeriodViewVisibility(true);
-                    _fromDateTextView.setText(getString(R.string.Lifetime));
+                    _fromDate = null;
+                    _toDate = null;
+                    _setDate(_fromDateTextView, SpDateUtils.beginOfDate(today));
                     _toDateTextView.setText(getString(R.string.Lifetime));
                     _rangeValueTextView.setText(R.string.Lifetime);
                 }
+                _exceptionsFrequencyAdapter.clear();
+                _exceptionsFrequencyAdapter.addAll(_getExceptionFrequencyList(label));
             }
 
             @Override
@@ -244,6 +254,23 @@ public class SpAddSankalpActivityFragment extends Fragment {
 
         });
 
+        _exceptionsFrequencySpinnerView = (Spinner) view.findViewById(R.id.exception_frequency_spinner);
+        _exceptionsFrequencyAdapter = new ArrayAdapter<SpExceptionFrequency>(getContext(), R.layout.spinner_item,
+                _getExceptionFrequencyList(null));
+        _exceptionsFrequencyAdapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
+        _exceptionsFrequencySpinnerView.setAdapter(_exceptionsFrequencyAdapter);
+        _exceptionsFrequencySpinnerView.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+
+        });
+        _exceptionFrequencyCount = (EditText) view.findViewById(R.id.exception_frequency_count_textView);
 
         _fromDateTextView = (EditText) view.findViewById(R.id.fromdate_textView);
         _toDateTextView = (EditText) view.findViewById(R.id.todate_textView);
@@ -275,13 +302,21 @@ public class SpAddSankalpActivityFragment extends Fragment {
         int itemId = ((SpCategoryItem)_itemsSpinnerView.getSelectedItem()).getId();
 
         SpSankalp sankalp = SpSankalpFactory.getNewSankalp(sankalpType, categoryId, itemId);
-        if (_fromDate != null && _toDate != null) {
-            sankalp.setFromDate(_fromDate);
-            sankalp.setToDate(_toDate);
-        }
-        else if (_fromDateTextView.getText().equals(getString(R.string.Lifetime))) {
+        sankalp.setFromDate(_fromDate);
+        sankalp.setToDate(_toDate);
+        if ( _rangeValueTextView.getText().equals(getString(R.string.Lifetime))) {
             sankalp.setLifetime(SpDataConstants.SANKALP_IS_LIFTIME_TRUE);
         }
+
+        String count = _exceptionFrequencyCount.getText().toString();
+        if (!(count.equals("") || count.equals("0"))) {
+            sankalp.setExceptionFrequencyId(SpExceptionFrequency.FREQUENCY_UNDEFINED);
+        }
+        else {
+            sankalp.setExceptionFrequencyCount(Integer.valueOf(count));
+            sankalp.setExceptionFrequencyId(((SpExceptionFrequency)_exceptionsFrequencySpinnerView.getSelectedItem()).getId());
+        }
+
         sankalp.setDescription(_descriptionView.getText().toString());
 
         SpContentProvider.getInstance(getContext()).addSankalp(sankalp);
@@ -297,13 +332,40 @@ public class SpAddSankalpActivityFragment extends Fragment {
     {
         if (isLabelVisible) {
             _rangeValueTextView.setVisibility(View.VISIBLE);
-            _fromToDateContainer.setVisibility(View.INVISIBLE);
+            _fromToDateContainer.setVisibility(View.GONE);
         }
         else {
-            _rangeValueTextView.setVisibility(View.INVISIBLE);
+            _rangeValueTextView.setVisibility(View.GONE);
             _fromToDateContainer.setVisibility(View.VISIBLE);
         }
 
+    }
+
+    private ArrayList<SpExceptionFrequency> _getExceptionFrequencyList(String range)
+    {
+        ArrayList<SpExceptionFrequency> frequencies = new ArrayList<SpExceptionFrequency>();
+        frequencies.add(new SpExceptionFrequency(SpExceptionFrequency.FREQUENCY_TOTAL, getContext()));
+        if (range != null) {
+            if (range.equals(getString(R.string.Range))) {
+                // Add date maths logic
+            }
+            else if (range.equals(getString(R.string.thisMonth))) {
+                frequencies.add(new SpExceptionFrequency(SpExceptionFrequency.FREQUENCY_WEEKLY, getContext()));
+                frequencies.add(new SpExceptionFrequency(SpExceptionFrequency.FREQUENCY_DAILY, getContext()));
+            }
+            else if (range.equals(getString(R.string.thisYear))) {
+                frequencies.add(new SpExceptionFrequency(SpExceptionFrequency.FREQUENCY_MONTHLY, getContext()));
+                frequencies.add(new SpExceptionFrequency(SpExceptionFrequency.FREQUENCY_WEEKLY, getContext()));
+                frequencies.add(new SpExceptionFrequency(SpExceptionFrequency.FREQUENCY_DAILY, getContext()));
+            }
+            else if (range.equals(getString(R.string.Lifetime))) {
+                frequencies.add(new SpExceptionFrequency(SpExceptionFrequency.FREQUENCY_YEARLY, getContext()));
+                frequencies.add(new SpExceptionFrequency(SpExceptionFrequency.FREQUENCY_MONTHLY, getContext()));
+                frequencies.add(new SpExceptionFrequency(SpExceptionFrequency.FREQUENCY_WEEKLY, getContext()));
+                frequencies.add(new SpExceptionFrequency(SpExceptionFrequency.FREQUENCY_DAILY, getContext()));
+            }
+        }
+        return frequencies;
     }
 
     private void _populateCategories(int sankalpType) {

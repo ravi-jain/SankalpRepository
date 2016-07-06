@@ -29,6 +29,8 @@
     <string name="sankalpItem">Item</string>
     <string name="sankalpPeriod">Period</string>
     <string name="tyag">Tyag</string>
+    <string name="tyagExceptions">Exceptions</string>
+    <string name="niyamFrequency">Frequency</string>
     <string name="niyam">Niyam</string>
     <string name="description">Description</string>
 
@@ -44,4 +46,14 @@
     <string name="discardSankalp">Discard</string>
     <string name="deleteSankalp">Delete</string>
     <string name="title_activity_sp_sankalp_list">Sankalp</string>
+    <string name="title_activity_user_setup">User Profile</string>
+
+    <string name="total">Total</string>
+    <string name="current">Current</string>
+    <string name="past">Past</string>
+    <string name="upcoming">Upcoming</string>
+    <string name="yearly">Yearly</string>
+    <string name="monthly">Monthly</string>
+    <string name="weekly">Weekly</string>
+    <string name="daily">Daily</string>
 </resources>

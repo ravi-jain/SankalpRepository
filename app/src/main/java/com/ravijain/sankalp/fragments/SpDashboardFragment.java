@@ -1,36 +1,32 @@
 package com.ravijain.sankalp.fragments;
 
 
-import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
-import android.support.v4.widget.CursorAdapter;
-import android.view.ActionMode;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
-import android.widget.ListAdapter;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.ravijain.sankalp.R;
 import com.ravijain.sankalp.activities.SpAddSankalpActivity;
+import com.ravijain.sankalp.activities.SpConstants;
+import com.ravijain.sankalp.activities.SpSankalpList;
 import com.ravijain.sankalp.data.SpCategory;
 import com.ravijain.sankalp.data.SpCategoryItem;
+import com.ravijain.sankalp.data.SpContentProvider;
 import com.ravijain.sankalp.data.SpDataConstants;
 import com.ravijain.sankalp.data.SpDateUtils;
-import com.ravijain.sankalp.data.SpTableContract;
-import com.ravijain.sankalp.data.SpContentProvider;
+import com.ravijain.sankalp.data.SpSankalp;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.Hashtable;
 
 /**
@@ -39,13 +35,26 @@ import java.util.Hashtable;
 public class SpDashboardFragment extends Fragment {
 
 
-    private ListViewAdapter tyagAdapter;
-    private ListView tyagListView;
-    private ListViewAdapter niyamAdapter;
-    private ListView niyamListView;
-    private CursorLoaderTask cursorLoaderTask;
-    private Hashtable<Integer, SpCategory> _categories;
-    private Hashtable<Integer, SpCategoryItem> _categoryItems;
+    private DashboardLoader _dashboardLoaderTask;
+
+    private TextView _tyagTotal;
+    private TextView _tyagCurrent;
+    private TextView _tyagLifetime;
+    private TextView _tyagUpcoming;
+    private TextView _niyamTotal;
+    private TextView _niyamCurrent;
+    private TextView _niyamLifetime;
+    private TextView _niyamUpcoming;
+
+    private LinearLayout _tt_ll;
+    private LinearLayout _tc_ll;
+    private LinearLayout _tl_ll;
+    private LinearLayout _tu_ll;
+
+    private LinearLayout _nt_ll;
+    private LinearLayout _nc_ll;
+    private LinearLayout _nl_ll;
+    private LinearLayout _nu_ll;
 
     public SpDashboardFragment() {
         // Required empty public constructor
@@ -58,21 +67,39 @@ public class SpDashboardFragment extends Fragment {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_sankalp_dashboard, container, false);
 
-        tyagAdapter = new ListViewAdapter(getContext(), null, 0);
-        tyagListView = (ListView) rootView.findViewById(R.id.tyagListview_dashboard);
-        tyagListView.setAdapter(tyagAdapter);
+        _tyagTotal = (TextView) rootView.findViewById(R.id.tyag_total_tv);
+        _tyagCurrent = (TextView) rootView.findViewById(R.id.tyag_current_tv);
+        _tyagLifetime = (TextView) rootView.findViewById(R.id.tyag_lifetime_tv);
+        _tyagUpcoming = (TextView) rootView.findViewById(R.id.tyag_upcoming_tv);
 
-        SpMultiNodeChoiceListener listener = new SpMultiNodeChoiceListener();
-        tyagListView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
-        tyagListView.setMultiChoiceModeListener(listener);
+        _niyamTotal = (TextView) rootView.findViewById(R.id.niyam_total_tv);
+        _niyamCurrent = (TextView) rootView.findViewById(R.id.niyam_current_tv);
+        _niyamLifetime = (TextView) rootView.findViewById(R.id.niyam_lifetime_tv);
+        _niyamUpcoming = (TextView) rootView.findViewById(R.id.niyam_upcoming_tv);
 
+        View.OnClickListener listener = new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                _handleLinearLayoutClick(view);
+            }
+        };
+        _tt_ll = (LinearLayout) rootView.findViewById(R.id.tt_ll);
+        _tt_ll.setOnClickListener(listener);
+        _tc_ll = (LinearLayout) rootView.findViewById(R.id.tc_ll);
+        _tc_ll.setOnClickListener(listener);
+        _tl_ll = (LinearLayout) rootView.findViewById(R.id.tl_ll);
+        _tl_ll.setOnClickListener(listener);
+        _tu_ll = (LinearLayout) rootView.findViewById(R.id.tu_ll);
+        _tu_ll.setOnClickListener(listener);
 
-        niyamAdapter = new ListViewAdapter(getContext(), null, 0);
-        niyamListView = (ListView) rootView.findViewById(R.id.niyamListview_dashboard);
-        niyamListView.setAdapter(niyamAdapter);
-
-        niyamListView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
-        niyamListView.setMultiChoiceModeListener(listener);
+        _nt_ll = (LinearLayout) rootView.findViewById(R.id.nt_ll);
+        _nt_ll.setOnClickListener(listener);
+        _nc_ll = (LinearLayout) rootView.findViewById(R.id.nc_ll);
+        _nc_ll.setOnClickListener(listener);
+        _nl_ll = (LinearLayout) rootView.findViewById(R.id.nl_ll);
+        _nl_ll.setOnClickListener(listener);
+        _nu_ll = (LinearLayout) rootView.findViewById(R.id.nu_ll);
+        _nu_ll.setOnClickListener(listener);
 
         FloatingActionButton fab = (FloatingActionButton) rootView.findViewById(R.id.addSankalpButton);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -83,149 +110,116 @@ public class SpDashboardFragment extends Fragment {
             }
         });
 
-        cursorLoaderTask = new CursorLoaderTask();
-        cursorLoaderTask.execute((Void) null);
+        _dashboardLoaderTask = new DashboardLoader();
+        _dashboardLoaderTask.execute((Void) null);
 
 
         return rootView;
     }
 
-    private class ListViewAdapter extends CursorAdapter
-    {
-        ListViewAdapter(Context context, Cursor cursor, int flags) {
-            super(context, cursor, 0);
+    private void _handleLinearLayoutClick(View view) {
+        int sankalpType = SpDataConstants.SANKALP_TYPE_TYAG;
+        int filter = SpConstants.INTENT_VALUE_SANKALP_LIST_FILTER_ALL;
+
+        if (view == _tt_ll) {
+            sankalpType = SpDataConstants.SANKALP_TYPE_TYAG;
+            filter = SpConstants.INTENT_VALUE_SANKALP_LIST_FILTER_ALL;
+        }
+        else if (view == _tc_ll) {
+            sankalpType = SpDataConstants.SANKALP_TYPE_TYAG;
+            filter = SpConstants.INTENT_VALUE_SANKALP_LIST_FILTER_CURRENT;
+        }
+        else if (view == _tl_ll) {
+            sankalpType = SpDataConstants.SANKALP_TYPE_TYAG;
+            filter = SpConstants.INTENT_VALUE_SANKALP_LIST_FILTER_LIFETIME;
+        }
+        else if (view == _tu_ll) {
+            sankalpType = SpDataConstants.SANKALP_TYPE_TYAG;
+            filter = SpConstants.INTENT_VALUE_SANKALP_LIST_FILTER_UPCOMING;
+        }
+        else if (view == _nt_ll) {
+            sankalpType = SpDataConstants.SANKALP_TYPE_NIYAM;
+            filter = SpConstants.INTENT_VALUE_SANKALP_LIST_FILTER_ALL;
+        }
+        else if (view == _nc_ll) {
+            sankalpType = SpDataConstants.SANKALP_TYPE_NIYAM;
+            filter = SpConstants.INTENT_VALUE_SANKALP_LIST_FILTER_CURRENT;
+        }
+        else if (view == _nl_ll) {
+            sankalpType = SpDataConstants.SANKALP_TYPE_NIYAM;
+            filter = SpConstants.INTENT_VALUE_SANKALP_LIST_FILTER_LIFETIME;
+        }
+        else if (view == _nu_ll) {
+            sankalpType = SpDataConstants.SANKALP_TYPE_NIYAM;
+            filter = SpConstants.INTENT_VALUE_SANKALP_LIST_FILTER_UPCOMING;
         }
 
-        // The newView method is used to inflate a new view and return it,
-        // you don't bind any data to the view at this point.
-        @Override
-        public View newView(Context context, Cursor cursor, ViewGroup parent) {
-            return LayoutInflater.from(context).inflate(R.layout.list_item_dashboard, parent, false);
-        }
-
-        // The bindView method is used to bind all data to a given view
-        // such as setting the text on a TextView.
-        @Override
-        public void bindView(View view, Context context, Cursor cursor) {
-            // Find fields to populate in inflated template
-//            TextView tvCategory = (TextView) view.findViewById(R.id.list_item_category_textview);
-            TextView tvItem = (TextView) view.findViewById(R.id.list_item_item_textview);
-            TextView tvPeriod = (TextView) view.findViewById(R.id.list_item_period_textview);
-            // Extract properties from cursor
-//            int categoryId = cursor.getInt(cursor.getColumnIndexOrThrow(SpTableContract.SpSankalpTable.COLUMN_CATEGORY_ID));
-//            SpCategory category = _categories.get(categoryId);
-            int itemId = cursor.getInt(cursor.getColumnIndexOrThrow(SpTableContract.SpSankalpTable.COLUMN_ITEM_ID));
-            SpCategoryItem item = _categoryItems.get(itemId);
-            int isLifetime = cursor.getInt(cursor.getColumnIndexOrThrow(SpTableContract.SpSankalpTable.COLUMN_ISLIFETIME));
-
-            String period;
-            if (isLifetime == SpDataConstants.SANKALP_IS_LIFTIME_TRUE) {
-                period = getString(R.string.Lifetime);
-            }
-            else {
-                long fromDate = cursor.getLong(cursor.getColumnIndexOrThrow(SpTableContract.SpSankalpTable.COLUMN_FROM_DATE));
-                long toDate = cursor.getLong(cursor.getColumnIndexOrThrow(SpTableContract.SpSankalpTable.COLUMN_TO_DATE));
-
-                period = SpDateUtils.getFriendlyDateString(fromDate) + " - " + SpDateUtils.getFriendlyDateString(toDate);
-            }
-
-
-            // Populate fields with extracted properties
-//            tvCategory.setText(category.getCategoryName());
-            tvItem.setText(item.getCategoryItemName());
-            tvPeriod.setText(String.valueOf(period));
-        }
-
+        Intent intent = new Intent(getActivity(), SpSankalpList.class);
+        intent.putExtra(SpConstants.INTENT_KEY_SANKALP_TYPE, sankalpType);
+        intent.putExtra(SpConstants.INTENT_KEY_SANKALP_LIST_FILTER, filter);
+        startActivity(intent);
     }
 
-    private class CursorLoaderTask extends AsyncTask<Void, Void, Boolean>
+    private class DashboardLoader extends AsyncTask<Void, Void, Boolean>
     {
-        private Cursor _tyagCursor;
-        private Cursor _niyamCursor;
+        private int _tt = 0;
+        private int _tc = 0;
+        private int _tl = 0;
+        private int _tu = 0;
+        private int _nt = 0;
+        private int _nc = 0;
+        private int _nl = 0;
+        private int _nu = 0;
         @Override
         protected Boolean doInBackground(Void... params) {
             SpContentProvider provider = SpContentProvider.getInstance(getContext());
-//            _categories = provider.getAllCategories();
-            _categoryItems = provider.getAllCategoryItems();
-            _tyagCursor = provider.getTyagCursor();
-            _niyamCursor = provider.getNiyamCursor();
+            ArrayList<SpSankalp> tyags = provider.getSankalps(SpDataConstants.SANKALP_TYPE_TYAG, SpConstants.INTENT_VALUE_SANKALP_LIST_FILTER_ALL);
+            for (SpSankalp tyag : tyags) {
+                _tt++;
+                if (tyag.isLifetime() == SpDataConstants.SANKALP_IS_LIFTIME_TRUE) {
+                    _tl++;
+                }
+                if (SpDateUtils.isUpcomingDate(tyag.getFromDate())) {
+                    _tu++;
+                }
+                else if(SpDateUtils.isCurrentDate(tyag.getFromDate(), tyag.getToDate())) {
+                    _tc++;
+                }
+            }
 
+            ArrayList<SpSankalp> niyams = provider.getSankalps(SpDataConstants.SANKALP_TYPE_NIYAM, SpConstants.INTENT_VALUE_SANKALP_LIST_FILTER_ALL);
+            for (SpSankalp niyam : niyams) {
+                _nt++;
+                if (niyam.isLifetime() == SpDataConstants.SANKALP_IS_LIFTIME_TRUE) {
+                    _nl++;
+                }
+                if (SpDateUtils.isUpcomingDate(niyam.getFromDate())) {
+                    _nu++;
+                }
+                else if(SpDateUtils.isCurrentDate(niyam.getFromDate(), niyam.getToDate())) {
+                    _nc++;
+                }
+            }
             return true;
         }
 
         @Override
         protected void onPostExecute(final Boolean success) {
-            cursorLoaderTask = null;
+            _dashboardLoaderTask = null;
 
             if (success) {
-                tyagAdapter.swapCursor(_tyagCursor);
-                niyamAdapter.swapCursor(_niyamCursor);
+                _tyagTotal.setText(String.valueOf(_tt));
+                _tyagCurrent.setText(String.valueOf(_tc));
+                _tyagLifetime.setText(String.valueOf(_tl));
+                _tyagUpcoming.setText(String.valueOf(_tu));
 
-                ListUtils.setDynamicHeight(tyagListView);
-                ListUtils.setDynamicHeight(niyamListView);
+                _niyamTotal.setText(String.valueOf(_nt));
+                _niyamCurrent.setText(String.valueOf(_nc));
+                _niyamLifetime.setText(String.valueOf(_nl));
+                _niyamUpcoming.setText(String.valueOf(_nu));
             } else {
                 // Error
             }
-        }
-    }
-
-    private static class ListUtils {
-        public static void setDynamicHeight(ListView mListView) {
-            ListAdapter mListAdapter = mListView.getAdapter();
-            if (mListAdapter == null) {
-                // when adapter is null
-                return;
-            }
-            int height = 0;
-            int desiredWidth = View.MeasureSpec.makeMeasureSpec(mListView.getWidth(), View.MeasureSpec.UNSPECIFIED);
-            for (int i = 0; i < mListAdapter.getCount(); i++) {
-                View listItem = mListAdapter.getView(i, null, mListView);
-                listItem.measure(desiredWidth, View.MeasureSpec.UNSPECIFIED);
-                height += listItem.getMeasuredHeight();
-            }
-            ViewGroup.LayoutParams params = mListView.getLayoutParams();
-            params.height = height + (mListView.getDividerHeight() * (mListAdapter.getCount() - 1));
-            mListView.setLayoutParams(params);
-            mListView.requestLayout();
-        }
-    }
-
-    private class SpMultiNodeChoiceListener implements AbsListView.MultiChoiceModeListener
-    {
-
-        @Override
-        public void onItemCheckedStateChanged(ActionMode actionMode, int i, long l, boolean b) {
-
-        }
-
-        @Override
-        public boolean onCreateActionMode(ActionMode actionMode, Menu menu) {
-            MenuInflater inflater = actionMode.getMenuInflater();
-            inflater.inflate(R.menu.menu_dashboard_context, menu);
-            return true;
-        }
-
-        @Override
-        public boolean onPrepareActionMode(ActionMode actionMode, Menu menu) {
-            return false;
-        }
-
-        @Override
-        public boolean onActionItemClicked(ActionMode actionMode, MenuItem menuItem) {
-
-            switch (menuItem.getItemId()) {
-                case R.id.action_db_deleteSankalp:
-                    //deleteSelectedItems();
-                    actionMode.finish(); // Action picked, so close the CAB
-                    return true;
-                default:
-                    return false;
-            }
-        }
-
-        @Override
-        public void onDestroyActionMode(ActionMode actionMode) {
-
         }
     }
 

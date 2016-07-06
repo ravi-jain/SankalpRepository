@@ -25,7 +25,7 @@ public class SpTableContract {
         public static final String COLUMN_CATEGORY_TYPE = "type";
     }
 
-    public static final class SpItemTable implements BaseColumns {
+    public static final class SpItemTable  implements BaseColumns{
         // Table name
         public static final String TABLE_NAME = "spItemTable";
 
@@ -34,19 +34,19 @@ public class SpTableContract {
         public static final String COLUMN_ITEM_CATEGORY_ID = "categoryID";
     }
 
-    public static final class SpTyagTable implements BaseColumns, SpSankalpTable {
+    public static final class SpTyagTable implements SpSankalpTable {
         // Table name
         public static final String TABLE_NAME = "spTyagTable";
 
     }
 
-    public static final class SpNiyamTable implements BaseColumns, SpSankalpTable {
+    public static final class SpNiyamTable implements SpSankalpTable {
         // Table name
         public static final String TABLE_NAME = "spNiyamTable";
 
     }
 
-    public static interface SpSankalpTable {
+    public static interface SpSankalpTable extends BaseColumns{
         // Table name
 
         public static final String COLUMN_CREATION_DATE = "creationDate";
@@ -56,5 +56,7 @@ public class SpTableContract {
         public static final String COLUMN_TO_DATE = "toDate";
         public static final String COLUMN_DESCRIPTION = "description";
         public static final String COLUMN_ISLIFETIME = "isLifetime";
+        public static final String COLUMN_EXCEPTION_FREQUENCY_ID = "exFreqId";
+        public static final String COLUMN_EXCEPTION_FREQUENCY_COUNT = "exFreqCount";
     }
 }

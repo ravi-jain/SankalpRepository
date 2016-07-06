@@ -124,7 +124,7 @@ public class SpDateUtils {
 
     public static String getFriendlyDateString(Date date)
     {
-        SimpleDateFormat dateFormatter = new SimpleDateFormat("dd-MM-yyyy", Locale.US);
+        SimpleDateFormat dateFormatter = new SimpleDateFormat("MMMM dd, yyyy", Locale.US);
         return dateFormatter.format(date);
     }
 
@@ -132,6 +132,18 @@ public class SpDateUtils {
     {
         Date date = new Date(milliSeconds);
         return getFriendlyDateString(date);
+    }
+
+    public static boolean isCurrentDate(Date fromDate, Date toDate)
+    {
+        Date now = new Date();
+        return fromDate.before(now) && (toDate == null || toDate.after(now));
+    }
+
+    public static boolean isUpcomingDate(Date fromDate)
+    {
+        Date now = new Date();
+        return fromDate.after(now);
     }
 
 }

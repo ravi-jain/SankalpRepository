@@ -1,25 +1,23 @@
-package com.ravijain.sankalp.fragments;
+package com.ravijain.sankalp.activities;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.os.AsyncTask;
 import android.os.Build;
+import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.text.TextUtils;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import com.ravijain.sankalp.R;
-import com.ravijain.sankalp.data.SpUser;
 import com.ravijain.sankalp.data.SpContentProvider;
+import com.ravijain.sankalp.data.SpUser;
 
-public class SpUserSetupFragment extends Fragment {
+public class SpUserSetupActivity extends AppCompatActivity {
 
     // UI references.
     private EditText mEmailView;
@@ -30,28 +28,16 @@ public class SpUserSetupFragment extends Fragment {
 
     private UserRegisterTask mRegisterTask = null;
 
-    public SpUserSetupFragment() {
-        // Required empty public constructor
-    }
-
-
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-    }
+        setContentView(R.layout.activity_user_setup);
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+        mNameView = (EditText) findViewById(R.id.userName);
+        mMobileView = (EditText) findViewById(R.id.userMobile);
+        mEmailView = (EditText) findViewById(R.id.userEmail);
 
-        // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_user_setup, container, false);
-
-        mNameView = (EditText) view.findViewById(R.id.userName);
-        mMobileView = (EditText) view.findViewById(R.id.userMobile);
-        mEmailView = (EditText) view.findViewById(R.id.userEmail);
-
-        Button mEmailSignInButton = (Button) view.findViewById(R.id.userRegister_button);
+        Button mEmailSignInButton = (Button) findViewById(R.id.userRegister_button);
         mEmailSignInButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -59,10 +45,8 @@ public class SpUserSetupFragment extends Fragment {
             }
         });
 
-        mUserSetUpView = view.findViewById(R.id.userSetup_form);
-        mProgressView = view.findViewById(R.id.userSetup_progress);
-
-        return view;
+        mUserSetUpView = findViewById(R.id.userSetup_form);
+        mProgressView = findViewById(R.id.userSetup_progress);
     }
 
     private void _registerUser() {
@@ -194,7 +178,7 @@ public class SpUserSetupFragment extends Fragment {
         protected Boolean doInBackground(Void... params) {
             // TODO: attempt authentication against a network service.
 
-            SpContentProvider provider = SpContentProvider.getInstance(getContext());
+            SpContentProvider provider = SpContentProvider.getInstance(getApplicationContext());
             provider.addUser(_user);
             return true;
         }
@@ -205,7 +189,7 @@ public class SpUserSetupFragment extends Fragment {
             _showProgress(false);
 
             if (success) {
-                Toast.makeText(getContext(), "Registration Complete", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "Registration Complete", Toast.LENGTH_SHORT).show();
             } else {
                 // Error
             }
