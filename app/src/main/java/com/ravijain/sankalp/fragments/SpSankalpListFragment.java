@@ -28,6 +28,7 @@ import com.ravijain.sankalp.data.SpCategoryItem;
 import com.ravijain.sankalp.data.SpContentProvider;
 import com.ravijain.sankalp.data.SpDataConstants;
 import com.ravijain.sankalp.data.SpDateUtils;
+import com.ravijain.sankalp.data.SpExceptionOrTarget;
 import com.ravijain.sankalp.data.SpSankalp;
 
 import java.util.ArrayList;
@@ -124,6 +125,34 @@ public class SpSankalpListFragment extends Fragment {
 //            tvCategory.setText(category.getCategoryName());
             tvItem.setText(item.getCategoryItemName());
             tvPeriod.setText(String.valueOf(period));
+
+            SpExceptionOrTarget exceptionOrTarget = sankalp.getExceptionOrTarget();
+            if (exceptionOrTarget.getId() == SpExceptionOrTarget.EXCEPTION_OR_TARGET_UNDEFINED) {
+                View exceptionOrTargetContainer = convertView.findViewById(R.id.exceptionOrTarget_li_container);
+                exceptionOrTargetContainer.setVisibility(View.GONE);
+            }
+            else {
+                TextView title = (TextView) convertView.findViewById(R.id.exceptionOrTarget_li_title);
+                TextView currentCountLabel = (TextView) convertView.findViewById(R.id.exceptionOrTargetCurrentCount_li_label);
+
+                if (_sankalpType == SpDataConstants.SANKALP_TYPE_TYAG) {
+                    title.setText(R.string.tyagExceptions);
+                    currentCountLabel.setText(R.string.exception_left_label);
+                }
+                else {
+                    title.setText(R.string.niyamFrequency);
+                    currentCountLabel.setText(R.string.frequency_done_label);
+                }
+                TextView spinnerLabel = (TextView) convertView.findViewById(R.id.exceptionOrTarget_spinner_li_label);
+                spinnerLabel.setText(exceptionOrTarget.getLabel());
+                TextView count = (TextView) convertView.findViewById(R.id.exceptionOrTargetCount_li_textView);
+                count.setText(String.valueOf(exceptionOrTarget.getExceptionOrTargetCount()));
+
+                TextView currentCount = (TextView) convertView.findViewById(R.id.exceptionOrTargetCurrentCount_li_tv);
+                currentCount.setText(String.valueOf(exceptionOrTarget.getExceptionOrTargetCountCurrent()));
+
+            }
+
             // Return the completed view to render on screen
             return convertView;
         }

@@ -2,12 +2,9 @@ package com.ravijain.sankalp.data;
 
 import android.content.ContentValues;
 import android.content.Context;
-import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.text.TextUtils;
-
-import com.ravijain.sankalp.R;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -20,9 +17,11 @@ import java.util.Iterator;
 public class SpContentProvider {
 
     private SpDBHelper _dbHelper;
+    private Context _context;
     private static SpContentProvider instanceRef = null;
 
     private SpContentProvider(Context context) {
+        _context = context;
         _dbHelper = new SpDBHelper(context);
     }
 
@@ -234,9 +233,9 @@ public class SpContentProvider {
         if (sankalp.getToDate() != null) {
             values.put(SpTableContract.SpSankalpTable.COLUMN_TO_DATE, sankalp.getToDate().getTime());
         }
-        values.put(SpTableContract.SpSankalpTable.COLUMN_EXCEPTION_FREQUENCY_ID, sankalp.getExceptionFrequencyId());
-        values.put(SpTableContract.SpSankalpTable.COLUMN_EXCEPTION_FREQUENCY_COUNT, sankalp.getExceptionFrequencyCount());
-        values.put(SpTableContract.SpSankalpTable.COLUMN_EXCEPTION_FREQUENCY_COUNT_FINISHED, sankalp.getExceptionFrequencyCountFinished());
+        values.put(SpTableContract.SpSankalpTable.COLUMN_EXCEPTION_TARGET_ID, sankalp.getExceptionOrTarget().getId());
+        values.put(SpTableContract.SpSankalpTable.COLUMN_EXCEPTION_TARGET_COUNT, sankalp.getExceptionOrTarget().getExceptionOrTargetCount());
+        values.put(SpTableContract.SpSankalpTable.COLUMN_EXCEPTION_TARGET_CURRENT_COUNT, sankalp.getExceptionOrTarget().getExceptionOrTargetCountCurrent());
         values.put(SpTableContract.SpSankalpTable.COLUMN_DESCRIPTION, sankalp.getDescription());
 
         String tableName = null;
@@ -290,12 +289,13 @@ public class SpContentProvider {
                     sankalp.setToDate(new Date(toDate));
                 }
 
-                int exceptionFrequencyId = cursor.getInt(cursor.getColumnIndexOrThrow(SpTableContract.SpSankalpTable.COLUMN_EXCEPTION_FREQUENCY_ID));
-                int exceptionFrequencyCount = cursor.getInt(cursor.getColumnIndexOrThrow(SpTableContract.SpSankalpTable.COLUMN_EXCEPTION_FREQUENCY_COUNT));
-                int exceptionFrequencyCountFinished = cursor.getInt(cursor.getColumnIndexOrThrow(SpTableContract.SpSankalpTable.COLUMN_EXCEPTION_FREQUENCY_COUNT_FINISHED));
-                sankalp.setExceptionFrequencyId(exceptionFrequencyId);
-                sankalp.setExceptionFrequencyCount(exceptionFrequencyCount);
-                sankalp.setExceptionFrequencyCountFinished(exceptionFrequencyCountFinished);
+                int exceptionOrTargetid = cursor.getInt(cursor.getColumnIndexOrThrow(SpTableContract.SpSankalpTable.COLUMN_EXCEPTION_TARGET_ID));
+                int exceptionOrTargetCount = cursor.getInt(cursor.getColumnIndexOrThrow(SpTableContract.SpSankalpTable.COLUMN_EXCEPTION_TARGET_COUNT));
+                int exceptionOrTargetCurrentCount = cursor.getInt(cursor.getColumnIndexOrThrow(SpTableContract.SpSankalpTable.COLUMN_EXCEPTION_TARGET_CURRENT_COUNT));
+                SpExceptionOrTarget exceptionOrTarget = new SpExceptionOrTarget(exceptionOrTargetid, _context);
+                exceptionOrTarget.setExceptionOrTargetCount(exceptionOrTargetCount);
+                exceptionOrTarget.setExceptionOrTargetCountCurrent(exceptionOrTargetCurrentCount);
+                sankalp.setExceptionOrTarget(exceptionOrTarget);
 
                 String description = cursor.getString(cursor.getColumnIndexOrThrow(SpTableContract.SpSankalpTable.COLUMN_DESCRIPTION));
                 sankalp.setDescription(description);

@@ -30,7 +30,7 @@
     <string name="sankalpPeriod">Period</string>
     <string name="tyag">Tyag</string>
     <string name="tyagExceptions">Exceptions</string>
-    <string name="niyamFrequency">Frequency</string>
+    <string name="niyamFrequency">Target</string>
     <string name="niyam">Niyam</string>
     <string name="description">Description</string>
 
@@ -56,6 +56,6 @@
     <string name="monthly">Monthly</string>
     <string name="weekly">Weekly</string>
     <string name="daily">Daily</string>
-    <string name="exception_left_label">Exceptions Left</string>
+    <string name="exception_left_label">Used</string>
     <string name="frequency_done_label">Completed</string>
 </resources>

@@ -24,5 +24,35 @@
     <TextView
         android:id="@+id/list_item_period_textview"
         style="@style/SpText"/>
+    <LinearLayout
+        android:id="@+id/exceptionOrTarget_li_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/exceptionOrTarget_li_title"
+            style="@style/SpLabel"
+            android:text="@string/tyagExceptions" />
+        <TextView
+            android:id="@+id/exceptionOrTarget_spinner_li_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="10dp"
+            style="@style/SpText"/>
+
+        <TextView
+            android:id="@+id/exceptionOrTargetCount_li_textView"
+            android:layout_marginRight="10dp"
+            style="@style/SpText"/>
+
+        <TextView
+            android:id="@+id/exceptionOrTargetCurrentCount_li_label"
+            style="@style/SpLabel" />
+
+        <TextView
+            android:id="@+id/exceptionOrTargetCurrentCount_li_tv"
+            style="@style/SpText"/>
+
+    </LinearLayout>
 
 </LinearLayout>

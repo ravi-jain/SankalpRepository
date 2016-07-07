@@ -56,8 +56,8 @@ public class SpTableContract {
         public static final String COLUMN_TO_DATE = "toDate";
         public static final String COLUMN_DESCRIPTION = "description";
         public static final String COLUMN_ISLIFETIME = "isLifetime";
-        public static final String COLUMN_EXCEPTION_FREQUENCY_ID = "exFreqId";
-        public static final String COLUMN_EXCEPTION_FREQUENCY_COUNT = "exFreqCount";
-        public static final String COLUMN_EXCEPTION_FREQUENCY_COUNT_FINISHED = "exFreqCountFinished";
+        public static final String COLUMN_EXCEPTION_TARGET_ID = "exTargetId";
+        public static final String COLUMN_EXCEPTION_TARGET_COUNT = "exTargetCount";
+        public static final String COLUMN_EXCEPTION_TARGET_CURRENT_COUNT = "exTargetCurrentCount";
     }
 }

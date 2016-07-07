@@ -10,7 +10,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 public class SpDBHelper extends SQLiteOpenHelper {
 
     // If you change the database schema, you must increment the database version.
-    private static final int DATABASE_VERSION = 9;
+    private static final int DATABASE_VERSION = 10;
 
     static final String DATABASE_NAME = "sankalp.db";
 
@@ -51,9 +51,9 @@ public class SpDBHelper extends SQLiteOpenHelper {
             SpTableContract.SpSankalpTable.COLUMN_DESCRIPTION + " TEXT, " +
             SpTableContract.SpSankalpTable.COLUMN_CATEGORY_ID + " INTEGER NOT NULL, " +
             SpTableContract.SpSankalpTable.COLUMN_ISLIFETIME + " INTEGER NOT NULL, " +
-            SpTableContract.SpSankalpTable.COLUMN_EXCEPTION_FREQUENCY_ID + " INTEGER, " +
-            SpTableContract.SpSankalpTable.COLUMN_EXCEPTION_FREQUENCY_COUNT + " INTEGER, " +
-            SpTableContract.SpSankalpTable.COLUMN_EXCEPTION_FREQUENCY_COUNT_FINISHED + " INTEGER, " +
+            SpTableContract.SpSankalpTable.COLUMN_EXCEPTION_TARGET_ID + " INTEGER, " +
+            SpTableContract.SpSankalpTable.COLUMN_EXCEPTION_TARGET_COUNT + " INTEGER, " +
+            SpTableContract.SpSankalpTable.COLUMN_EXCEPTION_TARGET_CURRENT_COUNT + " INTEGER, " +
             // Set up the location column as a foreign key to location table.
             " FOREIGN KEY (" + SpTableContract.SpSankalpTable.COLUMN_CATEGORY_ID + ") REFERENCES " +
             SpTableContract.SpCategoryTable.TABLE_NAME + " (" + SpTableContract.SpCategoryTable._ID + "), " +

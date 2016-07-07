@@ -27,7 +27,7 @@ import com.ravijain.sankalp.data.SpCategoryItem;
 import com.ravijain.sankalp.data.SpContentProvider;
 import com.ravijain.sankalp.data.SpDataConstants;
 import com.ravijain.sankalp.data.SpDateUtils;
-import com.ravijain.sankalp.data.SpExceptionFrequency;
+import com.ravijain.sankalp.data.SpExceptionOrTarget;
 import com.ravijain.sankalp.data.SpSankalp;
 import com.ravijain.sankalp.data.SpSankalpFactory;
 
@@ -46,25 +46,26 @@ public class SpAddSankalpActivityFragment extends Fragment {
     private Spinner _categoriesSpinnerView;
     private Spinner _itemsSpinnerView;
     private Spinner _rangeLabelsSpinnerView;
-    private Spinner _exceptionsFrequencySpinnerView;
+
     private EditText _fromDateTextView;
     private EditText _toDateTextView;
     private EditText _descriptionView;
     private EditText _exceptionFrequencyCount;
     private TextView _rangeValueTextView;
     private View _fromToDateContainer;
-    private TextView _exceptionFrequencyTitleTextView;
 
-    private View _exception_frequency_count_finished_ll;
-    private TextView _exception_frequency_count_finished_label;
-    private EditText _exception_frequency_count_finished_tv;
+    private Spinner _exceptionsOrTargetSpinnerView;
+    private TextView _exceptionOrTargetTitleTextView;
+    private View _exceptionOrTargetCurrentCount_ll;
+    private TextView _exceptionOrTargetCurrentCount_label;
+    private EditText _exceptionOrTargetCurrentCount_tv;
 
     private DatePickerDialog _fromDatePickerDialog;
     private DatePickerDialog _toDatePickerDialog;
 
     private ArrayAdapter<SpCategory> _categoriesAdapter;
     private ArrayAdapter<SpCategoryItem> _itemsAdapter;
-    private ArrayAdapter<SpExceptionFrequency> _exceptionsFrequencyAdapter;
+    private ArrayAdapter<SpExceptionOrTarget> _exceptionsFrequencyAdapter;
 
     private Hashtable<Integer, Hashtable<String, SpCategory>> _categoriesTable;
     private Hashtable<Integer, Hashtable<String, SpCategoryItem>> _categoryItemsTable;
@@ -125,8 +126,7 @@ public class SpAddSankalpActivityFragment extends Fragment {
         if (id == R.id.action_addSankalp) {
             _addSankalp();
             return true;
-        }
-        else if (id == R.id.action_discardSankalp) {
+        } else if (id == R.id.action_discardSankalp) {
             _discardSankalp();
             return true;
         }
@@ -145,10 +145,10 @@ public class SpAddSankalpActivityFragment extends Fragment {
 
     private void _populateAndBindFormFields(View view) {
 
-        _exceptionFrequencyTitleTextView = (TextView) view.findViewById(R.id.spExceptionFrequencyTitle);
-        _exception_frequency_count_finished_ll = view.findViewById(R.id.exception_frequency_count_finished_ll);
-        _exception_frequency_count_finished_label = (TextView) view.findViewById(R.id.exception_frequency_count_finished_label);
-        _exception_frequency_count_finished_tv = (EditText) view.findViewById(R.id.exception_frequency_count_finished_tv);
+        _exceptionOrTargetTitleTextView = (TextView) view.findViewById(R.id.exceptionOrTargetTitle);
+        _exceptionOrTargetCurrentCount_ll = view.findViewById(R.id.exceptionOrTargetCurrentCount_ll);
+        _exceptionOrTargetCurrentCount_label = (TextView) view.findViewById(R.id.exceptionOrTargetCurrentCount_label);
+        _exceptionOrTargetCurrentCount_tv = (EditText) view.findViewById(R.id.exceptionOrTargetCurrentCount_tv);
 
         _sankalpRGView = (RadioGroup) view.findViewById(R.id.radioGroup_sankalp);
         _sankalpRGView.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
@@ -156,15 +156,15 @@ public class SpAddSankalpActivityFragment extends Fragment {
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 switch (checkedId) {
                     case R.id.radio_tyag:
-                        _exceptionFrequencyTitleTextView.setText(R.string.tyagExceptions);
-                        _exception_frequency_count_finished_label.setText(R.string.exception_left_label);
-                        _exception_frequency_count_finished_tv.setText("0");
+                        _exceptionOrTargetTitleTextView.setText(R.string.tyagExceptions);
+                        _exceptionOrTargetCurrentCount_label.setText(R.string.exception_left_label);
+                        //_exceptionOrTargetCurrentCount_tv.setText("0");
                         _populateCategories(SpDataConstants.SANKALP_TYPE_TYAG);
                         break;
                     case R.id.radio_niyam:
-                        _exceptionFrequencyTitleTextView.setText(R.string.niyamFrequency);
-                        _exception_frequency_count_finished_label.setText(R.string.frequency_done_label);
-                        _exception_frequency_count_finished_tv.setText("1");
+                        _exceptionOrTargetTitleTextView.setText(R.string.niyamFrequency);
+                        _exceptionOrTargetCurrentCount_label.setText(R.string.frequency_done_label);
+                        //_exceptionOrTargetCurrentCount_tv.setText("1");
                         _populateCategories(SpDataConstants.SANKALP_TYPE_NIYAM);
                         break;
                 }
@@ -179,7 +179,7 @@ public class SpAddSankalpActivityFragment extends Fragment {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
                 // your code here
-                _populateItems(((SpCategory)parentView.getSelectedItem()).getId());
+                _populateItems(((SpCategory) parentView.getSelectedItem()).getId());
             }
 
             @Override
@@ -222,34 +222,29 @@ public class SpAddSankalpActivityFragment extends Fragment {
                     _togglePeriodViewVisibility(false);
                     _setDate(_fromDateTextView, SpDateUtils.beginOfDate(today));
                     _setDate(_toDateTextView, SpDateUtils.endOfDate(today));
-                }
-                else if (label.equals(getString(R.string.thisDay))) {
+                } else if (label.equals(getString(R.string.thisDay))) {
                     _setDate(_fromDateTextView, SpDateUtils.beginOfDate(today));
                     _setDate(_toDateTextView, SpDateUtils.endOfDate(today));
                     _togglePeriodViewVisibility(true);
                     _rangeValueTextView.setText(SpDateUtils.getDayString(today));
 
-                }
-                else if (label.equals(getString(R.string.tomorrow))) {
+                } else if (label.equals(getString(R.string.tomorrow))) {
                     _togglePeriodViewVisibility(true);
                     Calendar nextDate = SpDateUtils.nextDate(today);
                     _setDate(_fromDateTextView, SpDateUtils.beginOfDate(nextDate));
                     _setDate(_toDateTextView, SpDateUtils.endOfDate(nextDate));
                     _rangeValueTextView.setText(SpDateUtils.getDayString(nextDate));
-                }
-                else if (label.equals(getString(R.string.thisMonth))) {
+                } else if (label.equals(getString(R.string.thisMonth))) {
                     _togglePeriodViewVisibility(true);
                     _setDate(_fromDateTextView, SpDateUtils.beginOfMonth(today));
                     _setDate(_toDateTextView, SpDateUtils.endOfMonth(today));
                     _rangeValueTextView.setText(SpDateUtils.getMonthString(today));
-                }
-                else if (label.equals(getString(R.string.thisYear))) {
+                } else if (label.equals(getString(R.string.thisYear))) {
                     _togglePeriodViewVisibility(true);
                     _setDate(_fromDateTextView, SpDateUtils.beginOfYear(today));
                     _setDate(_toDateTextView, SpDateUtils.endOfYear(today));
                     _rangeValueTextView.setText(SpDateUtils.yearOfDate(today));
-                }
-                else if (label.equals(getString(R.string.Lifetime))) {
+                } else if (label.equals(getString(R.string.Lifetime))) {
                     _togglePeriodViewVisibility(true);
                     _fromDate = null;
                     _toDate = null;
@@ -268,12 +263,12 @@ public class SpAddSankalpActivityFragment extends Fragment {
 
         });
 
-        _exceptionsFrequencySpinnerView = (Spinner) view.findViewById(R.id.exception_frequency_spinner);
-        _exceptionsFrequencyAdapter = new ArrayAdapter<SpExceptionFrequency>(getContext(), R.layout.spinner_item,
+        _exceptionsOrTargetSpinnerView = (Spinner) view.findViewById(R.id.exceptionOrTarget_spinner);
+        _exceptionsFrequencyAdapter = new ArrayAdapter<SpExceptionOrTarget>(getContext(), R.layout.spinner_item,
                 _getExceptionFrequencyList(null));
         _exceptionsFrequencyAdapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
-        _exceptionsFrequencySpinnerView.setAdapter(_exceptionsFrequencyAdapter);
-        _exceptionsFrequencySpinnerView.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        _exceptionsOrTargetSpinnerView.setAdapter(_exceptionsFrequencyAdapter);
+        _exceptionsOrTargetSpinnerView.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
             }
@@ -284,7 +279,7 @@ public class SpAddSankalpActivityFragment extends Fragment {
             }
 
         });
-        _exceptionFrequencyCount = (EditText) view.findViewById(R.id.exception_frequency_count_textView);
+        _exceptionFrequencyCount = (EditText) view.findViewById(R.id.exceptionOrTargetCount_textView);
         _exceptionFrequencyCount.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -297,27 +292,15 @@ public class SpAddSankalpActivityFragment extends Fragment {
                 int newCount;
                 if (s.equals("")) {
                     newCount = 0;
-                }
-                else {
+                } else {
                     newCount = Integer.valueOf(charSequence.toString());
                 }
                 if (newCount > 0) {
-                    _exception_frequency_count_finished_ll.setVisibility(View.VISIBLE);
-                    int id = _sankalpRGView.getCheckedRadioButtonId();
-                    int count = 0;
-                    switch (id) {
-                        case R.id.radio_tyag:
-                            count = newCount;
-                            break;
-                        case R.id.radio_niyam:
-                            count = 0;
-                            break;
-                    }
-                    _exception_frequency_count_finished_tv.setText(String.valueOf(count));
-                }
-                else {
-                    _exception_frequency_count_finished_ll.setVisibility(View.GONE);
-                    _exception_frequency_count_finished_tv.setText("");
+                    _exceptionOrTargetCurrentCount_ll.setVisibility(View.VISIBLE);
+                    _exceptionOrTargetCurrentCount_tv.setText(String.valueOf(0));
+                } else {
+                    _exceptionOrTargetCurrentCount_ll.setVisibility(View.GONE);
+                    _exceptionOrTargetCurrentCount_tv.setText("");
                 }
             }
 
@@ -340,8 +323,7 @@ public class SpAddSankalpActivityFragment extends Fragment {
 
     }
 
-    private void _addSankalp()
-    {
+    private void _addSankalp() {
         int id = _sankalpRGView.getCheckedRadioButtonId();
         int sankalpType = -1;
         switch (id) {
@@ -353,75 +335,74 @@ public class SpAddSankalpActivityFragment extends Fragment {
                 break;
         }
 
-        int categoryId = ((SpCategory)_categoriesSpinnerView.getSelectedItem()).getId();
-        int itemId = ((SpCategoryItem)_itemsSpinnerView.getSelectedItem()).getId();
+        int categoryId = ((SpCategory) _categoriesSpinnerView.getSelectedItem()).getId();
+        int itemId = ((SpCategoryItem) _itemsSpinnerView.getSelectedItem()).getId();
 
         SpSankalp sankalp = SpSankalpFactory.getNewSankalp(sankalpType, categoryId, itemId);
         sankalp.setFromDate(_fromDate);
         sankalp.setToDate(_toDate);
-        if ( _rangeValueTextView.getText().equals(getString(R.string.Lifetime))) {
+        if (_rangeValueTextView.getText().equals(getString(R.string.Lifetime))) {
             sankalp.setLifetime(SpDataConstants.SANKALP_IS_LIFTIME_TRUE);
         }
 
+        SpExceptionOrTarget exceptionOrTarget = new SpExceptionOrTarget(SpExceptionOrTarget.EXCEPTION_OR_TARGET_UNDEFINED, getContext());
         String count = _exceptionFrequencyCount.getText().toString();
-        if (count.equals("") || (count.equals("0") && sankalpType == SpDataConstants.SANKALP_TYPE_NIYAM)) {
-            sankalp.setExceptionFrequencyId(SpExceptionFrequency.FREQUENCY_UNDEFINED);
-        }
-        else {
-            sankalp.setExceptionFrequencyCount(Integer.valueOf(count));
-            sankalp.setExceptionFrequencyId(((SpExceptionFrequency)_exceptionsFrequencySpinnerView.getSelectedItem()).getId());
-            if (!_exception_frequency_count_finished_tv.getText().equals(""))
-            {
-                sankalp.setExceptionFrequencyCountFinished(Integer.valueOf(_exception_frequency_count_finished_tv.getText().toString()));
+        if (count != "") {
+            int countValue = Integer.valueOf(count);
+            if (countValue == 0 && sankalpType == SpDataConstants.SANKALP_TYPE_TYAG) {
+                exceptionOrTarget.setId(SpExceptionOrTarget.EXCEPTION_OR_TARGET_TOTAL);
+            }
+            else {
+                exceptionOrTarget.setExceptionOrTargetCount(countValue);
+                exceptionOrTarget.setId(((SpExceptionOrTarget) _exceptionsOrTargetSpinnerView.getSelectedItem()).getId());
+            }
+
+            String currentCount = _exceptionOrTargetCurrentCount_tv.getText().toString();
+            if (!currentCount.equals("")) {
+                exceptionOrTarget.setExceptionOrTargetCountCurrent(Integer.valueOf(currentCount));
             }
         }
 
+        sankalp.setExceptionOrTarget(exceptionOrTarget);
         sankalp.setDescription(_descriptionView.getText().toString());
 
         SpContentProvider.getInstance(getContext()).addSankalp(sankalp);
         NavUtils.navigateUpFromSameTask(getActivity());
     }
 
-    private void _discardSankalp()
-    {
+    private void _discardSankalp() {
         NavUtils.navigateUpFromSameTask(getActivity());
     }
 
-    private void _togglePeriodViewVisibility(boolean isLabelVisible)
-    {
+    private void _togglePeriodViewVisibility(boolean isLabelVisible) {
         if (isLabelVisible) {
             _rangeValueTextView.setVisibility(View.VISIBLE);
             _fromToDateContainer.setVisibility(View.GONE);
-        }
-        else {
+        } else {
             _rangeValueTextView.setVisibility(View.GONE);
             _fromToDateContainer.setVisibility(View.VISIBLE);
         }
 
     }
 
-    private ArrayList<SpExceptionFrequency> _getExceptionFrequencyList(String range)
-    {
-        ArrayList<SpExceptionFrequency> frequencies = new ArrayList<SpExceptionFrequency>();
-        frequencies.add(new SpExceptionFrequency(SpExceptionFrequency.FREQUENCY_TOTAL, getContext()));
+    private ArrayList<SpExceptionOrTarget> _getExceptionFrequencyList(String range) {
+        ArrayList<SpExceptionOrTarget> frequencies = new ArrayList<SpExceptionOrTarget>();
+        frequencies.add(new SpExceptionOrTarget(SpExceptionOrTarget.EXCEPTION_OR_TARGET_TOTAL, getContext()));
         if (range != null) {
             if (range.equals(getString(R.string.Range))) {
                 // Add date maths logic
-            }
-            else if (range.equals(getString(R.string.thisMonth))) {
-                frequencies.add(new SpExceptionFrequency(SpExceptionFrequency.FREQUENCY_WEEKLY, getContext()));
-                frequencies.add(new SpExceptionFrequency(SpExceptionFrequency.FREQUENCY_DAILY, getContext()));
-            }
-            else if (range.equals(getString(R.string.thisYear))) {
-                frequencies.add(new SpExceptionFrequency(SpExceptionFrequency.FREQUENCY_MONTHLY, getContext()));
-                frequencies.add(new SpExceptionFrequency(SpExceptionFrequency.FREQUENCY_WEEKLY, getContext()));
-                frequencies.add(new SpExceptionFrequency(SpExceptionFrequency.FREQUENCY_DAILY, getContext()));
-            }
-            else if (range.equals(getString(R.string.Lifetime))) {
-                frequencies.add(new SpExceptionFrequency(SpExceptionFrequency.FREQUENCY_YEARLY, getContext()));
-                frequencies.add(new SpExceptionFrequency(SpExceptionFrequency.FREQUENCY_MONTHLY, getContext()));
-                frequencies.add(new SpExceptionFrequency(SpExceptionFrequency.FREQUENCY_WEEKLY, getContext()));
-                frequencies.add(new SpExceptionFrequency(SpExceptionFrequency.FREQUENCY_DAILY, getContext()));
+            } else if (range.equals(getString(R.string.thisMonth))) {
+                frequencies.add(new SpExceptionOrTarget(SpExceptionOrTarget.EXCEPTION_OR_TARGET_WEEKLY, getContext()));
+                frequencies.add(new SpExceptionOrTarget(SpExceptionOrTarget.EXCEPTION_OR_TARGET_DAILY, getContext()));
+            } else if (range.equals(getString(R.string.thisYear))) {
+                frequencies.add(new SpExceptionOrTarget(SpExceptionOrTarget.EXCEPTION_OR_TARGET_MONTHLY, getContext()));
+                frequencies.add(new SpExceptionOrTarget(SpExceptionOrTarget.EXCEPTION_OR_TARGET_WEEKLY, getContext()));
+                frequencies.add(new SpExceptionOrTarget(SpExceptionOrTarget.EXCEPTION_OR_TARGET_DAILY, getContext()));
+            } else if (range.equals(getString(R.string.Lifetime))) {
+                frequencies.add(new SpExceptionOrTarget(SpExceptionOrTarget.EXCEPTION_OR_TARGET_YEARLY, getContext()));
+                frequencies.add(new SpExceptionOrTarget(SpExceptionOrTarget.EXCEPTION_OR_TARGET_MONTHLY, getContext()));
+                frequencies.add(new SpExceptionOrTarget(SpExceptionOrTarget.EXCEPTION_OR_TARGET_WEEKLY, getContext()));
+                frequencies.add(new SpExceptionOrTarget(SpExceptionOrTarget.EXCEPTION_OR_TARGET_DAILY, getContext()));
             }
         }
         return frequencies;
@@ -466,8 +447,7 @@ public class SpAddSankalpActivityFragment extends Fragment {
         _setDate(dateTextView, cal.getTime());
     }
 
-    private void _setDate(EditText dateTextView, Date date)
-    {
+    private void _setDate(EditText dateTextView, Date date) {
         if (dateTextView == _fromDateTextView) {
             _fromDate = date;
         } else if (dateTextView == _toDateTextView) {

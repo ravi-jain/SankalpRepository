@@ -114,7 +114,7 @@
         </LinearLayout>
 
         <TextView
-            android:id="@+id/spExceptionFrequencyTitle"
+            android:id="@+id/exceptionOrTargetTitle"
             style="@style/SpLabel"
             android:paddingTop="@dimen/activity_vertical_margin"
             android:text="@string/tyagExceptions" />
@@ -127,32 +127,32 @@
             android:weightSum="1">
 
             <Spinner
-                android:id="@+id/exception_frequency_spinner"
+                android:id="@+id/exceptionOrTarget_spinner"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:spinnerMode="dropdown" />
 
             <EditText
-                android:id="@+id/exception_frequency_count_textView"
+                android:id="@+id/exceptionOrTargetCount_textView"
                 style="@style/SpText"
                 android:text="0"
                 android:inputType="number" />
         </LinearLayout>
 
         <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-            android:id="@+id/exception_frequency_count_finished_ll"
+            android:id="@+id/exceptionOrTargetCurrentCount_ll"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:visibility="gone"
             android:weightSum="1">
 
             <TextView
-                android:id="@+id/exception_frequency_count_finished_label"
+                android:id="@+id/exceptionOrTargetCurrentCount_label"
                 android:text="@string/exception_left_label"
                style="@style/SpText" />
 
             <EditText
-                android:id="@+id/exception_frequency_count_finished_tv"
+                android:id="@+id/exceptionOrTargetCurrentCount_tv"
                 style="@style/SpText"
                 android:inputType="number" />
         </LinearLayout>

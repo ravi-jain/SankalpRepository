@@ -14,44 +14,24 @@ public class SpSankalp {
     private Date _toDate;
     private String _description;
     private Date _creationDate;
-    private int _exceptionFrequencyId;
-    private int _exceptionFrequencyCount;
-    private int _exceptionFrequencyCountFinished;
+    private SpExceptionOrTarget _exceptionOrTarget;
     private int _isLifetime = SpDataConstants.SANKALP_IS_LIFTIME_FALSE;
 
-    public SpSankalp(int categoryId, int itemId)
-    {
+    public SpSankalp(int categoryId, int itemId) {
         _categoryID = categoryId;
         _itemId = itemId;
     }
 
-    public SpSankalp()
-    {
+    public SpSankalp() {
 
     }
 
-    public int getExceptionFrequencyCountFinished() {
-        return _exceptionFrequencyCountFinished;
+    public SpExceptionOrTarget getExceptionOrTarget() {
+        return _exceptionOrTarget;
     }
 
-    public void setExceptionFrequencyCountFinished(int exceptionFrequencyCountFinished) {
-        this._exceptionFrequencyCountFinished = exceptionFrequencyCountFinished;
-    }
-
-    public int getExceptionFrequencyCount() {
-        return _exceptionFrequencyCount;
-    }
-
-    public void setExceptionFrequencyCount(int exceptionFrequencyCount) {
-        this._exceptionFrequencyCount = exceptionFrequencyCount;
-    }
-
-    public int getExceptionFrequencyId() {
-        return _exceptionFrequencyId;
-    }
-
-    public void setExceptionFrequencyId(int exceptionFrequencyId) {
-        this._exceptionFrequencyId = exceptionFrequencyId;
+    public void setExceptionOrTarget(SpExceptionOrTarget exceptionOrTarget) {
+        this._exceptionOrTarget = exceptionOrTarget;
     }
 
     public int getId() {
