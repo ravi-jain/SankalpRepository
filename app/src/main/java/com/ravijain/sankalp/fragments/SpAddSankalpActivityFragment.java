@@ -5,6 +5,8 @@ import android.os.AsyncTask;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -52,6 +54,10 @@ public class SpAddSankalpActivityFragment extends Fragment {
     private TextView _rangeValueTextView;
     private View _fromToDateContainer;
     private TextView _exceptionFrequencyTitleTextView;
+
+    private View _exception_frequency_count_finished_ll;
+    private TextView _exception_frequency_count_finished_label;
+    private EditText _exception_frequency_count_finished_tv;
 
     private DatePickerDialog _fromDatePickerDialog;
     private DatePickerDialog _toDatePickerDialog;
@@ -140,6 +146,10 @@ public class SpAddSankalpActivityFragment extends Fragment {
     private void _populateAndBindFormFields(View view) {
 
         _exceptionFrequencyTitleTextView = (TextView) view.findViewById(R.id.spExceptionFrequencyTitle);
+        _exception_frequency_count_finished_ll = view.findViewById(R.id.exception_frequency_count_finished_ll);
+        _exception_frequency_count_finished_label = (TextView) view.findViewById(R.id.exception_frequency_count_finished_label);
+        _exception_frequency_count_finished_tv = (EditText) view.findViewById(R.id.exception_frequency_count_finished_tv);
+
         _sankalpRGView = (RadioGroup) view.findViewById(R.id.radioGroup_sankalp);
         _sankalpRGView.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
@@ -147,10 +157,14 @@ public class SpAddSankalpActivityFragment extends Fragment {
                 switch (checkedId) {
                     case R.id.radio_tyag:
                         _exceptionFrequencyTitleTextView.setText(R.string.tyagExceptions);
+                        _exception_frequency_count_finished_label.setText(R.string.exception_left_label);
+                        _exception_frequency_count_finished_tv.setText("0");
                         _populateCategories(SpDataConstants.SANKALP_TYPE_TYAG);
                         break;
                     case R.id.radio_niyam:
                         _exceptionFrequencyTitleTextView.setText(R.string.niyamFrequency);
+                        _exception_frequency_count_finished_label.setText(R.string.frequency_done_label);
+                        _exception_frequency_count_finished_tv.setText("1");
                         _populateCategories(SpDataConstants.SANKALP_TYPE_NIYAM);
                         break;
                 }
@@ -271,6 +285,47 @@ public class SpAddSankalpActivityFragment extends Fragment {
 
         });
         _exceptionFrequencyCount = (EditText) view.findViewById(R.id.exception_frequency_count_textView);
+        _exceptionFrequencyCount.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                String s = charSequence.toString();
+                int newCount;
+                if (s.equals("")) {
+                    newCount = 0;
+                }
+                else {
+                    newCount = Integer.valueOf(charSequence.toString());
+                }
+                if (newCount > 0) {
+                    _exception_frequency_count_finished_ll.setVisibility(View.VISIBLE);
+                    int id = _sankalpRGView.getCheckedRadioButtonId();
+                    int count = 0;
+                    switch (id) {
+                        case R.id.radio_tyag:
+                            count = newCount;
+                            break;
+                        case R.id.radio_niyam:
+                            count = 0;
+                            break;
+                    }
+                    _exception_frequency_count_finished_tv.setText(String.valueOf(count));
+                }
+                else {
+                    _exception_frequency_count_finished_ll.setVisibility(View.GONE);
+                    _exception_frequency_count_finished_tv.setText("");
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
 
         _fromDateTextView = (EditText) view.findViewById(R.id.fromdate_textView);
         _toDateTextView = (EditText) view.findViewById(R.id.todate_textView);
@@ -309,12 +364,16 @@ public class SpAddSankalpActivityFragment extends Fragment {
         }
 
         String count = _exceptionFrequencyCount.getText().toString();
-        if (!(count.equals("") || count.equals("0"))) {
+        if (count.equals("") || (count.equals("0") && sankalpType == SpDataConstants.SANKALP_TYPE_NIYAM)) {
             sankalp.setExceptionFrequencyId(SpExceptionFrequency.FREQUENCY_UNDEFINED);
         }
         else {
             sankalp.setExceptionFrequencyCount(Integer.valueOf(count));
             sankalp.setExceptionFrequencyId(((SpExceptionFrequency)_exceptionsFrequencySpinnerView.getSelectedItem()).getId());
+            if (!_exception_frequency_count_finished_tv.getText().equals(""))
+            {
+                sankalp.setExceptionFrequencyCountFinished(Integer.valueOf(_exception_frequency_count_finished_tv.getText().toString()));
+            }
         }
 
         sankalp.setDescription(_descriptionView.getText().toString());

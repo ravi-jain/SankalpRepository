@@ -16,6 +16,7 @@ public class SpSankalp {
     private Date _creationDate;
     private int _exceptionFrequencyId;
     private int _exceptionFrequencyCount;
+    private int _exceptionFrequencyCountFinished;
     private int _isLifetime = SpDataConstants.SANKALP_IS_LIFTIME_FALSE;
 
     public SpSankalp(int categoryId, int itemId)
@@ -27,6 +28,14 @@ public class SpSankalp {
     public SpSankalp()
     {
 
+    }
+
+    public int getExceptionFrequencyCountFinished() {
+        return _exceptionFrequencyCountFinished;
+    }
+
+    public void setExceptionFrequencyCountFinished(int exceptionFrequencyCountFinished) {
+        this._exceptionFrequencyCountFinished = exceptionFrequencyCountFinished;
     }
 
     public int getExceptionFrequencyCount() {

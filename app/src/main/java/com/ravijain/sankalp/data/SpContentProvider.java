@@ -236,6 +236,7 @@ public class SpContentProvider {
         }
         values.put(SpTableContract.SpSankalpTable.COLUMN_EXCEPTION_FREQUENCY_ID, sankalp.getExceptionFrequencyId());
         values.put(SpTableContract.SpSankalpTable.COLUMN_EXCEPTION_FREQUENCY_COUNT, sankalp.getExceptionFrequencyCount());
+        values.put(SpTableContract.SpSankalpTable.COLUMN_EXCEPTION_FREQUENCY_COUNT_FINISHED, sankalp.getExceptionFrequencyCountFinished());
         values.put(SpTableContract.SpSankalpTable.COLUMN_DESCRIPTION, sankalp.getDescription());
 
         String tableName = null;
@@ -288,6 +289,13 @@ public class SpContentProvider {
                     long toDate = cursor.getLong(toDateColIndex);
                     sankalp.setToDate(new Date(toDate));
                 }
+
+                int exceptionFrequencyId = cursor.getInt(cursor.getColumnIndexOrThrow(SpTableContract.SpSankalpTable.COLUMN_EXCEPTION_FREQUENCY_ID));
+                int exceptionFrequencyCount = cursor.getInt(cursor.getColumnIndexOrThrow(SpTableContract.SpSankalpTable.COLUMN_EXCEPTION_FREQUENCY_COUNT));
+                int exceptionFrequencyCountFinished = cursor.getInt(cursor.getColumnIndexOrThrow(SpTableContract.SpSankalpTable.COLUMN_EXCEPTION_FREQUENCY_COUNT_FINISHED));
+                sankalp.setExceptionFrequencyId(exceptionFrequencyId);
+                sankalp.setExceptionFrequencyCount(exceptionFrequencyCount);
+                sankalp.setExceptionFrequencyCountFinished(exceptionFrequencyCountFinished);
 
                 String description = cursor.getString(cursor.getColumnIndexOrThrow(SpTableContract.SpSankalpTable.COLUMN_DESCRIPTION));
                 sankalp.setDescription(description);

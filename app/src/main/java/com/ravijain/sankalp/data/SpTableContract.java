@@ -58,5 +58,6 @@ public class SpTableContract {
         public static final String COLUMN_ISLIFETIME = "isLifetime";
         public static final String COLUMN_EXCEPTION_FREQUENCY_ID = "exFreqId";
         public static final String COLUMN_EXCEPTION_FREQUENCY_COUNT = "exFreqCount";
+        public static final String COLUMN_EXCEPTION_FREQUENCY_COUNT_FINISHED = "exFreqCountFinished";
     }
 }
