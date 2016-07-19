@@ -5,10 +5,15 @@ import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.os.AsyncTask;
 import android.os.Build;
+import android.support.design.widget.TextInputLayout;
+import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -20,11 +25,11 @@ import com.ravijain.sankalp.data.SpUser;
 public class SpUserSetupActivity extends AppCompatActivity {
 
     // UI references.
-    private EditText mEmailView;
-    private EditText mNameView;
-    private EditText mMobileView;
-    private View mProgressView;
-    private View mUserSetUpView;
+    private EditText _mEmailView, _mNameView, _mMobileView;
+    private TextInputLayout _inputLayoutName, _inputLayoutEmail, _inputLayoutMobile;
+
+    private View _mProgressView;
+    private View _mUserSetUpView;
 
     private UserRegisterTask mRegisterTask = null;
 
@@ -33,9 +38,17 @@ public class SpUserSetupActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_setup);
 
-        mNameView = (EditText) findViewById(R.id.userName);
-        mMobileView = (EditText) findViewById(R.id.userMobile);
-        mEmailView = (EditText) findViewById(R.id.userEmail);
+        _mNameView = (EditText) findViewById(R.id.userName);
+        _mMobileView = (EditText) findViewById(R.id.userMobile);
+        _mEmailView = (EditText) findViewById(R.id.userEmail);
+
+        _inputLayoutName = (TextInputLayout) findViewById(R.id.input_layout_name);
+        _inputLayoutEmail = (TextInputLayout) findViewById(R.id.input_layout_email);
+        _inputLayoutMobile = (TextInputLayout) findViewById(R.id.input_layout_mobile);
+
+        _mNameView.addTextChangedListener(new FormInputTextWatcher(_mNameView));
+        _mMobileView.addTextChangedListener(new FormInputTextWatcher(_mMobileView));
+        _mEmailView.addTextChangedListener(new FormInputTextWatcher(_mEmailView));
 
         Button mEmailSignInButton = (Button) findViewById(R.id.userRegister_button);
         mEmailSignInButton.setOnClickListener(new View.OnClickListener() {
@@ -45,8 +58,8 @@ public class SpUserSetupActivity extends AppCompatActivity {
             }
         });
 
-        mUserSetUpView = findViewById(R.id.userSetup_form);
-        mProgressView = findViewById(R.id.userSetup_progress);
+        _mUserSetUpView = findViewById(R.id.userSetup_form);
+        _mProgressView = findViewById(R.id.userSetup_progress);
     }
 
     private void _registerUser() {
@@ -55,74 +68,34 @@ public class SpUserSetupActivity extends AppCompatActivity {
                 return;
             }
 
+            if (!_validateName()) {
+                return;
+            }
+
+            if (!_validateEmail()) {
+                return;
+            }
+
+            if (!_validateMobile()) {
+                return;
+            }
+
             // Reset errors.
-            mEmailView.setError(null);
-            mMobileView.setError(null);
-            mNameView.setError(null);
+            _mEmailView.setError(null);
+            _mMobileView.setError(null);
+            _mNameView.setError(null);
 
             // Store values at the time of the login attempt.
-            String name = mNameView.getText().toString();
-            String mobile = mMobileView.getText().toString();
-            String email = mEmailView.getText().toString();
+            String name = _mNameView.getText().toString();
+            String mobile = _mMobileView.getText().toString();
+            String email = _mEmailView.getText().toString();
 
-            boolean cancel = false;
-            View focusView = null;
-
-            // Check for a valid email address.
-            if (TextUtils.isEmpty(name)) {
-                mNameView.setError(getString(R.string.error_field_required));
-                focusView = mNameView;
-                cancel = true;
-            } else if (!_isNameValid(name)) {
-                mNameView.setError(getString(R.string.error_invalid_email));
-                focusView = mNameView;
-                cancel = true;
-            }
-            if (TextUtils.isEmpty(mobile)) {
-                mMobileView.setError(getString(R.string.error_field_required));
-                focusView = mMobileView;
-                cancel = true;
-            } else if (!_isMobileValid(mobile)) {
-                mMobileView.setError(getString(R.string.error_invalid_email));
-                focusView = mMobileView;
-                cancel = true;
-            }
-            if (TextUtils.isEmpty(email)) {
-                mEmailView.setError(getString(R.string.error_field_required));
-                focusView = mEmailView;
-                cancel = true;
-            } else if (!_isEmailValid(email)) {
-                mEmailView.setError(getString(R.string.error_invalid_email));
-                focusView = mEmailView;
-                cancel = true;
-            }
-
-            if (cancel) {
-                // There was an error; don't attempt login and focus the first
-                // form field with an error.
-                focusView.requestFocus();
-            } else {
-                // Show a progress spinner, and kick off a background task to
-                // perform the user login attempt.
-                _showProgress(true);
-                mRegisterTask = new UserRegisterTask(new SpUser(name, mobile, email));
-                mRegisterTask.execute((Void) null);
-            }
+            // Show a progress spinner, and kick off a background task to
+            // perform the user login attempt.
+            _showProgress(true);
+            mRegisterTask = new UserRegisterTask(new SpUser(name, mobile, email));
+            mRegisterTask.execute((Void) null);
         }
-    }
-
-    private boolean _isEmailValid(String email) {
-        //TODO: Replace this with your own logic
-        return email.contains("@");
-    }
-
-    private boolean _isNameValid(String name) {
-        //TODO: Replace this with your own logic
-        return true;
-    }
-    private boolean _isMobileValid(String mobile) {
-        //TODO: Replace this with your own logic
-        return true;
     }
 
     /**
@@ -136,31 +109,113 @@ public class SpUserSetupActivity extends AppCompatActivity {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
             int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
 
-            mUserSetUpView.setVisibility(show ? View.GONE : View.VISIBLE);
-            mUserSetUpView.animate().setDuration(shortAnimTime).alpha(
+            _mUserSetUpView.setVisibility(show ? View.GONE : View.VISIBLE);
+            _mUserSetUpView.animate().setDuration(shortAnimTime).alpha(
                     show ? 0 : 1).setListener(new AnimatorListenerAdapter() {
                 @Override
                 public void onAnimationEnd(Animator animation) {
-                    mUserSetUpView.setVisibility(show ? View.GONE : View.VISIBLE);
+                    _mUserSetUpView.setVisibility(show ? View.GONE : View.VISIBLE);
                 }
             });
 
-            mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
-            mProgressView.animate().setDuration(shortAnimTime).alpha(
+            _mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
+            _mProgressView.animate().setDuration(shortAnimTime).alpha(
                     show ? 1 : 0).setListener(new AnimatorListenerAdapter() {
                 @Override
                 public void onAnimationEnd(Animator animation) {
-                    mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
+                    _mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
                 }
             });
         } else {
             // The ViewPropertyAnimator APIs are not available, so simply show
             // and hide the relevant UI components.
-            mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
-            mUserSetUpView.setVisibility(show ? View.GONE : View.VISIBLE);
+            _mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
+            _mUserSetUpView.setVisibility(show ? View.GONE : View.VISIBLE);
         }
     }
 
+    private boolean _validateName() {
+        if (_mNameView.getText().toString().trim().isEmpty()) {
+            _inputLayoutName.setError(getString(R.string.err_msg_name));
+            requestFocus(_mNameView);
+            return false;
+        } else {
+            _inputLayoutName.setErrorEnabled(false);
+        }
+
+        return true;
+    }
+
+    private boolean _validateEmail() {
+        String email = _mEmailView.getText().toString().trim();
+
+        if (email.isEmpty() || !isValidEmail(email)) {
+            _inputLayoutEmail.setError(getString(R.string.err_msg_email));
+            requestFocus(_mEmailView);
+            return false;
+        } else {
+            _inputLayoutEmail.setErrorEnabled(false);
+        }
+
+        return true;
+    }
+
+    private boolean _validateMobile() {
+        if (_mMobileView.getText().toString().trim().isEmpty()) {
+            _inputLayoutMobile.setError(getString(R.string.err_msg_mobile));
+            requestFocus(_mMobileView);
+            return false;
+        } else {
+            _inputLayoutMobile.setErrorEnabled(false);
+        }
+
+        return true;
+    }
+
+    private static boolean isValidEmail(String email) {
+        return !TextUtils.isEmpty(email) && android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
+    }
+
+    private void requestFocus(View view) {
+        if (view.requestFocus()) {
+            getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+        }
+    }
+
+
+    private void _handleSuccessfulRegistration() {
+        Toast.makeText(getApplicationContext(), "Registration Complete", Toast.LENGTH_SHORT).show();
+        NavUtils.navigateUpFromSameTask(this);
+    }
+
+    private class FormInputTextWatcher implements TextWatcher {
+
+        private View view;
+
+        private FormInputTextWatcher(View view) {
+            this.view = view;
+        }
+
+        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+        }
+
+        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+        }
+
+        public void afterTextChanged(Editable editable) {
+            switch (view.getId()) {
+                case R.id.userName:
+                    _validateName();
+                    break;
+                case R.id.userEmail:
+                    _validateEmail();
+                    break;
+                case R.id.userMobile:
+                    _validateMobile();
+                    break;
+            }
+        }
+    }
 
     /**
      * Represents an asynchronous login/registration task used to authenticate
@@ -179,7 +234,7 @@ public class SpUserSetupActivity extends AppCompatActivity {
             // TODO: attempt authentication against a network service.
 
             SpContentProvider provider = SpContentProvider.getInstance(getApplicationContext());
-            provider.addUser(_user);
+            //provider.addUser(_user);
             return true;
         }
 
@@ -189,7 +244,7 @@ public class SpUserSetupActivity extends AppCompatActivity {
             _showProgress(false);
 
             if (success) {
-                Toast.makeText(getApplicationContext(), "Registration Complete", Toast.LENGTH_SHORT).show();
+                _handleSuccessfulRegistration();
             } else {
                 // Error
             }

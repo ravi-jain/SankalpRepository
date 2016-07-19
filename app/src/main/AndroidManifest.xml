@@ -48,8 +48,22 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.ravijain.sankalp.activities.SpMainActivity" />
         </activity>
-        <activity android:name=".activities.SpUserSetupActivity"
-            android:label="@string/title_activity_user_setup"></activity>
+        <activity
+            android:name=".activities.SpUserSetupActivity"
+            android:label="@string/title_activity_user_setup">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.ravijain.sankalp.activities.SpMainActivity" />
+        </activity>
+        <activity
+            android:name=".activities.SpSankalpDetailsActivity"
+            android:label="@string/Details">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.ravijain.sankalp.activities.SpSankalpList" />
+
+
+        </activity>
     </application>
 
 </manifest>

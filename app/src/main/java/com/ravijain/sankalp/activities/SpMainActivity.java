@@ -21,7 +21,8 @@ public class SpMainActivity extends AppCompatActivity {
         SpContentProvider provider = SpContentProvider.getInstance(getApplicationContext());
         SpUser user = provider.getUser();
         Fragment fragment;
-        if (user == null) {
+        boolean forceUserScreen = false;
+        if (forceUserScreen || user == null) {
             Intent intent = new Intent(this, SpUserSetupActivity.class);
             startActivity(intent);
         }

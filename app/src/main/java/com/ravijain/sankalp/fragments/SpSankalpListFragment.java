@@ -2,9 +2,7 @@ package com.ravijain.sankalp.fragments;
 
 import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
 import android.os.AsyncTask;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.util.SparseBooleanArray;
@@ -16,14 +14,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.ravijain.sankalp.R;
-import com.ravijain.sankalp.activities.SpAddSankalpActivity;
 import com.ravijain.sankalp.activities.SpConstants;
-import com.ravijain.sankalp.data.SpCategory;
+import com.ravijain.sankalp.activities.SpSankalpDetailsActivity;
 import com.ravijain.sankalp.data.SpCategoryItem;
 import com.ravijain.sankalp.data.SpContentProvider;
 import com.ravijain.sankalp.data.SpDataConstants;
@@ -71,6 +69,18 @@ public class SpSankalpListFragment extends Fragment {
         SpMultiNodeChoiceListener listener = new SpMultiNodeChoiceListener();
         _sankalpListView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
         _sankalpListView.setMultiChoiceModeListener(listener);
+        _sankalpListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                SpSankalp sankalp = (SpSankalp)adapterView.getItemAtPosition(position);
+                Bundle args = new Bundle();
+                //args.putParcelable(SpConstants.INTENT_KEY_SANKALP, sankalp);
+                Intent intent = new Intent(getActivity(), SpSankalpDetailsActivity.class);
+                intent.putExtra(SpConstants.INTENT_KEY_SANKALP_TYPE, _sankalpType);
+                intent.putExtra(SpConstants.INTENT_KEY_SANKALP_ID, sankalp.getId());
+                startActivity(intent);
+            }
+        });
 
 //        FloatingActionButton fab = (FloatingActionButton) rootView.findViewById(R.id.addSankalpButton);
 //        fab.setOnClickListener(new View.OnClickListener() {
@@ -213,7 +223,7 @@ public class SpSankalpListFragment extends Fragment {
         @Override
         public boolean onCreateActionMode(ActionMode actionMode, Menu menu) {
             MenuInflater inflater = actionMode.getMenuInflater();
-            inflater.inflate(R.menu.menu_dashboard_context, menu);
+            inflater.inflate(R.menu.menu_list_context, menu);
             return true;
         }
 

@@ -10,6 +10,7 @@ public interface SpDataConstants {
     public static final String CATEGORY_NAME_ENTERTAINMENT = "Entertainment";
     public static final String CATEGORY_NAME_TRAVEL = "Travel";
     public static final String CATEGORY_NAME_DHARMA = "Dharma";
+    public static final String CATEGORY_OTHERS = "Others";
     public static final int SANKALP_TYPE_TYAG = 0;
     public static final int SANKALP_TYPE_NIYAM = 1;
     public static final int SANKALP_TYPE_BOTH = 2;

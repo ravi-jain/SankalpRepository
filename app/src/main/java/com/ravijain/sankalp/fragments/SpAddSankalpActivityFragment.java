@@ -422,6 +422,11 @@ public class SpAddSankalpActivityFragment extends Fragment {
     private void _populateCategories(Collection<SpCategory> values) {
         _categoriesAdapter.clear();
         _categoriesAdapter.addAll(values);
+        _categoriesSpinnerView.setSelection(0);
+//        Object o = _categoriesSpinnerView.getSelectedItem();
+//        if (o != null && o instanceof SpCategory) {
+//            _populateItems(((SpCategory) o).getId());
+//        }
     }
 
     private void _populateItems(int categoryId) {

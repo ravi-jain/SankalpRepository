@@ -14,7 +14,7 @@ public class SpCategory implements SpDataConstants{
 
     public static String[] tyagCategoryNames = {CATEGORY_NAME_FOOD, CATEGORY_NAME_ENTERTAINMENT, CATEGORY_NAME_TRAVEL};
     public static String[] niyamCategoryNames = {CATEGORY_NAME_DHARMA};
-    public static String[] sankalpCategoryNames = {};
+    public static String[] sankalpCategoryNames = {CATEGORY_OTHERS};
 
     private static Hashtable<String, SpCategory> defaultCategories = new Hashtable<String, SpCategory>();
 

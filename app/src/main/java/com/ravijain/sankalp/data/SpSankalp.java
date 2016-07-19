@@ -12,7 +12,7 @@ public class SpSankalp {
     private int _itemId;
     private Date _fromDate;
     private Date _toDate;
-    private String _description;
+    private String _description = "";
     private Date _creationDate;
     private SpExceptionOrTarget _exceptionOrTarget;
     private int _isLifetime = SpDataConstants.SANKALP_IS_LIFTIME_FALSE;
