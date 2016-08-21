@@ -8,13 +8,13 @@ public class SpSankalpFactory {
 
     public static SpSankalp getNewSankalp(int sankalpType, int categoryId, int itemId)
     {
-        if (sankalpType == SpDataConstants.SANKALP_TYPE_TYAG) {
-            return new SpTyag(categoryId, itemId);
-        }
-        else if (sankalpType == SpDataConstants.SANKALP_TYPE_NIYAM) {
-            return new SpNiyam(categoryId, itemId);
-        }
-        return null;
+//        if (sankalpType == SpDataConstants.SANKALP_TYPE_TYAG) {
+//            return new SpTyag(categoryId, itemId);
+//        }
+//        else if (sankalpType == SpDataConstants.SANKALP_TYPE_NIYAM) {
+//            return new SpNiyam(categoryId, itemId);
+//        }
+        return new SpSankalp(sankalpType, categoryId, itemId);
     }
 
 }

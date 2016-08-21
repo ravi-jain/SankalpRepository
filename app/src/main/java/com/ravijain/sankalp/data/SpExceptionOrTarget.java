@@ -39,8 +39,27 @@ public class SpExceptionOrTarget {
                 break;
             case EXCEPTION_OR_TARGET_TOTAL:
             default:
-                _label = context.getString(R.string.total);
+                _label = context.getString(R.string.total2);
         }
+    }
+
+    public String getRepresentationalSummary()
+    {
+        StringBuilder s = new StringBuilder();
+        if (getExceptionOrTargetCount() == 0) {
+            s.append("None");
+        }
+        else {
+            s.append(getLabel()).append(" ");
+            if (getExceptionOrTargetCount() > 1) {
+                s.append(String.valueOf(getExceptionOrTargetCount())).append(" times");
+            }
+            else if (getExceptionOrTargetCount() == 1) {
+                s.append(" once");
+            }
+        }
+
+        return s.toString();
     }
 
     public int getExceptionOrTargetCount() {

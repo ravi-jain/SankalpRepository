@@ -10,7 +10,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 public class SpDBHelper extends SQLiteOpenHelper {
 
     // If you change the database schema, you must increment the database version.
-    private static final int DATABASE_VERSION = 11;
+    private static final int DATABASE_VERSION = 14;
 
     static final String DATABASE_NAME = "sankalp.db";
 
@@ -45,6 +45,7 @@ public class SpDBHelper extends SQLiteOpenHelper {
     final String PARTIAL_SQL_CREATE_SANKALP_TABLE = " (" +
             SpTableContract.SpSankalpTable._ID + " INTEGER PRIMARY KEY," +
             SpTableContract.SpSankalpTable.COLUMN_CREATION_DATE + " INTEGER NOT NULL, " +
+            SpTableContract.SpSankalpTable.COLUMN_SANKALP_TYPE + " INTEGER NOT NULL, " +
             SpTableContract.SpSankalpTable.COLUMN_FROM_DATE + " INTEGER NOT NULL, " +
             SpTableContract.SpSankalpTable.COLUMN_TO_DATE + " INTEGER, " +
             SpTableContract.SpSankalpTable.COLUMN_ITEM_ID + " INTEGER NOT NULL, " +
@@ -61,8 +62,10 @@ public class SpDBHelper extends SQLiteOpenHelper {
             SpTableContract.SpItemTable.TABLE_NAME + " (" + SpTableContract.SpItemTable._ID + ")" +
             " );";
 
-    final String SQL_CREATE_TYAG_TABLE = "CREATE TABLE " + SpTableContract.SpTyagTable.TABLE_NAME + PARTIAL_SQL_CREATE_SANKALP_TABLE;
-    final String SQL_CREATE_NIYAM_TABLE = "CREATE TABLE " + SpTableContract.SpNiyamTable.TABLE_NAME + PARTIAL_SQL_CREATE_SANKALP_TABLE;
+//    final String SQL_CREATE_TYAG_TABLE = "CREATE TABLE " + SpTableContract.SpTyagTable.TABLE_NAME + PARTIAL_SQL_CREATE_SANKALP_TABLE;
+//    final String SQL_CREATE_NIYAM_TABLE = "CREATE TABLE " + SpTableContract.SpNiyamTable.TABLE_NAME + PARTIAL_SQL_CREATE_SANKALP_TABLE;
+
+    final String SQL_CREATE_SANKALP_TABLE = "CREATE TABLE " + SpTableContract.SpSankalpTable.TABLE_NAME + PARTIAL_SQL_CREATE_SANKALP_TABLE;
 
     public SpDBHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -74,8 +77,8 @@ public class SpDBHelper extends SQLiteOpenHelper {
         //sqLiteDatabase.execSQL(SQL_CREATE_USER_TABLE);
         _createCategoryTable(sqLiteDatabase);
         _createItemTable(sqLiteDatabase);
-        sqLiteDatabase.execSQL(SQL_CREATE_NIYAM_TABLE);
-        sqLiteDatabase.execSQL(SQL_CREATE_TYAG_TABLE);
+        sqLiteDatabase.execSQL(SQL_CREATE_SANKALP_TABLE);
+//        sqLiteDatabase.execSQL(SQL_CREATE_TYAG_TABLE);
     }
 
     private void _createItemTable(SQLiteDatabase sqLiteDatabase) {
@@ -91,8 +94,7 @@ public class SpDBHelper extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
         //sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + SpTableContract.SpUserTable.TABLE_NAME);
-        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + SpTableContract.SpTyagTable.TABLE_NAME);
-        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + SpTableContract.SpNiyamTable.TABLE_NAME);
+        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + SpTableContract.SpSankalpTable.TABLE_NAME);
         sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + SpTableContract.SpCategoryTable.TABLE_NAME);
         sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + SpTableContract.SpItemTable.TABLE_NAME);
         onCreate(sqLiteDatabase);

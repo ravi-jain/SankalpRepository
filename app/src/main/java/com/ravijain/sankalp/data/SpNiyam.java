@@ -5,7 +5,7 @@ package com.ravijain.sankalp.data;
  */
 public class SpNiyam extends SpSankalp {
     public SpNiyam(int categoryId, int itemId) {
-        super(categoryId, itemId);
+        super(categoryId, itemId, SpDataConstants.SANKALP_TYPE_NIYAM);
     }
 
     public SpNiyam() {

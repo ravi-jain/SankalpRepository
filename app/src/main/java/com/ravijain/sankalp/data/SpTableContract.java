@@ -34,7 +34,7 @@ public class SpTableContract {
         public static final String COLUMN_ITEM_CATEGORY_ID = "categoryID";
     }
 
-    public static final class SpTyagTable implements SpSankalpTable {
+    /*public static final class SpTyagTable implements SpSankalpTable {
         // Table name
         public static final String TABLE_NAME = "spTyagTable";
 
@@ -44,12 +44,14 @@ public class SpTableContract {
         // Table name
         public static final String TABLE_NAME = "spNiyamTable";
 
-    }
+    }*/
 
     public static interface SpSankalpTable extends BaseColumns{
         // Table name
 
+        public static final String TABLE_NAME = "spSankalpTable";
         public static final String COLUMN_CREATION_DATE = "creationDate";
+        public static final String COLUMN_SANKALP_TYPE = "sankalpType";
         public static final String COLUMN_CATEGORY_ID = "categoryID";
         public static final String COLUMN_ITEM_ID = "itemId";
         public static final String COLUMN_FROM_DATE = "fromDate";

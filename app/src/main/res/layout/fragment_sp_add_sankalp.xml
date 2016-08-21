@@ -1,21 +1,22 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:fillViewport="false">
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/touch_selector"
-        android:minHeight="?android:attr/listPreferredItemHeight"
-        android:orientation="vertical"
         android:focusable="true"
         android:focusableInTouchMode="true"
+        android:minHeight="?android:attr/listPreferredItemHeight"
+        android:orientation="vertical"
         android:paddingBottom="@dimen/activity_vertical_margin"
         android:paddingLeft="@dimen/activity_horizontal_margin"
         android:paddingRight="@dimen/activity_horizontal_margin"
         android:paddingTop="@dimen/activity_vertical_margin">
 
-        <TextView
+        <!--<TextView
             style="@style/SpLabel"
             android:text="@string/sankalpType" />
 
@@ -36,33 +37,50 @@
                 android:id="@+id/radio_niyam"
                 style="@style/SpText"
                 android:text="@string/niyam" />
-        </RadioGroup>
+        </RadioGroup>-->
 
-        <TextView
-            style="@style/SpLabel"
-            android:paddingTop="@dimen/activity_vertical_margin"
-            android:text="@string/sankalpCategory" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:weightSum="1">
+
+            <TextView
+                style="@style/SpLabel"
+                android:layout_width="0dp"
+                android:layout_weight="0.5"
+                android:paddingTop="@dimen/activity_vertical_margin"
+                android:text="@string/sankalpCategory" />
+
+            <TextView
+                style="@style/SpLabel"
+                android:layout_width="0dp"
+                android:layout_weight="0.5"
+                android:paddingTop="@dimen/activity_vertical_margin"
+                android:text="@string/sankalpItem" />
+
+        </LinearLayout>
 
         <View style="@style/SpHorizontalDivider" />
 
-        <Spinner
-            android:id="@+id/categories_spinner"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:spinnerMode="dropdown" />
+            android:weightSum="1">
 
-        <TextView
-            style="@style/SpLabel"
-            android:paddingTop="@dimen/activity_vertical_margin"
-            android:text="@string/sankalpItem" />
+            <Spinner
+                android:id="@+id/categories_spinner"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.5"
+                android:spinnerMode="dropdown" />
 
-        <View style="@style/SpHorizontalDivider" />
-
-        <Spinner
-            android:id="@+id/items_spinner"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:spinnerMode="dropdown" />
+            <Spinner
+                android:id="@+id/items_spinner"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.5"
+                android:spinnerMode="dropdown" />
+        </LinearLayout>
 
         <TextView
             style="@style/SpLabel"
@@ -72,10 +90,9 @@
         <View style="@style/SpHorizontalDivider" />
 
         <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-            xmlns:tools="http://schemas.android.com/tools"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            >
+            android:layout_height="wrap_content">
+
             <android.support.v7.widget.AppCompatSpinner
                 android:id="@+id/rangeLabels_spinner"
                 android:layout_width="wrap_content"
@@ -86,35 +103,47 @@
 
             <TextView
                 android:id="@+id/rangeValue_textView"
+                style="@style/SpText"
                 android:layout_alignParentRight="true"
-                android:layout_toRightOf="@+id/rangeLabels_spinner"
-                android:gravity="right"
                 android:layout_marginRight="@dimen/activity_horizontal_margin"
-                style="@style/SpText" />
+                android:layout_toRightOf="@+id/rangeLabels_spinner"
+                android:gravity="right" />
         </RelativeLayout>
 
         <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
             xmlns:tools="http://schemas.android.com/tools"
             android:id="@+id/fromToDateContainer"
+            android:paddingTop="@dimen/activity_vertical_margin"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:visibility="invisible"
             android:weightSum="1">
 
-            <EditText
-                android:id="@+id/fromdate_textView"
+            <android.support.design.widget.TextInputLayout
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
                 android:layout_weight=".5"
-                android:hint="@string/from_date" />
+                android:layout_height="wrap_content">
 
-            <EditText
-                android:id="@+id/todate_textView"
+                <EditText
+                    android:id="@+id/fromdate_textView"
+                    style="@style/SpText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/from_date" />
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
                 android:layout_weight=".5"
+                android:layout_height="wrap_content">
 
-                android:hint="@string/to_date" />
+                <EditText
+                    android:id="@+id/todate_textView"
+                    style="@style/SpText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/to_date" />
+            </android.support.design.widget.TextInputLayout>
 
         </LinearLayout>
 
@@ -140,28 +169,27 @@
             <EditText
                 android:id="@+id/exceptionOrTargetCount_textView"
                 style="@style/SpText"
-                android:text="0"
                 android:layout_marginLeft="25dp"
-                android:layout_marginTop="10dp"
-                android:padding="10dp"
                 android:layout_marginRight="25dp"
-                android:background="@drawable/edittextbox"
-                android:inputType="number" />
+
+                android:inputType="number"
+
+                android:text="0" />
 
             <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:id="@+id/exceptionOrTargetCurrentCount_ll"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="right"
+                android:layout_marginRight="@dimen/activity_horizontal_margin"
                 android:gravity="right"
                 android:visibility="gone"
-                android:layout_marginRight="@dimen/activity_horizontal_margin"
                 android:weightSum="1">
 
                 <TextView
                     android:id="@+id/exceptionOrTargetCurrentCount_label"
-                    android:text="@string/exception_left_label"
-                    style="@style/SpText" />
+                    style="@style/SpText"
+                    android:text="@string/exception_left_label" />
 
                 <EditText
                     android:id="@+id/exceptionOrTargetCurrentCount_tv"
@@ -170,17 +198,19 @@
             </LinearLayout>
         </LinearLayout>
 
+        <TextView
+            style="@style/SpLabel"
+            android:paddingTop="@dimen/activity_vertical_margin"
+            android:text="@string/description" />
 
-
+        <View style="@style/SpHorizontalDivider" />
         <EditText
             android:id="@+id/sankalpDescription"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:fontFamily="sans-serif-condensed"
-            android:hint="@string/description"
+            style="@style/SpText"
+            android:hint="@string/descriptionHint"
             android:inputType="textMultiLine"
-            android:textSize="20sp" />
+             />
 
     </LinearLayout>
 </ScrollView>

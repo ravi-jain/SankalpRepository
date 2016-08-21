@@ -1,10 +1,14 @@
 package com.ravijain.sankalp.fragments;
 
+import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.support.v7.widget.SearchView;
+import android.text.TextUtils;
 import android.util.SparseBooleanArray;
 import android.view.ActionMode;
 import android.view.LayoutInflater;
@@ -15,8 +19,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.ravijain.sankalp.R;
@@ -26,7 +30,6 @@ import com.ravijain.sankalp.data.SpCategoryItem;
 import com.ravijain.sankalp.data.SpContentProvider;
 import com.ravijain.sankalp.data.SpDataConstants;
 import com.ravijain.sankalp.data.SpDateUtils;
-import com.ravijain.sankalp.data.SpExceptionOrTarget;
 import com.ravijain.sankalp.data.SpSankalp;
 
 import java.util.ArrayList;
@@ -36,12 +39,13 @@ import java.util.Hashtable;
 /**
  * A placeholder fragment containing a simple view.
  */
-public class SpSankalpListFragment extends Fragment {
+public class SpSankalpListFragment extends Fragment implements SearchView.OnQueryTextListener {
 
-    private SankalpListAdapter _sankalpAdapter;
+    private SpSankalpListAdapter _sankalpAdapter;
     private ListView _sankalpListView;
     private SankalpLoaderTask _loaderTask;
     private Hashtable<Integer, SpCategoryItem> _categoryItems;
+    private TextView _listSummaryTv;
 
     private int _sankalpType;
     private int _listFilter;
@@ -53,16 +57,20 @@ public class SpSankalpListFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_sp_sankalp_list, container, false);
-        _sankalpType = getActivity().getIntent().getIntExtra(SpConstants.INTENT_KEY_SANKALP_TYPE, SpDataConstants.SANKALP_TYPE_TYAG);
+        setHasOptionsMenu(true);
+        _sankalpType = getActivity().getIntent().getIntExtra(SpConstants.INTENT_KEY_SANKALP_TYPE, SpDataConstants.SANKALP_TYPE_BOTH);
         _listFilter = getActivity().getIntent().getIntExtra(SpConstants.INTENT_KEY_SANKALP_LIST_FILTER, SpConstants.INTENT_VALUE_SANKALP_LIST_FILTER_CURRENT);
 
-        String title = getString(R.string.tyag);
+        String title = getString(R.string.title_activity_sp_sankalp_list);
         if (_sankalpType == SpDataConstants.SANKALP_TYPE_NIYAM) {
             title = getString(R.string.niyam);
         }
+        else if (_sankalpType == SpDataConstants.SANKALP_TYPE_TYAG) {
+            title = getString(R.string.tyag);
+        }
         getActivity().setTitle(title);
 
-        _sankalpAdapter = new SankalpListAdapter(getContext(), new ArrayList<SpSankalp>());
+        _sankalpAdapter = new SpSankalpListAdapter(getContext(), new ArrayList<SpSankalp>());
         _sankalpListView = (ListView) rootView.findViewById(R.id.sankalpListview);
         _sankalpListView.setAdapter(_sankalpAdapter);
 
@@ -73,139 +81,191 @@ public class SpSankalpListFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                 SpSankalp sankalp = (SpSankalp)adapterView.getItemAtPosition(position);
-                Bundle args = new Bundle();
-                //args.putParcelable(SpConstants.INTENT_KEY_SANKALP, sankalp);
                 Intent intent = new Intent(getActivity(), SpSankalpDetailsActivity.class);
-                intent.putExtra(SpConstants.INTENT_KEY_SANKALP_TYPE, _sankalpType);
+                intent.putExtra(SpConstants.INTENT_KEY_SANKALP_TYPE, sankalp.getSankalpType());
                 intent.putExtra(SpConstants.INTENT_KEY_SANKALP_ID, sankalp.getId());
                 startActivity(intent);
             }
         });
+        _sankalpListView.setEmptyView(rootView.findViewById(R.id.emptyListText));
 
-//        FloatingActionButton fab = (FloatingActionButton) rootView.findViewById(R.id.addSankalpButton);
-//        fab.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Intent intent = new Intent(getActivity(), SpAddSankalpActivity.class);
-//                startActivity(intent);
-//            }
-//        });
-
+        _listSummaryTv = ((TextView)rootView.findViewById(R.id.listViewShowSummary));
+        _listSummaryTv.setText(_getListSummary());
         _loaderTask = new SankalpLoaderTask();
-        _loaderTask.execute((Void) null);
+        _loaderTask.execute(_sankalpType, _listFilter);
 
         return rootView;
     }
 
-    public class SankalpListAdapter extends ArrayAdapter<SpSankalp> {
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_list, menu);
 
-        public SankalpListAdapter(Context context, ArrayList<SpSankalp> sankalps) {
-            super(context, 0, sankalps);
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            // Get the data item for this position
-            SpSankalp sankalp = getItem(position);
-            // Check if an existing view is being reused, otherwise inflate the view
-            if (convertView == null) {
-                convertView = LayoutInflater.from(getContext()).inflate(R.layout.list_item_dashboard, parent, false);
-            }
-            // Lookup view for data population
-            TextView tvItem = (TextView) convertView.findViewById(R.id.list_item_item_textview);
-            TextView tvPeriod = (TextView) convertView.findViewById(R.id.list_item_period_textview);
-            // Populate the data into the template view using the data object
-            int itemId = sankalp.getItemId();
-            SpCategoryItem item = _categoryItems.get(itemId);
-            int isLifetime = sankalp.isLifetime();
-
-            String period;
-            if (isLifetime == SpDataConstants.SANKALP_IS_LIFTIME_TRUE) {
-                period = getString(R.string.Lifetime);
-            }
-            else {
-                Date fromDate = sankalp.getFromDate();
-                Date toDate = sankalp.getToDate();
-
-                period = SpDateUtils.getFriendlyDateString(fromDate) + " - " + SpDateUtils.getFriendlyDateString(toDate);
-            }
-
-
-            // Populate fields with extracted properties
-//            tvCategory.setText(category.getCategoryName());
-            tvItem.setText(item.getCategoryItemName());
-            tvPeriod.setText(String.valueOf(period));
-
-            SpExceptionOrTarget exceptionOrTarget = sankalp.getExceptionOrTarget();
-            if (exceptionOrTarget.getId() == SpExceptionOrTarget.EXCEPTION_OR_TARGET_UNDEFINED) {
-                View exceptionOrTargetContainer = convertView.findViewById(R.id.exceptionOrTarget_li_container);
-                exceptionOrTargetContainer.setVisibility(View.GONE);
-            }
-            else {
-                TextView title = (TextView) convertView.findViewById(R.id.exceptionOrTarget_li_title);
-                TextView currentCountLabel = (TextView) convertView.findViewById(R.id.exceptionOrTargetCurrentCount_li_label);
-
-                if (_sankalpType == SpDataConstants.SANKALP_TYPE_TYAG) {
-                    title.setText(R.string.tyagExceptions);
-                    currentCountLabel.setText(R.string.exception_left_label);
-                }
-                else {
-                    title.setText(R.string.niyamFrequency);
-                    currentCountLabel.setText(R.string.frequency_done_label);
-                }
-                TextView spinnerLabel = (TextView) convertView.findViewById(R.id.exceptionOrTarget_spinner_li_label);
-                spinnerLabel.setText(exceptionOrTarget.getLabel());
-                TextView count = (TextView) convertView.findViewById(R.id.exceptionOrTargetCount_li_textView);
-                count.setText(String.valueOf(exceptionOrTarget.getExceptionOrTargetCount()));
-
-                TextView currentCount = (TextView) convertView.findViewById(R.id.exceptionOrTargetCurrentCount_li_tv);
-                currentCount.setText(String.valueOf(exceptionOrTarget.getExceptionOrTargetCountCurrent()));
-
-            }
-
-            // Return the completed view to render on screen
-            return convertView;
-        }
+        // Get the SearchView and set the searchable configuration
+//        SearchManager searchManager = (SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE);
+        SearchView searchView = (SearchView) menu.findItem(R.id.list_search).getActionView();
+        searchView.setOnQueryTextListener(this);
+        // Assumes current activity is the searchable activity
+//        searchView.setSearchableInfo(searchManager.getSearchableInfo(getActivity().getComponentName()));
+//        searchView.setIconifiedByDefault(false); // Do not iconify the widget; expand it by default
     }
 
-    private class SankalpLoaderTask extends AsyncTask<Void, Void, Boolean>
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.action_list_filter) {
+            //_addSankalp();
+            SpFilterDialogFragment d = new SpFilterDialogFragment();
+            d.setListFilter(_listFilter);
+            d.show(getFragmentManager(), "SpFilterDialogFragment");
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    public void onDialogPositiveClick(int sankalpTypeid, int period) {
+
+        int sankalpType, listFilter;
+        if (period == R.id.rb_sp_current) {
+            listFilter = SpConstants.INTENT_VALUE_SANKALP_LIST_FILTER_CURRENT;
+        }
+        else if (period == R.id.rb_sp_upcoming) {
+            listFilter = SpConstants.INTENT_VALUE_SANKALP_LIST_FILTER_UPCOMING;
+        }
+        else if (period == R.id.rb_sp_all) {
+            listFilter = SpConstants.INTENT_VALUE_SANKALP_LIST_FILTER_ALL;
+        }
+        else {
+            listFilter = -1;
+        }
+        if (sankalpTypeid == R.id.rb_st_tyag) {
+            sankalpType = SpDataConstants.SANKALP_TYPE_TYAG;
+        }
+        else if (sankalpTypeid == R.id.rb_st_niyam) {
+            sankalpType = SpDataConstants.SANKALP_TYPE_NIYAM;
+        }
+        else {
+            sankalpType = SpDataConstants.SANKALP_TYPE_BOTH;
+        }
+
+        _listSummaryTv.setText(_getListSummary());
+
+        _sankalpAdapter.filter(sankalpType, listFilter);
+
+//        _loaderTask = new SankalpLoaderTask();
+//        _loaderTask.execute(_sankalpType, _listFilter);
+    }
+
+    public void onDialogNegativeClick(DialogFragment dialog) {
+
+    }
+
+    private String _getListSummary()
+    {
+        String sankalpType;
+        if (_sankalpType == SpDataConstants.SANKALP_TYPE_BOTH) {
+            sankalpType = "sankalps";
+        }
+        else if (_sankalpType == SpDataConstants.SANKALP_TYPE_TYAG) {
+            sankalpType = "tyags";
+        }
+        else {
+            sankalpType = "niyams";
+        }
+
+        String pd;
+        if (_listFilter == SpConstants.INTENT_VALUE_SANKALP_LIST_FILTER_LIFETIME) {
+            pd = "lifetime";
+        }
+        else if (_listFilter == SpConstants.INTENT_VALUE_SANKALP_LIST_FILTER_CURRENT) {
+            pd = "current";
+        }
+        else if (_listFilter == SpConstants.INTENT_VALUE_SANKALP_LIST_FILTER_UPCOMING) {
+            pd = "upcoming";
+        }
+        else if (_listFilter == SpConstants.INTENT_VALUE_SANKALP_LIST_FILTER_TODAY) {
+            pd = "today's";
+        }
+        else if (_listFilter == SpConstants.INTENT_VALUE_SANKALP_LIST_FILTER_TOMORROW) {
+            pd = "tomorrow's";
+        }
+        else if (_listFilter == SpConstants.INTENT_VALUE_SANKALP_LIST_FILTER_MONTH) {
+            pd = "this month's";
+        }
+        else if (_listFilter == SpConstants.INTENT_VALUE_SANKALP_LIST_FILTER_YEAR) {
+            pd = "this year's";
+        }
+        else {
+            pd = "all";
+        }
+
+        return "Showing " + pd + " " + sankalpType + ".";
+    }
+
+    public void searchList(String query) {
+        _sankalpAdapter.search(query);
+    }
+
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        searchList(query);
+        return true;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String newText) {
+        if (TextUtils.isEmpty(newText)) {
+            searchList("");
+            return true;
+        }
+        return false;
+    }
+
+
+    private class SankalpLoaderTask extends AsyncTask<Integer, Integer, Boolean>
     {
         private ArrayList<SpSankalp> _sankalps = new ArrayList<SpSankalp>();
         @Override
-        protected Boolean doInBackground(Void... params) {
+        protected Boolean doInBackground(Integer... integers) {
+            int sankalpType = integers[0];
+            int listFilter = integers[1];
             SpContentProvider provider = SpContentProvider.getInstance(getContext());
-            _categoryItems = provider.getAllCategoryItems();
-            ArrayList<SpSankalp> sankalps = provider.getSankalps(_sankalpType, SpConstants.INTENT_VALUE_SANKALP_LIST_FILTER_ALL);
-            for (SpSankalp sankalp : sankalps) {
-                if (_listFilter == SpConstants.INTENT_VALUE_SANKALP_LIST_FILTER_ALL) {
+            _sankalps = provider.getSankalps(_sankalpType, _listFilter);
+
+//            _sankalpType = sankalpType;
+//            _listFilter = listFilter;
+
+            /*for (SpSankalp sankalp : sankalps) {
+                if (listFilter == SpConstants.INTENT_VALUE_SANKALP_LIST_FILTER_ALL) {
                     _sankalps.add(sankalp);
                 }
-                else if (_listFilter == SpConstants.INTENT_VALUE_SANKALP_LIST_FILTER_LIFETIME){
+                else if (listFilter == SpConstants.INTENT_VALUE_SANKALP_LIST_FILTER_LIFETIME){
                     if (sankalp.isLifetime() == SpDataConstants.SANKALP_IS_LIFTIME_TRUE) {
                         _sankalps.add(sankalp);
                     }
                 }else {
-                    Date now = new Date();
-                    if (_listFilter == SpConstants.INTENT_VALUE_SANKALP_LIST_FILTER_UPCOMING && SpDateUtils.isUpcomingDate(sankalp.getFromDate())) {
+                    if (listFilter == SpConstants.INTENT_VALUE_SANKALP_LIST_FILTER_UPCOMING && SpDateUtils.isUpcomingDate(sankalp.getFromDate())) {
                         _sankalps.add(sankalp);
                     }
-                    else if(_listFilter == SpConstants.INTENT_VALUE_SANKALP_LIST_FILTER_CURRENT && SpDateUtils.isCurrentDate(sankalp.getFromDate(), sankalp.getToDate())) {
+                    else if(listFilter == SpConstants.INTENT_VALUE_SANKALP_LIST_FILTER_CURRENT && SpDateUtils.isCurrentDate(sankalp.getFromDate(), sankalp.getToDate())) {
                         _sankalps.add(sankalp);
                     }
                 }
 
-            }
+            }*/
 
             return true;
         }
+
 
         @Override
         protected void onPostExecute(final Boolean success) {
             _loaderTask = null;
 
             if (success) {
-                _sankalpAdapter.clear();
-                _sankalpAdapter.addAll(_sankalps);
+                _sankalpAdapter.clearAdapter();
+                _sankalpAdapter.addItems(_sankalps);
             } else {
                 // Error
             }
@@ -251,7 +311,7 @@ public class SpSankalpListFragment extends Fragment {
                         }
                     }
                     SpContentProvider provider = SpContentProvider.getInstance(getContext());
-                    provider.deleteSankalps(sankalpsToBeDeleted, _sankalpType);
+                    provider.deleteSankalps(sankalpsToBeDeleted);
                     actionMode.finish(); // Action picked, so close the CAB
                     return true;
                 default:

@@ -5,13 +5,14 @@
     <item
         android:id="@+id/action_addSankalp"
         android:title="@string/addSankalp"
-        android:icon="@android:drawable/ic_input_add"
         app:showAsAction="always"/>
-    <item
+        <!--android:icon="@android:drawable/ic_input_add"-->
+
+    <!--<item
         android:id="@+id/action_discardSankalp"
         android:title="@string/discardSankalp"
         android:icon="@android:drawable/ic_delete"
-        app:showAsAction="always"/>
+        app:showAsAction="always"/>-->
     <!--<item
         android:id="@+id/action_settings"
         android:orderInCategory="100"

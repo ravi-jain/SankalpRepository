@@ -22,6 +22,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.ravijain.sankalp.R;
+import com.ravijain.sankalp.activities.SpConstants;
 import com.ravijain.sankalp.data.SpCategory;
 import com.ravijain.sankalp.data.SpCategoryItem;
 import com.ravijain.sankalp.data.SpContentProvider;
@@ -42,7 +43,7 @@ import java.util.Hashtable;
  */
 public class SpAddSankalpActivityFragment extends Fragment {
 
-    private RadioGroup _sankalpRGView;
+//    private RadioGroup _sankalpRGView;
     private Spinner _categoriesSpinnerView;
     private Spinner _itemsSpinnerView;
     private Spinner _rangeLabelsSpinnerView;
@@ -71,6 +72,7 @@ public class SpAddSankalpActivityFragment extends Fragment {
     private Hashtable<Integer, Hashtable<String, SpCategoryItem>> _categoryItemsTable;
     private Date _fromDate = null;
     private Date _toDate = null;
+    private int _sankalpType;
 
     public SpAddSankalpActivityFragment() {
     }
@@ -80,6 +82,14 @@ public class SpAddSankalpActivityFragment extends Fragment {
                              Bundle savedInstanceState) {
         View fragmentView = inflater.inflate(R.layout.fragment_sp_add_sankalp, container, false);
         setHasOptionsMenu(true);
+
+        _sankalpType = getActivity().getIntent().getIntExtra(SpConstants.INTENT_KEY_SANKALP_TYPE, SpDataConstants.SANKALP_TYPE_TYAG);
+        if (_sankalpType == SpDataConstants.SANKALP_TYPE_TYAG) {
+            getActivity().setTitle(R.string.title_activity_sp_add_tyag);
+        }
+        else {
+            getActivity().setTitle(R.string.title_activity_sp_add_niyam);
+        }
 
         _categoriesTable = new Hashtable<Integer, Hashtable<String, SpCategory>>();
         _categoryItemsTable = new Hashtable<Integer, Hashtable<String, SpCategoryItem>>();
@@ -109,7 +119,7 @@ public class SpAddSankalpActivityFragment extends Fragment {
 
 
         _populateAndBindFormFields(fragmentView);
-        _sankalpRGView.check(R.id.radio_tyag);
+//        _sankalpRGView.check(R.id.radio_tyag);
         //_populateData();
 
         return fragmentView;
@@ -126,21 +136,12 @@ public class SpAddSankalpActivityFragment extends Fragment {
         if (id == R.id.action_addSankalp) {
             _addSankalp();
             return true;
-        } else if (id == R.id.action_discardSankalp) {
+        } /*else if (id == R.id.action_discardSankalp) {
             _discardSankalp();
             return true;
-        }
+        }*/
 
         return super.onOptionsItemSelected(item);
-    }
-
-    private void _populateData() {
-        int sankalpType = _sankalpRGView.getCheckedRadioButtonId();
-        if (sankalpType == R.id.radio_tyag) {
-            _populateCategories(SpDataConstants.SANKALP_TYPE_TYAG);
-        } else {
-            _populateCategories(SpDataConstants.SANKALP_TYPE_NIYAM);
-        }
     }
 
     private void _populateAndBindFormFields(View view) {
@@ -150,26 +151,16 @@ public class SpAddSankalpActivityFragment extends Fragment {
         _exceptionOrTargetCurrentCount_label = (TextView) view.findViewById(R.id.exceptionOrTargetCurrentCount_label);
         _exceptionOrTargetCurrentCount_tv = (EditText) view.findViewById(R.id.exceptionOrTargetCurrentCount_tv);
 
-        _sankalpRGView = (RadioGroup) view.findViewById(R.id.radioGroup_sankalp);
-        _sankalpRGView.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup group, int checkedId) {
-                switch (checkedId) {
-                    case R.id.radio_tyag:
-                        _exceptionOrTargetTitleTextView.setText(R.string.tyagExceptions);
-                        _exceptionOrTargetCurrentCount_label.setText(R.string.exception_left_label);
-                        //_exceptionOrTargetCurrentCount_tv.setText("0");
-                        _populateCategories(SpDataConstants.SANKALP_TYPE_TYAG);
-                        break;
-                    case R.id.radio_niyam:
-                        _exceptionOrTargetTitleTextView.setText(R.string.niyamFrequency);
-                        _exceptionOrTargetCurrentCount_label.setText(R.string.frequency_done_label);
-                        //_exceptionOrTargetCurrentCount_tv.setText("1");
-                        _populateCategories(SpDataConstants.SANKALP_TYPE_NIYAM);
-                        break;
-                }
-            }
-        });
+        if (_sankalpType == SpDataConstants.SANKALP_TYPE_TYAG) {
+            _exceptionOrTargetTitleTextView.setText(R.string.tyagExceptions);
+            _exceptionOrTargetCurrentCount_label.setText(R.string.exception_left_label);
+            _populateCategories(SpDataConstants.SANKALP_TYPE_TYAG);
+        }
+        else {
+            _exceptionOrTargetTitleTextView.setText(R.string.niyamFrequency);
+            _exceptionOrTargetCurrentCount_label.setText(R.string.frequency_done_label);
+            _populateCategories(SpDataConstants.SANKALP_TYPE_NIYAM);
+        }
 
         _categoriesSpinnerView = (Spinner) view.findViewById(R.id.categories_spinner);
         _categoriesAdapter = new ArrayAdapter<SpCategory>(getContext(), R.layout.spinner_item, new ArrayList<SpCategory>());
@@ -324,21 +315,11 @@ public class SpAddSankalpActivityFragment extends Fragment {
     }
 
     private void _addSankalp() {
-        int id = _sankalpRGView.getCheckedRadioButtonId();
-        int sankalpType = -1;
-        switch (id) {
-            case R.id.radio_tyag:
-                sankalpType = SpDataConstants.SANKALP_TYPE_TYAG;
-                break;
-            case R.id.radio_niyam:
-                sankalpType = SpDataConstants.SANKALP_TYPE_NIYAM;
-                break;
-        }
 
         int categoryId = ((SpCategory) _categoriesSpinnerView.getSelectedItem()).getId();
         int itemId = ((SpCategoryItem) _itemsSpinnerView.getSelectedItem()).getId();
 
-        SpSankalp sankalp = SpSankalpFactory.getNewSankalp(sankalpType, categoryId, itemId);
+        SpSankalp sankalp = SpSankalpFactory.getNewSankalp(_sankalpType, categoryId, itemId);
         sankalp.setFromDate(_fromDate);
         sankalp.setToDate(_toDate);
         if (_rangeValueTextView.getText().equals(getString(R.string.Lifetime))) {
@@ -349,7 +330,7 @@ public class SpAddSankalpActivityFragment extends Fragment {
         String count = _exceptionFrequencyCount.getText().toString();
         if (count != "") {
             int countValue = Integer.valueOf(count);
-            if (countValue == 0 && sankalpType == SpDataConstants.SANKALP_TYPE_TYAG) {
+            if (countValue == 0 && _sankalpType == SpDataConstants.SANKALP_TYPE_TYAG) {
                 exceptionOrTarget.setId(SpExceptionOrTarget.EXCEPTION_OR_TARGET_TOTAL);
             }
             else {

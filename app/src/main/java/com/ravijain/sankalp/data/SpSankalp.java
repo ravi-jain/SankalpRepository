@@ -1,5 +1,7 @@
 package com.ravijain.sankalp.data;
 
+import com.ravijain.sankalp.activities.SpConstants;
+
 import java.util.Date;
 
 /**
@@ -16,14 +18,71 @@ public class SpSankalp {
     private Date _creationDate;
     private SpExceptionOrTarget _exceptionOrTarget;
     private int _isLifetime = SpDataConstants.SANKALP_IS_LIFTIME_FALSE;
+    private int _sankalpType;
 
-    public SpSankalp(int categoryId, int itemId) {
+    private SpCategory _category = null;
+    private SpCategoryItem _item = null;
+
+    public SpSankalp(int sankalpType, int categoryId, int itemId) {
         _categoryID = categoryId;
         _itemId = itemId;
+        _sankalpType = sankalpType;
     }
 
     public SpSankalp() {
 
+    }
+
+    public boolean isMatch(String query) {
+        if (_item != null && _item.getCategoryItemName().equalsIgnoreCase(query)) {
+            return true;
+        }
+        if (_category != null && _category.getCategoryName().equalsIgnoreCase(query)) {
+            return true;
+        }
+        return false;
+    }
+
+    public String getSankalpSummary() {
+        StringBuilder s = new StringBuilder();
+        String sankalpType = getSankalpType() == SpDataConstants.SANKALP_TYPE_TYAG ? "Tyag" : "Niyam";
+        s.append("I take ").append(sankalpType).append(" of ").append(getItem().getCategoryItemName()).append(" for ");
+        if (isLifetime() == SpDataConstants.SANKALP_IS_LIFTIME_TRUE) {
+            s.append("lifetime");
+        } else {
+            s.append(SpDateUtils.getFriendlyPeriodString(getFromDate(), getToDate()));
+        }
+
+        if (getExceptionOrTarget().getExceptionOrTargetCount() > 0) {
+            if (getSankalpType() == SpDataConstants.SANKALP_TYPE_TYAG) {
+                s.append(" except ");
+            } else if (getSankalpType() == SpDataConstants.SANKALP_TYPE_NIYAM) {
+                s.append(" with a target of ");
+            }
+            s.append(getExceptionOrTarget().getRepresentationalSummary());
+        }
+
+        return s.toString();
+    }
+
+    public SpCategoryItem getItem() {
+        return _item;
+    }
+
+    public void setItem(SpCategoryItem item) {
+        this._item = item;
+    }
+
+    public SpCategory getCategory() {
+        return _category;
+    }
+
+    public void setCategory(SpCategory category) {
+        this._category = category;
+    }
+
+    public int getSankalpType() {
+        return _sankalpType;
     }
 
     public SpExceptionOrTarget getExceptionOrTarget() {

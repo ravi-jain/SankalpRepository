@@ -1,259 +1,677 @@
-
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:minHeight="?android:attr/listPreferredItemHeight"
-    android:orientation="vertical"
-    android:weightSum="1"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    android:background="@drawable/touch_selector">
+    android:layout_height="match_parent"
+    android:fillViewport="true">
 
-    <LinearLayout
-        android:layout_weight=".5"
-        android:orientation="vertical"
+    <RelativeLayout xmlns:card_view="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <TextView
-            android:id="@+id/db_tv_1"
-            android:text = "@string/tyag"
-            style="@style/SpLabel" />
-        <View
-            android:id="@+id/db_v_1"
-            style="@style/SpHorizontalDivider" />
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:clickable="true"
-            android:id="@+id/tt_ll"
-            android:background="@drawable/touch_selector"
-            android:paddingBottom="@dimen/activity_vertical_margin"
-            android:paddingLeft="@dimen/activity_horizontal_margin"
-            android:paddingRight="@dimen/activity_horizontal_margin"
-            android:paddingTop="@dimen/activity_vertical_margin"
-            android:layout_height="wrap_content">
-            <TextView
-                android:text = "@string/total"
-                style="@style/SpLabel" />
-            <TextView
-                android:id="@+id/tyag_total_tv"
-                android:paddingLeft="30dp"
-                style="@style/SpText" />
-            <!--<ImageButton
-                android:id="@+id/tyag_total_ib"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@android:drawable/ic_menu_view"/>-->
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:clickable="true"
-            android:id="@+id/tc_ll"
-            android:background="@drawable/touch_selector"
-            android:paddingBottom="@dimen/activity_vertical_margin"
-            android:paddingLeft="@dimen/activity_horizontal_margin"
-            android:paddingRight="@dimen/activity_horizontal_margin"
-            android:layout_height="wrap_content">
-            <!--android:paddingTop="@dimen/activity_vertical_margin"-->
-
-            <TextView
-                android:text = "@string/current"
-                style="@style/SpLabel" />
-            <TextView
-                android:id="@+id/tyag_current_tv"
-                android:paddingLeft="30dp"
-                style="@style/SpText" />
-            <!--<ImageButton
-                android:id="@+id/tyag_current_ib"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@android:drawable/ic_menu_view"/>-->
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:clickable="true"
-            android:id="@+id/tl_ll"
-            android:background="@drawable/touch_selector"
-            android:paddingBottom="@dimen/activity_vertical_margin"
-            android:paddingLeft="@dimen/activity_horizontal_margin"
-            android:paddingRight="@dimen/activity_horizontal_margin"
-            android:layout_height="wrap_content">
-            <!--android:paddingTop="@dimen/activity_vertical_margin"-->
-            <TextView
-                android:text = "@string/Lifetime"
-                style="@style/SpLabel" />
-            <TextView
-                android:id="@+id/tyag_lifetime_tv"
-                android:paddingLeft="30dp"
-                style="@style/SpText" />
-            <!--<ImageButton
-                android:id="@+id/tyag_lifetime_ib"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@android:drawable/ic_menu_view"/>-->
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:clickable="true"
-            android:id="@+id/tu_ll"
-            android:background="@drawable/touch_selector"
-            android:paddingBottom="@dimen/activity_vertical_margin"
-            android:paddingLeft="@dimen/activity_horizontal_margin"
-            android:paddingRight="@dimen/activity_horizontal_margin"
-            android:layout_height="wrap_content">
-            <!--android:paddingTop="@dimen/activity_vertical_margin"-->
-            <TextView
-                android:text = "@string/upcoming"
-                style="@style/SpLabel" />
-            <TextView
-                android:id="@+id/tyag_upcoming_tv"
-                android:paddingLeft="30dp"
-                style="@style/SpText" />
-            <!--<ImageButton
-                android:id="@+id/tyag_upcoming_ib"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@android:drawable/ic_menu_view"/>-->
-
-        </LinearLayout>
-
-    </LinearLayout>
-    <LinearLayout
-        android:layout_weight=".5"
-        android:orientation="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <TextView
-            android:id="@+id/db_tv_2"
-            android:text = "@string/niyam"
-            style="@style/SpLabel" />
-        <View
-            android:id="@+id/db_v_2"
-            style="@style/SpHorizontalDivider" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:clickable="true"
-            android:id="@+id/nt_ll"
-            android:background="@drawable/touch_selector"
-            android:paddingBottom="@dimen/activity_vertical_margin"
-            android:paddingLeft="@dimen/activity_horizontal_margin"
-            android:paddingRight="@dimen/activity_horizontal_margin"
-            android:paddingTop="@dimen/activity_vertical_margin"
-            android:layout_height="wrap_content">
-            <TextView
-                android:text = "@string/total"
-                style="@style/SpLabel" />
-            <TextView
-                android:id="@+id/niyam_total_tv"
-                android:paddingLeft="30dp"
-                style="@style/SpText" />
-            <!--<ImageButton
-                android:id="@+id/niyam_total_ib"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@android:drawable/ic_menu_view"/>-->
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:clickable="true"
-            android:id="@+id/nc_ll"
-            android:background="@drawable/touch_selector"
-            android:paddingBottom="@dimen/activity_vertical_margin"
-            android:paddingLeft="@dimen/activity_horizontal_margin"
-            android:paddingRight="@dimen/activity_horizontal_margin"
-            android:layout_height="wrap_content">
-            <TextView
-                android:text = "@string/current"
-                style="@style/SpLabel" />
-            <TextView
-                android:id="@+id/niyam_current_tv"
-                android:paddingLeft="30dp"
-                style="@style/SpText" />
-            <!--<ImageButton
-                android:id="@+id/niyam_current_ib"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@android:drawable/ic_menu_view"/>-->
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:clickable="true"
-            android:id="@+id/nl_ll"
-            android:background="@drawable/touch_selector"
-            android:paddingBottom="@dimen/activity_vertical_margin"
-            android:paddingLeft="@dimen/activity_horizontal_margin"
-            android:paddingRight="@dimen/activity_horizontal_margin"
-            android:layout_height="wrap_content">
-            <TextView
-                android:text = "@string/Lifetime"
-                style="@style/SpLabel" />
-            <TextView
-                android:id="@+id/niyam_lifetime_tv"
-                android:paddingLeft="30dp"
-                style="@style/SpText" />
-            <!--<ImageButton
-                android:id="@+id/niyam_lifetime_ib"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@android:drawable/ic_menu_view"/>-->
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:clickable="true"
-            android:id="@+id/nu_ll"
-            android:background="@drawable/touch_selector"
-            android:paddingBottom="@dimen/activity_vertical_margin"
-            android:paddingLeft="@dimen/activity_horizontal_margin"
-            android:paddingRight="@dimen/activity_horizontal_margin"
-            android:layout_height="wrap_content">
-            <TextView
-                android:text = "@string/upcoming"
-                style="@style/SpLabel" />
-            <TextView
-                android:id="@+id/niyam_upcoming_tv"
-                android:paddingLeft="30dp"
-                style="@style/SpText" />
-           <!-- <ImageButton
-                android:id="@+id/niyam_upcoming_ib"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@android:drawable/ic_menu_view"/>-->
-
-        </LinearLayout>
-
-
-    </LinearLayout>
-
-
-
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/addSankalpButton"
-        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/fab_margin"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_gravity="end|bottom"
-        android:src="@android:drawable/ic_input_add" />
+        android:background="@drawable/touch_selector"
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin">
 
 
+        <android.support.v7.widget.CardView
+            android:id="@+id/db_card_overview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            card_view:cardCornerRadius="4dp"
+            card_view:contentPadding="16dp">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/card_overview_header"
+                    style="@style/SpLabel"
+
+                    android:text="@string/overviewHeader" />
+
+                <View
+                    android:id="@+id/hb1"
+                    style="@style/SpHorizontalDivider"
+                    android:layout_below="@+id/card_overview_header"
+                    android:layout_marginBottom="5dp" />
+
+                <TableLayout
+                    android:id="@+id/table_db"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/hb1"
+                    android:layout_marginLeft="16dp">
+
+                    <TableRow
+                        android:layout_marginBottom="8dp"
+                        android:gravity="center_vertical">
+
+                        <TextView
+                            style="@style/SpLabel"
+                            android:layout_marginRight="5dp"
+                            android:text="@string/total" />
+
+                        <View
+                            android:layout_width="10dp"
+                            android:layout_height="10dp"
+                            android:layout_marginRight="5dp"
+                            android:background="@color/sankalp_tyag" />
+
+                        <TextView
+                            android:id="@+id/tyag_total_tv"
+                            style="@style/SpText"
+                            android:layout_marginRight="20dp" />
+
+                        <View
+                            android:layout_width="10dp"
+                            android:layout_height="10dp"
+                            android:layout_marginRight="5dp"
+                            android:background="@color/sankalp_niyam" />
+
+                        <TextView
+                            android:id="@+id/niyam_total_tv"
+                            style="@style/SpText" />
+
+                    </TableRow>
 
 
-</LinearLayout>
+                    <TableRow
+                        android:layout_marginBottom="8dp"
+                        android:gravity="center_vertical">
+
+                        <TextView
+                            style="@style/SpLabel"
+                            android:layout_marginRight="5dp"
+                            android:text="@string/current" />
+
+                        <View
+                            android:layout_width="10dp"
+                            android:layout_height="10dp"
+                            android:layout_marginRight="5dp"
+                            android:background="@color/sankalp_tyag" />
+
+                        <TextView
+                            android:id="@+id/tyag_current_tv"
+                            style="@style/SpText" />
+
+                        <View
+                            android:layout_width="10dp"
+                            android:layout_height="10dp"
+                            android:layout_marginRight="5dp"
+                            android:background="@color/sankalp_niyam" />
+
+                        <TextView
+                            android:id="@+id/niyam_current_tv"
+                            style="@style/SpText" />
+
+                    </TableRow>
+
+                    <TableRow
+                        android:layout_marginBottom="8dp"
+                        android:gravity="center_vertical">
+
+                        <TextView
+                            style="@style/SpLabel"
+                            android:layout_marginRight="5dp"
+                            android:text="@string/lifetime_db" />
+
+                        <View
+                            android:layout_width="10dp"
+                            android:layout_height="10dp"
+                            android:layout_marginRight="5dp"
+                            android:background="@color/sankalp_tyag" />
+
+                        <TextView
+                            android:id="@+id/tyag_lifetime_tv"
+                            style="@style/SpText" />
+
+                        <View
+                            android:layout_width="10dp"
+                            android:layout_height="10dp"
+                            android:layout_marginRight="5dp"
+                            android:background="@color/sankalp_niyam" />
+
+                        <TextView
+                            android:id="@+id/niyam_lifetime_tv"
+                            style="@style/SpText" />
+                    </TableRow>
+
+                    <TableRow
+                        android:layout_marginBottom="8dp"
+                        android:gravity="center_vertical">
+
+                        <TextView
+                            style="@style/SpLabel"
+                            android:layout_marginRight="5dp"
+                            android:text="@string/upcoming" />
+
+                        <View
+                            android:layout_width="10dp"
+                            android:layout_height="10dp"
+                            android:layout_marginRight="5dp"
+                            android:background="@color/sankalp_tyag" />
+
+                        <TextView
+                            android:id="@+id/tyag_upcoming_tv"
+                            style="@style/SpText" />
+
+                        <View
+                            android:layout_width="10dp"
+                            android:layout_height="10dp"
+                            android:layout_marginRight="5dp"
+                            android:background="@color/sankalp_niyam" />
+
+                        <TextView
+                            android:id="@+id/niyam_upcoming_tv"
+                            style="@style/SpText" />
+
+                    </TableRow>
+                </TableLayout>
+
+
+                <!--<LinearLayout
+                    android:id="@+id/total_lv"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginBottom="8dp"
+                    android:layout_below="@+id/card_overview_header">
+
+                    <TextView
+                        android:text = "@string/total"
+                        style="@style/SpLabel"
+                        android:layout_marginRight="10dp"/>
+
+                    <View
+                        android:layout_width="10dp"
+                        android:layout_height="10dp"
+                        android:layout_marginRight="10dp"
+                        android:background="@color/sankalp_tyag"/>
+
+                    <TextView
+                        android:id="@+id/tyag_total_tv"
+                        style="@style/SpText"
+                        android:layout_marginRight="20dp"/>
+
+                    <View
+                        android:layout_width="10dp"
+                        android:layout_height="10dp"
+                        android:layout_marginRight="10dp"
+                        android:background="@color/sankalp_niyam"/>
+
+                    <TextView
+                        android:id="@+id/niyam_total_tv"
+                        style="@style/SpText" />
+
+
+                </LinearLayout>-->
+
+                <!-- <LinearLayout
+                     android:id="@+id/current_lv"
+                     android:layout_width="match_parent"
+                     android:layout_height="wrap_content"
+                     android:gravity="center_vertical"
+                     android:orientation="horizontal"
+                     android:layout_marginLeft="16dp"
+                     android:layout_marginBottom="8dp"
+                     android:layout_below="@+id/total_lv">
+
+                     <TextView
+                         android:text = "@string/current"
+                         style="@style/SpLabel"
+                         android:layout_marginRight="5dp"/>
+
+                     <View
+                         android:layout_width="10dp"
+                         android:layout_height="10dp"
+                         android:layout_marginRight="5dp"
+                         android:background="@color/sankalp_tyag"/>
+
+                     <TextView
+                         android:id="@+id/tyag_current_tv"
+                         style="@style/SpText" />
+
+                     <View
+                         android:layout_width="10dp"
+                         android:layout_height="10dp"
+                         android:layout_marginRight="5dp"
+                         android:background="@color/sankalp_niyam"/>
+
+                     <TextView
+                         android:id="@+id/niyam_current_tv"
+                         style="@style/SpText" />
+
+
+                 </LinearLayout>-->
+
+                <!--<LinearLayout
+                    android:id="@+id/lifetime_lv"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginBottom="8dp"
+                    android:layout_below="@+id/current_lv">
+
+                    <TextView
+                        android:text = "@string/lifetime_db"
+                        style="@style/SpLabel"
+                        android:layout_marginRight="5dp"/>
+
+                    <View
+                        android:layout_width="10dp"
+                        android:layout_height="10dp"
+                        android:layout_marginRight="5dp"
+                        android:background="@color/sankalp_tyag"/>
+
+                    <TextView
+                        android:id="@+id/tyag_lifetime_tv"
+                        style="@style/SpText" />
+
+                    <View
+                        android:layout_width="10dp"
+                        android:layout_height="10dp"
+                        android:layout_marginRight="5dp"
+                        android:background="@color/sankalp_niyam"/>
+
+                    <TextView
+                        android:id="@+id/niyam_lifetime_tv"
+                        style="@style/SpText" />
+
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/upcoming_lv"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginBottom="8dp"
+                    android:layout_below="@+id/lifetime_lv">
+
+                    <TextView
+                        android:text = "@string/upcoming"
+                        style="@style/SpLabel"
+                        android:layout_marginRight="5dp"/>
+
+                    <View
+                        android:layout_width="10dp"
+                        android:layout_height="10dp"
+                        android:layout_marginRight="5dp"
+                        android:background="@color/sankalp_tyag"/>
+
+                    <TextView
+                        android:id="@+id/tyag_upcoming_tv"
+                        style="@style/SpText" />
+
+                    <View
+                        android:layout_width="10dp"
+                        android:layout_height="10dp"
+                        android:layout_marginRight="5dp"
+                        android:background="@color/sankalp_niyam"/>
+
+                    <TextView
+                        android:id="@+id/niyam_upcoming_tv"
+                        style="@style/SpText" />
+
+
+                </LinearLayout>-->
+
+                <LinearLayout
+                    android:id="@+id/card_overview_legend"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_below="@+id/table_db"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <View
+                        android:layout_width="10dp"
+                        android:layout_height="10dp"
+                        android:background="@color/sankalp_tyag" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginRight="5dp"
+                        android:gravity="center_vertical"
+                        android:text="@string/tyag"
+                        android:textAppearance="?android:attr/textAppearanceSmall" />
+
+                    <View
+                        android:layout_width="10dp"
+                        android:layout_height="10dp"
+                        android:background="@color/sankalp_niyam" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        android:gravity="center_vertical"
+                        android:text="@string/niyam"
+                        android:textAppearance="?android:attr/textAppearanceSmall" />
+
+                </LinearLayout>
+
+            </RelativeLayout>
+
+
+            <!--<com.github.mikephil.charting.charts.BarChart android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:id="@+id/sankalp_chart"/>-->
+
+        </android.support.v7.widget.CardView>
+
+        <android.support.v7.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/db_card_overview"
+            card_view:cardCornerRadius="4dp"
+            card_view:contentPadding="16dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical">
+
+                    <TextView
+                        android:id="@+id/card_list_header"
+                        style="@style/SpLabel"
+                        android:text="@string/mostRecentHeader" />
+
+                    <ImageButton
+                        android:id="@+id/viewAll_button"
+                        android:src="@android:drawable/ic_menu_view"
+                        android:background="@android:color/transparent"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:text="@string/viewAllHeader"
+                        />
+
+
+                </RelativeLayout>
+
+                <View
+                    android:id="@+id/hb2"
+                    style="@style/SpHorizontalDivider"
+                    android:layout_marginBottom="5dp" />
+
+
+                <ListView
+                    android:id="@+id/card_recent_list"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                </ListView>
+
+            </LinearLayout>
+
+
+        </android.support.v7.widget.CardView>
+
+
+        <!--<com.github.mikephil.charting.charts.BarChart android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/sankalp_chart"
+            android:layout_weight="0.5"/>
+
+        <LinearLayout
+            android:layout_weight=".25"
+            android:visibility="gone"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/db_tv_1"
+                android:text = "@string/tyag"
+                style="@style/SpLabel" />
+            <View
+                android:id="@+id/db_v_1"
+                style="@style/SpHorizontalDivider" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:clickable="true"
+                android:id="@+id/tt_ll"
+                android:background="@drawable/touch_selector"
+                android:paddingBottom="@dimen/activity_vertical_margin"
+                android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:paddingRight="@dimen/activity_horizontal_margin"
+                android:paddingTop="@dimen/activity_vertical_margin"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:text = "@string/total"
+                    style="@style/SpLabel" />
+                <TextView
+                    android:id="@+id/tyag_total_tv"
+                    android:paddingLeft="30dp"
+                    style="@style/SpText" />
+                &lt;!&ndash;<ImageButton
+                    android:id="@+id/tyag_total_ib"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@android:drawable/ic_menu_view"/>&ndash;&gt;
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:clickable="true"
+                android:id="@+id/tc_ll"
+                android:background="@drawable/touch_selector"
+                android:paddingBottom="@dimen/activity_vertical_margin"
+                android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:paddingRight="@dimen/activity_horizontal_margin"
+                android:layout_height="wrap_content">
+                &lt;!&ndash;android:paddingTop="@dimen/activity_vertical_margin"&ndash;&gt;
+
+                <TextView
+                    android:text = "@string/current"
+                    style="@style/SpLabel" />
+                <TextView
+                    android:id="@+id/tyag_current_tv"
+                    android:paddingLeft="30dp"
+                    style="@style/SpText" />
+                &lt;!&ndash;<ImageButton
+                    android:id="@+id/tyag_current_ib"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@android:drawable/ic_menu_view"/>&ndash;&gt;
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:clickable="true"
+                android:id="@+id/tl_ll"
+                android:background="@drawable/touch_selector"
+                android:paddingBottom="@dimen/activity_vertical_margin"
+                android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:paddingRight="@dimen/activity_horizontal_margin"
+                android:layout_height="wrap_content">
+                &lt;!&ndash;android:paddingTop="@dimen/activity_vertical_margin"&ndash;&gt;
+                <TextView
+                    android:text = "@string/Lifetime"
+                    style="@style/SpLabel" />
+                <TextView
+                    android:id="@+id/tyag_lifetime_tv"
+                    android:paddingLeft="30dp"
+                    style="@style/SpText" />
+                &lt;!&ndash;<ImageButton
+                    android:id="@+id/tyag_lifetime_ib"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@android:drawable/ic_menu_view"/>&ndash;&gt;
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:clickable="true"
+                android:id="@+id/tu_ll"
+                android:background="@drawable/touch_selector"
+                android:paddingBottom="@dimen/activity_vertical_margin"
+                android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:paddingRight="@dimen/activity_horizontal_margin"
+                android:layout_height="wrap_content">
+                &lt;!&ndash;android:paddingTop="@dimen/activity_vertical_margin"&ndash;&gt;
+                <TextView
+                    android:text = "@string/upcoming"
+                    style="@style/SpLabel" />
+                <TextView
+                    android:id="@+id/tyag_upcoming_tv"
+                    android:paddingLeft="30dp"
+                    style="@style/SpText" />
+                &lt;!&ndash;<ImageButton
+                    android:id="@+id/tyag_upcoming_ib"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@android:drawable/ic_menu_view"/>&ndash;&gt;
+
+            </LinearLayout>
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_weight=".25"
+            android:visibility="gone"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/db_tv_2"
+                android:text = "@string/niyam"
+                style="@style/SpLabel" />
+            <View
+                android:id="@+id/db_v_2"
+                style="@style/SpHorizontalDivider" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:clickable="true"
+                android:id="@+id/nt_ll"
+                android:background="@drawable/touch_selector"
+                android:paddingBottom="@dimen/activity_vertical_margin"
+                android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:paddingRight="@dimen/activity_horizontal_margin"
+                android:paddingTop="@dimen/activity_vertical_margin"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:text = "@string/total"
+                    style="@style/SpLabel" />
+                <TextView
+                    android:id="@+id/niyam_total_tv"
+                    android:paddingLeft="30dp"
+                    style="@style/SpText" />
+                &lt;!&ndash;<ImageButton
+                    android:id="@+id/niyam_total_ib"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@android:drawable/ic_menu_view"/>&ndash;&gt;
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:clickable="true"
+                android:id="@+id/nc_ll"
+                android:background="@drawable/touch_selector"
+                android:paddingBottom="@dimen/activity_vertical_margin"
+                android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:paddingRight="@dimen/activity_horizontal_margin"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:text = "@string/current"
+                    style="@style/SpLabel" />
+                <TextView
+                    android:id="@+id/niyam_current_tv"
+                    android:paddingLeft="30dp"
+                    style="@style/SpText" />
+                &lt;!&ndash;<ImageButton
+                    android:id="@+id/niyam_current_ib"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@android:drawable/ic_menu_view"/>&ndash;&gt;
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:clickable="true"
+                android:id="@+id/nl_ll"
+                android:background="@drawable/touch_selector"
+                android:paddingBottom="@dimen/activity_vertical_margin"
+                android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:paddingRight="@dimen/activity_horizontal_margin"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:text = "@string/Lifetime"
+                    style="@style/SpLabel" />
+                <TextView
+                    android:id="@+id/niyam_lifetime_tv"
+                    android:paddingLeft="30dp"
+                    style="@style/SpText" />
+                &lt;!&ndash;<ImageButton
+                    android:id="@+id/niyam_lifetime_ib"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@android:drawable/ic_menu_view"/>&ndash;&gt;
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:clickable="true"
+                android:id="@+id/nu_ll"
+                android:background="@drawable/touch_selector"
+                android:paddingBottom="@dimen/activity_vertical_margin"
+                android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:paddingRight="@dimen/activity_horizontal_margin"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:text = "@string/upcoming"
+                    style="@style/SpLabel" />
+                <TextView
+                    android:id="@+id/niyam_upcoming_tv"
+                    android:paddingLeft="30dp"
+                    style="@style/SpText" />
+               &lt;!&ndash; <ImageButton
+                    android:id="@+id/niyam_upcoming_ib"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@android:drawable/ic_menu_view"/>&ndash;&gt;
+
+            </LinearLayout>
+
+
+        </LinearLayout>-->
+
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/addSankalpButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_margin="@dimen/fab_margin"
+            android:src="@android:drawable/ic_input_add" />
+
+
+    </RelativeLayout>
+</ScrollView>
+

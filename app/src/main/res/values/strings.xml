@@ -19,9 +19,14 @@
     <string name="title_activity_sankalp_list">SankalpListActivity</string>
     <string name="action_settings">Settings</string>
     <string name="title_activity_sp_add_sankalp">Add Sankalp</string>
+    <string name="title_activity_sp_add_tyag">Add Tyag</string>
+    <string name="title_activity_sp_add_niyam">Add Niyam</string>
 
 
     <!-- I18N Strings -->
+    <string name="UpdateProfile">Update Profile</string>
+    <string name="SankalpVidhi">Sankalp Vidhi</string>
+    <string name="Feedback">Contact Us</string>
     <string name="sankalpType">Sankalp type</string>
     <string name="sankalpCategory">Category</string>
     <string name="sankalpItem">Item</string>
@@ -31,6 +36,7 @@
     <string name="niyamFrequency">Target</string>
     <string name="niyam">Niyam</string>
     <string name="description">Description</string>
+    <string name="descriptionHint">Add any extra note</string>
 
     <string name="thisDay">Today</string>
     <string name="tomorrow">Tomorrow</string>
@@ -40,7 +46,7 @@
     <string name="Range">Date Range</string>
     <string name="from_date">From Date</string>
     <string name="to_date">To Date</string>
-    <string name="addSankalp">Add</string>
+    <string name="addSankalp">ADD</string>
     <string name="discardSankalp">Discard</string>
     <string name="deleteSankalp">Delete</string>
     <string name="title_activity_sp_sankalp_list">Sankalp</string>
@@ -50,6 +56,7 @@
     <string name="current">Current</string>
     <string name="past">Past</string>
     <string name="upcoming">Upcoming</string>
+    <string name="lifetime_db">Lifetime</string>
     <string name="yearly">Yearly</string>
     <string name="monthly">Monthly</string>
     <string name="weekly">Weekly</string>
@@ -58,4 +65,24 @@
     <string name="frequency_done_label">Completed</string>
     <string name="Details">Details</string>
     <string name="Share">Share</string>
+    <string name="overviewHeader">Overview</string>
+    <string name="mostRecentHeader">Most Recent</string>
+    <string name="viewAllHeader">View All</string>
+    <string name="total2">Total</string>
+    <string name="filterList">Filter</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
+    <string name="all">All</string>
+    <string name="searchLabel">Search</string>
+    <string name="defaultDescriptionEmptyValue">No description added</string>
+    <string name="sankalpSummary">Summary</string>
+    <string name="defaultDashboardQuote">Jio Aur Jeene Do</string>
+
+    <string name="quote1">Jio Aur Jeeno Do</string>
+    <string name="quote2">Sajjan aur viveki manav, paap pank se darte hai, atah vrato ko dharan karke unka paalan karte hai.</string>
+    <string name="EmptyList">No Records Found</string>
+    <string name="drawer_close">Close navigation drawer</string>
+    <string name="drawer_open">Open navigation drawer</string>
+    <string name="prompt_city">City</string>
+    <string name="update">UPDATE</string>
 </resources>

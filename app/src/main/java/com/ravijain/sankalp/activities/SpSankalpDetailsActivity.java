@@ -6,6 +6,7 @@ import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.ShareActionProvider;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
@@ -24,6 +25,7 @@ import java.util.Hashtable;
 
 public class SpSankalpDetailsActivity extends AppCompatActivity {
 
+    private TextView _sankalpSummaryTV;
     private TextView _sankalpTypeTV;
     private TextView _sankalpCategoryTV;
     private TextView _sankalpItemTV;
@@ -43,6 +45,7 @@ public class SpSankalpDetailsActivity extends AppCompatActivity {
         int id = getIntent().getIntExtra(SpConstants.INTENT_KEY_SANKALP_ID, -1);
 
         if (id > -1) {
+            _sankalpSummaryTV = (TextView) findViewById(R.id.sankalpSummary_v_tv);
             _sankalpTypeTV = (TextView) findViewById(R.id.sankalpType_v_tv);
             _sankalpCategoryTV = (TextView) findViewById(R.id.category_v_tv);
             _sankalpItemTV = (TextView) findViewById(R.id.item_v_tv);
@@ -102,8 +105,6 @@ public class SpSankalpDetailsActivity extends AppCompatActivity {
         private int _sankalpType;
         private int _id;
         private SpSankalp _sankalp;
-        Hashtable<Integer, SpCategory> _categories;
-        Hashtable<Integer, SpCategoryItem> _categoryItems;
 
         DetailsLoaderTask(int id, int sankalpType) {
             _id = id;
@@ -113,9 +114,7 @@ public class SpSankalpDetailsActivity extends AppCompatActivity {
         @Override
         protected Boolean doInBackground(Void... params) {
             SpContentProvider provider = SpContentProvider.getInstance(getApplicationContext());
-            _sankalp = provider.getSankalpById(_id, _sankalpType);
-            _categories = provider.getAllCategories();
-            _categoryItems = provider.getAllCategoryItems();
+            _sankalp = provider.getSankalpById(_id);
             return true;
         }
 
@@ -123,6 +122,8 @@ public class SpSankalpDetailsActivity extends AppCompatActivity {
         protected void onPostExecute(final Boolean success) {
 
             if (success) {
+
+                _sankalpSummaryTV.setText(_sankalp.getSankalpSummary());
                 String sankalpType;
                 if (_sankalpType == SpDataConstants.SANKALP_TYPE_TYAG) {
                     sankalpType = getString(R.string.tyag);
@@ -131,8 +132,8 @@ public class SpSankalpDetailsActivity extends AppCompatActivity {
                     sankalpType = getString(R.string.niyam);
                     _exceptionOrTargetTitleTV.setText(getString(R.string.niyamFrequency));
                 }
-                String category = _categories.get(_sankalp.getCategoryID()).getCategoryDisplayName();
-                String item = _categoryItems.get(_sankalp.getItemId()).getCategoryItemName();
+                String category = _sankalp.getCategory().getCategoryName();
+                String item = _sankalp.getItem().getCategoryItemName();
                 int isLifetime = _sankalp.isLifetime();
 
                 String period;
@@ -142,7 +143,7 @@ public class SpSankalpDetailsActivity extends AppCompatActivity {
                     Date fromDate = _sankalp.getFromDate();
                     Date toDate = _sankalp.getToDate();
 
-                    period = SpDateUtils.getFriendlyDateString(fromDate) + " - " + SpDateUtils.getFriendlyDateString(toDate);
+                    period = SpDateUtils.getFriendlyPeriodString(fromDate, toDate);//SpDateUtils.getFriendlyDateString(fromDate) + " - " + SpDateUtils.getFriendlyDateString(toDate);
                 }
 
                 _sankalpTypeTV.setText(sankalpType);
@@ -151,11 +152,12 @@ public class SpSankalpDetailsActivity extends AppCompatActivity {
                 _sankalpPeriodTV.setText(period);
 
                 String description = _sankalp.getDescription();
-                if (description != null && description.length() > 0) {
-                    _sankalpDescriptionTV.setText(_sankalp.getDescription());
+                if (description == null || TextUtils.isEmpty(description)) {
+                    description = getString(R.string.defaultDescriptionEmptyValue);
                 }
+                _sankalpDescriptionTV.setText(description);
 
-                String eOrT = _sankalp.getExceptionOrTarget().getLabel() + " " + String.valueOf(_sankalp.getExceptionOrTarget().getExceptionOrTargetCount()) + " times";
+                String eOrT = _sankalp.getExceptionOrTarget().getRepresentationalSummary();
                 _sankalpExceptionOrTargetTV.setText(eOrT);
 
             } else {
