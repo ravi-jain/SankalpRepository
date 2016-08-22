@@ -20,6 +20,7 @@ import android.widget.EditText;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.ravijain.sankalp.R;
 import com.ravijain.sankalp.activities.SpConstants;
@@ -189,6 +190,7 @@ public class SpAddSankalpActivityFragment extends Fragment {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
                 // your code here
+                Toast.makeText(getActivity(), ((SpCategoryItem)parentView.getSelectedItem()).getCategoryItemName(), Toast.LENGTH_SHORT).show();
             }
 
             @Override

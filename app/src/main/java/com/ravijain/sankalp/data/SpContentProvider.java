@@ -150,7 +150,7 @@ public class SpContentProvider {
         if (type != SpDataConstants.SANKALP_TYPE_BOTH) {
             query += " OR " + SpTableContract.SpCategoryTable.COLUMN_CATEGORY_TYPE + " =" + SpDataConstants.SANKALP_TYPE_BOTH;
         }
-        query += " ORDER BY " + SpTableContract.SpCategoryTable.COLUMN_CATEGORY_NAME + " ASC";
+        query += " ORDER BY " + SpTableContract.SpCategoryTable.COLUMN_CATEGORY_NAME + " DESC";
         Cursor cursor = db.rawQuery(query, null);
         if (cursor != null) {
             cursor.moveToFirst();
@@ -173,7 +173,7 @@ public class SpContentProvider {
         SQLiteDatabase db = _dbHelper.getReadableDatabase();
         String query = "SELECT * FROM " + SpTableContract.SpItemTable.TABLE_NAME + " WHERE "
                 + SpTableContract.SpItemTable.COLUMN_ITEM_CATEGORY_ID + " =" + id;
-        query += " ORDER BY " + SpTableContract.SpItemTable.COLUMN_ITEM_NAME + " ASC";
+        query += " ORDER BY " + SpTableContract.SpItemTable.COLUMN_ITEM_NAME + " DESC";
 
         Cursor cursor = db.rawQuery(query, null);
         if (cursor != null) {
@@ -247,9 +247,14 @@ public class SpContentProvider {
         if (sankalp.getToDate() != null) {
             values.put(SpTableContract.SpSankalpTable.COLUMN_TO_DATE, sankalp.getToDate().getTime());
         }
-        values.put(SpTableContract.SpSankalpTable.COLUMN_EXCEPTION_TARGET_ID, sankalp.getExceptionOrTarget().getId());
-        values.put(SpTableContract.SpSankalpTable.COLUMN_EXCEPTION_TARGET_COUNT, sankalp.getExceptionOrTarget().getExceptionOrTargetCount());
-        values.put(SpTableContract.SpSankalpTable.COLUMN_EXCEPTION_TARGET_CURRENT_COUNT, sankalp.getExceptionOrTarget().getExceptionOrTargetCountCurrent());
+
+        int targetCount = sankalp.getExceptionOrTarget().getExceptionOrTargetCount();
+        if (targetCount >= 0) {
+            values.put(SpTableContract.SpSankalpTable.COLUMN_EXCEPTION_TARGET_ID, sankalp.getExceptionOrTarget().getId());
+            values.put(SpTableContract.SpSankalpTable.COLUMN_EXCEPTION_TARGET_COUNT, sankalp.getExceptionOrTarget().getExceptionOrTargetCount());
+        }
+
+//        values.put(SpTableContract.SpSankalpTable.COLUMN_EXCEPTION_TARGET_CURRENT_COUNT, sankalp.getExceptionOrTarget().getExceptionOrTargetCountCurrent());
         values.put(SpTableContract.SpSankalpTable.COLUMN_DESCRIPTION, sankalp.getDescription());
 
         String tableName = SpTableContract.SpSankalpTable.TABLE_NAME;
@@ -263,8 +268,29 @@ public class SpContentProvider {
 
         SQLiteDatabase db = _dbHelper.getWritableDatabase();
         // Inserting Row
-        db.insert(tableName, null, values);
+        long sankalpId = db.insert(tableName, null, values);
         db.close(); // Closing database connection
+
+        if (sankalpId > -1) {
+            int currentCount = sankalp.getExceptionOrTarget().getExceptionOrTargetCountCurrent();
+            if (targetCount > 0 && currentCount >= 0) {
+                // Add in the ExTar Table
+                addExTarEntry(sankalpId, currentCount, new Date());
+            }
+
+        }
+    }
+
+    public void addExTarEntry(long sankalpId, int currentCount, Date date) {
+        String tableName = SpTableContract.SpExTarTable.TABLE_NAME;
+        ContentValues values = new ContentValues();
+        values.put(SpTableContract.SpExTarTable.COLUMN_SANKALP_ID, sankalpId);
+        values.put(SpTableContract.SpExTarTable.COLUMN_CURRENT_COUNT, currentCount);
+        values.put(SpTableContract.SpExTarTable.COLUMN_UPDATED_ON, date.getTime());
+
+        SQLiteDatabase db = _dbHelper.getWritableDatabase();
+        db.insert(tableName, null, values);
+        db.close();
     }
 
     public ArrayList<SpSankalp> getSankalps(int sankalpType, int listFilter) {
@@ -445,18 +471,39 @@ public class SpContentProvider {
             sankalp.setToDate(new Date(toDate));
         }
 
-        int exceptionOrTargetid = cursor.getInt(cursor.getColumnIndexOrThrow(SpTableContract.SpSankalpTable.COLUMN_EXCEPTION_TARGET_ID));
-        int exceptionOrTargetCount = cursor.getInt(cursor.getColumnIndexOrThrow(SpTableContract.SpSankalpTable.COLUMN_EXCEPTION_TARGET_COUNT));
-        int exceptionOrTargetCurrentCount = cursor.getInt(cursor.getColumnIndexOrThrow(SpTableContract.SpSankalpTable.COLUMN_EXCEPTION_TARGET_CURRENT_COUNT));
-        SpExceptionOrTarget exceptionOrTarget = new SpExceptionOrTarget(exceptionOrTargetid, _context);
-        exceptionOrTarget.setExceptionOrTargetCount(exceptionOrTargetCount);
-        exceptionOrTarget.setExceptionOrTargetCountCurrent(exceptionOrTargetCurrentCount);
-        sankalp.setExceptionOrTarget(exceptionOrTarget);
-
         String description = cursor.getString(cursor.getColumnIndexOrThrow(SpTableContract.SpSankalpTable.COLUMN_DESCRIPTION));
         sankalp.setDescription(description);
 
+        int exceptionOrTargetid = cursor.getInt(cursor.getColumnIndexOrThrow(SpTableContract.SpSankalpTable.COLUMN_EXCEPTION_TARGET_ID));
+        int exceptionOrTargetCount = cursor.getInt(cursor.getColumnIndexOrThrow(SpTableContract.SpSankalpTable.COLUMN_EXCEPTION_TARGET_COUNT));
+        //int exceptionOrTargetCurrentCount = cursor.getInt(cursor.getColumnIndexOrThrow(SpTableContract.SpSankalpTable.COLUMN_EXCEPTION_TARGET_CURRENT_COUNT));
+        SpExceptionOrTarget exceptionOrTarget = new SpExceptionOrTarget(exceptionOrTargetid, _context);
+        exceptionOrTarget.setExceptionOrTargetCount(exceptionOrTargetCount);
+        //exceptionOrTarget.setExceptionOrTargetCountCurrent(exceptionOrTargetCurrentCount);
+        if (exceptionOrTargetCount > 0) {
+            int currentCount = getExTarCurrentCount(id);
+            exceptionOrTarget.setExceptionOrTargetCountCurrent(currentCount);
+        }
+        sankalp.setExceptionOrTarget(exceptionOrTarget);
+
         return sankalp;
+    }
+
+    public int getExTarCurrentCount(int id) {
+        int count = -1;
+        SQLiteDatabase db = _dbHelper.getReadableDatabase();
+        String userQuery = "SELECT " + SpTableContract.SpExTarTable.COLUMN_CURRENT_COUNT + " FROM " + SpTableContract.SpExTarTable.TABLE_NAME
+                + " WHERE " + SpTableContract.SpExTarTable.COLUMN_SANKALP_ID + " = " + id +
+                " ORDER BY " + SpTableContract.SpExTarTable.COLUMN_UPDATED_ON + " DESC LIMIT 1";
+        Cursor c = db.rawQuery(userQuery, null);
+        if (c != null) {
+            c.moveToFirst();
+            count = c.getInt(c.getColumnIndexOrThrow(SpTableContract.SpExTarTable.COLUMN_CURRENT_COUNT));
+            c.close();
+        }
+
+        db.close();
+        return count;
     }
 
     public void deleteSankalps(ArrayList<SpSankalp> sankalpsToBeDeleted) {
@@ -483,8 +530,9 @@ public class SpContentProvider {
         if (cursor != null) {
             cursor.moveToFirst();
             sankalp = _createSankalpByCursor(cursor);
+            cursor.close();
         }
-        cursor.close();
+
         db.close();
         return sankalp;
     }

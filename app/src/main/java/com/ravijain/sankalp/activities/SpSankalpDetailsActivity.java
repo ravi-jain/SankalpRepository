@@ -6,9 +6,13 @@ import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.ShareActionProvider;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import com.ravijain.sankalp.R;
@@ -32,6 +36,9 @@ public class SpSankalpDetailsActivity extends AppCompatActivity {
     private TextView _sankalpPeriodTV;
     private TextView _exceptionOrTargetTitleTV;
     private TextView _sankalpExceptionOrTargetTV;
+    private View _exTarLL;
+    private TextView _exTarCurrentLabelTV;
+    private EditText _exTarCurrentCountET;
     private TextView _sankalpDescriptionTV;
     private ShareActionProvider mShareActionProvider;
 
@@ -40,9 +47,7 @@ public class SpSankalpDetailsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sp_sankalp_details);
 
-
-        int sankalpType = getIntent().getIntExtra(SpConstants.INTENT_KEY_SANKALP_TYPE, SpDataConstants.SANKALP_TYPE_TYAG);
-        int id = getIntent().getIntExtra(SpConstants.INTENT_KEY_SANKALP_ID, -1);
+        final int id = getIntent().getIntExtra(SpConstants.INTENT_KEY_SANKALP_ID, -1);
 
         if (id > -1) {
             _sankalpSummaryTV = (TextView) findViewById(R.id.sankalpSummary_v_tv);
@@ -52,13 +57,36 @@ public class SpSankalpDetailsActivity extends AppCompatActivity {
             _sankalpPeriodTV = (TextView) findViewById(R.id.sankalpPeriod_v_tv);
             _exceptionOrTargetTitleTV = (TextView) findViewById(R.id.exceptionOrTargetTitle);
             _sankalpExceptionOrTargetTV = (TextView) findViewById(R.id.sankalpExceptionOrTarget_v_tv);
+            _exTarLL = findViewById(R.id.exTarCurrent_ll);
+            _exTarCurrentLabelTV = (TextView) findViewById(R.id.exTarCurrentLabel_tv);
+            _exTarCurrentCountET = (EditText) findViewById(R.id.exTarCurrentCount_tv);
             _sankalpDescriptionTV = (TextView) findViewById(R.id.sankalpDescription_v_tv);
 
-            DetailsLoaderTask loaderTask = new DetailsLoaderTask(id, sankalpType);
-            loaderTask.execute((Void) null);
+            _exTarCurrentCountET.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+                }
+
+                @Override
+                public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                    String s = charSequence.toString();
+                    if (!TextUtils.isEmpty(s)) {
+                        int count = Integer.valueOf(s);
+                        UpdateExTarCountTask t = new UpdateExTarCountTask(id, count, new Date());
+                        t.execute((Void) null);
+                    }
+
+                }
+
+                @Override
+                public void afterTextChanged(Editable editable) {
+                }
+            });
         }
 
-
+        DetailsLoaderTask loaderTask = new DetailsLoaderTask(id);
+        loaderTask.execute((Void) null);
     }
 
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -101,14 +129,33 @@ public class SpSankalpDetailsActivity extends AppCompatActivity {
         }
     }
 
+    private class UpdateExTarCountTask extends AsyncTask<Void, Void, Boolean>
+    {
+
+        private Date _date;
+        private int _count;
+        private int _id;
+
+        UpdateExTarCountTask(int sankalpId, int count, Date date)
+        {
+            _id = sankalpId;
+            _count = count;
+            _date = date;
+        }
+        @Override
+        protected Boolean doInBackground(Void... integers) {
+            SpContentProvider p = SpContentProvider.getInstance(getApplicationContext());
+            p.addExTarEntry(_id, _count, _date);
+            return true;
+        }
+    }
+
     private class DetailsLoaderTask extends AsyncTask<Void, Void, Boolean> {
-        private int _sankalpType;
         private int _id;
         private SpSankalp _sankalp;
 
-        DetailsLoaderTask(int id, int sankalpType) {
+        DetailsLoaderTask(int id) {
             _id = id;
-            _sankalpType = sankalpType;
         }
 
         @Override
@@ -125,11 +172,15 @@ public class SpSankalpDetailsActivity extends AppCompatActivity {
 
                 _sankalpSummaryTV.setText(_sankalp.getSankalpSummary());
                 String sankalpType;
-                if (_sankalpType == SpDataConstants.SANKALP_TYPE_TYAG) {
+                String exTarCurrentLabel;
+
+                if (_sankalp.getSankalpType() == SpDataConstants.SANKALP_TYPE_TYAG) {
                     sankalpType = getString(R.string.tyag);
+                    exTarCurrentLabel = getString(R.string.exception_left_label);
                     _exceptionOrTargetTitleTV.setText(getString(R.string.tyagExceptions));
                 } else {
                     sankalpType = getString(R.string.niyam);
+                    exTarCurrentLabel = getString(R.string.frequency_done_label);
                     _exceptionOrTargetTitleTV.setText(getString(R.string.niyamFrequency));
                 }
                 String category = _sankalp.getCategory().getCategoryName();
@@ -159,6 +210,11 @@ public class SpSankalpDetailsActivity extends AppCompatActivity {
 
                 String eOrT = _sankalp.getExceptionOrTarget().getRepresentationalSummary();
                 _sankalpExceptionOrTargetTV.setText(eOrT);
+                if (_sankalp.getExceptionOrTarget().getExceptionOrTargetCountCurrent() > -1) {
+                    _exTarLL.setVisibility(View.VISIBLE);
+                    _exTarCurrentLabelTV.setText(exTarCurrentLabel);
+                    _exTarCurrentCountET.setText(String.valueOf(_sankalp.getExceptionOrTarget().getExceptionOrTargetCountCurrent()));
+                }
 
             } else {
                 // Error

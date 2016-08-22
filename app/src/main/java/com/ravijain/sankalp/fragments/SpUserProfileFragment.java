@@ -9,6 +9,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.ravijain.sankalp.R;
 
@@ -27,7 +28,9 @@ public class SpUserProfileFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_user_profile, container, false);
+        View v = inflater.inflate(R.layout.fragment_user_profile, container, false);
+        setHasOptionsMenu(true);
+        return v;
     }
 
     @Override
@@ -39,6 +42,7 @@ public class SpUserProfileFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.action_updateProfile) {
+            Toast.makeText(getActivity(), "hello", Toast.LENGTH_SHORT).show();
             return true;
         }
 

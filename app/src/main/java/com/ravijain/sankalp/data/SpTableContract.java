@@ -60,6 +60,15 @@ public class SpTableContract {
         public static final String COLUMN_ISLIFETIME = "isLifetime";
         public static final String COLUMN_EXCEPTION_TARGET_ID = "exTargetId";
         public static final String COLUMN_EXCEPTION_TARGET_COUNT = "exTargetCount";
-        public static final String COLUMN_EXCEPTION_TARGET_CURRENT_COUNT = "exTargetCurrentCount";
+        /*public static final String COLUMN_EXCEPTION_TARGET_CURRENT_COUNT = "exTargetCurrentCount";*/
     }
+
+    public static interface SpExTarTable extends BaseColumns{
+        public static final String TABLE_NAME = "exTarTable";
+        public static final String COLUMN_SANKALP_ID = "sankalpId";
+        public static final String COLUMN_CURRENT_COUNT = "count";
+        public static final String COLUMN_UPDATED_ON = "updatedOn";
+    }
+
+
 }

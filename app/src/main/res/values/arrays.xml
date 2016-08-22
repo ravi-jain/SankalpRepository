@@ -19,6 +19,7 @@
     </string-array>
 
     <string-array name="drawerList">
+        <item>@string/Dashboard</item>
         <item>@string/UpdateProfile</item>
         <item>@string/SankalpVidhi</item>
         <item>@string/Feedback</item>

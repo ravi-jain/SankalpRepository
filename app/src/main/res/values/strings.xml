@@ -24,6 +24,7 @@
 
 
     <!-- I18N Strings -->
+    <string name="Dashboard">Dashboard</string>
     <string name="UpdateProfile">Update Profile</string>
     <string name="SankalpVidhi">Sankalp Vidhi</string>
     <string name="Feedback">Contact Us</string>

@@ -10,7 +10,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 public class SpDBHelper extends SQLiteOpenHelper {
 
     // If you change the database schema, you must increment the database version.
-    private static final int DATABASE_VERSION = 14;
+    private static final int DATABASE_VERSION = 15;
 
     static final String DATABASE_NAME = "sankalp.db";
 
@@ -54,7 +54,7 @@ public class SpDBHelper extends SQLiteOpenHelper {
             SpTableContract.SpSankalpTable.COLUMN_ISLIFETIME + " INTEGER NOT NULL, " +
             SpTableContract.SpSankalpTable.COLUMN_EXCEPTION_TARGET_ID + " INTEGER, " +
             SpTableContract.SpSankalpTable.COLUMN_EXCEPTION_TARGET_COUNT + " INTEGER, " +
-            SpTableContract.SpSankalpTable.COLUMN_EXCEPTION_TARGET_CURRENT_COUNT + " INTEGER, " +
+            /*SpTableContract.SpSankalpTable.COLUMN_EXCEPTION_TARGET_CURRENT_COUNT + " INTEGER, " +*/
             // Set up the location column as a foreign key to location table.
             " FOREIGN KEY (" + SpTableContract.SpSankalpTable.COLUMN_CATEGORY_ID + ") REFERENCES " +
             SpTableContract.SpCategoryTable.TABLE_NAME + " (" + SpTableContract.SpCategoryTable._ID + "), " +
@@ -67,6 +67,15 @@ public class SpDBHelper extends SQLiteOpenHelper {
 
     final String SQL_CREATE_SANKALP_TABLE = "CREATE TABLE " + SpTableContract.SpSankalpTable.TABLE_NAME + PARTIAL_SQL_CREATE_SANKALP_TABLE;
 
+    final String SQL_CREATE_EXTAR_TABLE = "CREATE TABLE " + SpTableContract.SpExTarTable.TABLE_NAME + " (" +
+            SpTableContract.SpExTarTable._ID + " INTEGER PRIMARY KEY, " +
+            SpTableContract.SpExTarTable.COLUMN_SANKALP_ID + " INTEGER NOT NULL, " +
+            SpTableContract.SpExTarTable.COLUMN_CURRENT_COUNT + " INTEGER NOT NULL, " +
+            SpTableContract.SpExTarTable.COLUMN_UPDATED_ON + " INTEGER NOT NULL, " +
+            " FOREIGN KEY (" + SpTableContract.SpExTarTable.COLUMN_SANKALP_ID + ") REFERENCES " +
+            SpTableContract.SpSankalpTable.TABLE_NAME + " (" + SpTableContract.SpSankalpTable._ID + ")" +
+            " );";
+
     public SpDBHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
         _context = context;
@@ -78,6 +87,7 @@ public class SpDBHelper extends SQLiteOpenHelper {
         _createCategoryTable(sqLiteDatabase);
         _createItemTable(sqLiteDatabase);
         sqLiteDatabase.execSQL(SQL_CREATE_SANKALP_TABLE);
+        sqLiteDatabase.execSQL(SQL_CREATE_EXTAR_TABLE);
 //        sqLiteDatabase.execSQL(SQL_CREATE_TYAG_TABLE);
     }
 
@@ -95,6 +105,7 @@ public class SpDBHelper extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
         //sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + SpTableContract.SpUserTable.TABLE_NAME);
         sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + SpTableContract.SpSankalpTable.TABLE_NAME);
+        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + SpTableContract.SpExTarTable.TABLE_NAME);
         sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + SpTableContract.SpCategoryTable.TABLE_NAME);
         sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + SpTableContract.SpItemTable.TABLE_NAME);
         onCreate(sqLiteDatabase);

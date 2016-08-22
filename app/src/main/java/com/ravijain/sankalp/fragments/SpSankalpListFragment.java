@@ -82,7 +82,7 @@ public class SpSankalpListFragment extends Fragment implements SearchView.OnQuer
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                 SpSankalp sankalp = (SpSankalp)adapterView.getItemAtPosition(position);
                 Intent intent = new Intent(getActivity(), SpSankalpDetailsActivity.class);
-                intent.putExtra(SpConstants.INTENT_KEY_SANKALP_TYPE, sankalp.getSankalpType());
+//                intent.putExtra(SpConstants.INTENT_KEY_SANKALP_TYPE, sankalp.getSankalpType());
                 intent.putExtra(SpConstants.INTENT_KEY_SANKALP_ID, sankalp.getId());
                 startActivity(intent);
             }

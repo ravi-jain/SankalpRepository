@@ -2,5 +2,6 @@
     android:id="@android:id/text1"
     style="@style/SpText"
     android:padding="@dimen/activity_horizontal_margin"
+    android:gravity="center"
     android:singleLine="true"
     android:ellipsize="marquee"/>

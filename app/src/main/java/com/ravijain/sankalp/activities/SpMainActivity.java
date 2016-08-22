@@ -19,6 +19,7 @@ import android.widget.Toast;
 import com.ravijain.sankalp.R;
 import com.ravijain.sankalp.data.SpUser;
 import com.ravijain.sankalp.data.SpContentProvider;
+import com.ravijain.sankalp.fragments.SpCardDashboardFragment;
 import com.ravijain.sankalp.fragments.SpUserProfileFragment;
 
 public class SpMainActivity extends AppCompatActivity implements ListView.OnItemClickListener{
@@ -53,10 +54,18 @@ public class SpMainActivity extends AppCompatActivity implements ListView.OnItem
             // Set the list's click listener
             _drawerListView.setOnItemClickListener(this);
 
+            _loadDashboardFragment();
             setupDrawer();
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setHomeButtonEnabled(true);
         }
+    }
+
+    private void _loadDashboardFragment()
+    {
+        Fragment f = new SpCardDashboardFragment();
+        FragmentManager man = getSupportFragmentManager();
+        man.beginTransaction().replace(R.id.content_frame, f).commit();
     }
 
     private void setupDrawer() {
@@ -66,14 +75,14 @@ public class SpMainActivity extends AppCompatActivity implements ListView.OnItem
             public void onDrawerOpened(View drawerView) {
                 super.onDrawerOpened(drawerView);
 //                getSupportActionBar().setTitle("Navigation!");
-//                invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
+                invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
             }
 
             /** Called when a drawer has settled in a completely closed state. */
             public void onDrawerClosed(View view) {
                 super.onDrawerClosed(view);
 //                getSupportActionBar().setTitle(mActivityTitle);
-//                invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
+                invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
             }
         };
 
@@ -97,7 +106,10 @@ public class SpMainActivity extends AppCompatActivity implements ListView.OnItem
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
+
+//        getMenuInflater().inflate(R.menu.menu_user_profile, menu);
         return true;
+
     }
 
     @Override
@@ -118,35 +130,30 @@ public class SpMainActivity extends AppCompatActivity implements ListView.OnItem
 
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-        if (_drawerList[i].equals(getString(R.string.UpdateProfile))) {
-            Fragment f = new SpUserProfileFragment();
-            FragmentManager man = getSupportFragmentManager();
-            man.beginTransaction().replace(R.id.content_frame, f).commit();
 
-            _drawerListView.setItemChecked(i, true);
-            setTitle(_drawerList[i]);
+        Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.content_frame);
+
+        if (_drawerList[i].equals(getString(R.string.Dashboard))) {
+            if (!(currentFragment instanceof SpCardDashboardFragment)) {
+                _loadDashboardFragment();
+                _drawerListView.setItemChecked(i, true);
+                setTitle(getString(R.string.title_activity_sp_sankalp_list));
+                _drawerLayout.closeDrawer(_drawerListView);
+            }
+        }
+        else if (_drawerList[i].equals(getString(R.string.UpdateProfile))) {
+            if (!(currentFragment instanceof SpUserProfileFragment)) {
+                Fragment f = new SpUserProfileFragment();
+                FragmentManager man = getSupportFragmentManager();
+                man.beginTransaction().replace(R.id.content_frame, f).commit();
+
+                _drawerListView.setItemChecked(i, true);
+                setTitle(_drawerList[i]);
+            }
             _drawerLayout.closeDrawer(_drawerListView);
         }
         else {
             Toast.makeText(SpMainActivity.this, _drawerList[i], Toast.LENGTH_SHORT).show();
         }
-
-
-        // Create a new fragment and specify the planet to show based on position
-//        Fragment fragment = new PlanetFragment();
-//        Bundle args = new Bundle();
-//        args.putInt(PlanetFragment.ARG_PLANET_NUMBER, position);
-//        fragment.setArguments(args);
-//
-//        // Insert the fragment by replacing any existing fragment
-//        FragmentManager fragmentManager = getFragmentManager();
-//        fragmentManager.beginTransaction()
-//                .replace(R.id.content_frame, fragment)
-//                .commit();
-//
-//        // Highlight the selected item, update the title, and close the drawer
-//        _drawerListView.setItemChecked(position, true);
-//        setTitle(mPlanetTitles[position]);
-//        _drawerLayout.closeDrawer(_drawerListView);
     }
 }

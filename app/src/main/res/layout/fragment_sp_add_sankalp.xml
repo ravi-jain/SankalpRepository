@@ -39,7 +39,7 @@
                 android:text="@string/niyam" />
         </RadioGroup>-->
 
-        <LinearLayout
+        <!--<LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:weightSum="1">
@@ -81,6 +81,32 @@
                 android:layout_weight="0.5"
                 android:spinnerMode="dropdown" />
         </LinearLayout>
+-->
+        <TextView
+            style="@style/SpLabel"
+            android:paddingTop="@dimen/activity_vertical_margin"
+            android:text="@string/sankalpCategory" />
+
+        <View style="@style/SpHorizontalDivider" />
+
+        <Spinner
+            android:id="@+id/categories_spinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:spinnerMode="dropdown" />
+
+        <TextView
+            style="@style/SpLabel"
+            android:paddingTop="@dimen/activity_vertical_margin"
+            android:text="@string/sankalpItem" />
+
+        <View style="@style/SpHorizontalDivider" />
+
+        <Spinner
+            android:id="@+id/items_spinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:spinnerMode="dialog" />
 
         <TextView
             style="@style/SpLabel"
@@ -158,23 +184,45 @@
         <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
             android:weightSum="1">
 
             <Spinner
                 android:id="@+id/exceptionOrTarget_spinner"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
                 android:spinnerMode="dropdown" />
 
+            <!--<Button
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_marginLeft="15dp"
+                android:background="@drawable/round_button"
+                android:gravity="center_vertical|center_horizontal"
+                android:text="-"
+                android:textSize="15sp"
+                />-->
             <EditText
                 android:id="@+id/exceptionOrTargetCount_textView"
                 style="@style/SpText"
-                android:layout_marginLeft="25dp"
-                android:layout_marginRight="25dp"
-
+                android:minWidth="50dp"
+                android:layout_marginLeft="5dp"
+                android:gravity="center"
+                android:background="@drawable/edittextbox"
                 android:inputType="number"
-
+                android:layout_gravity="center_vertical"
                 android:text="0" />
+
+            <!--<Button
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_marginLeft="5dp"
+                android:background="@drawable/round_button"
+                android:gravity="center_vertical|center_horizontal"
+                android:text="+"
+                android:textSize="15sp"
+                 />-->
 
             <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:id="@+id/exceptionOrTargetCurrentCount_ll"
@@ -194,6 +242,10 @@
                 <EditText
                     android:id="@+id/exceptionOrTargetCurrentCount_tv"
                     style="@style/SpText"
+                    android:layout_marginLeft="15dp"
+                    android:minWidth="50dp"
+                    android:background="@drawable/edittextbox"
+                    android:gravity="center"
                     android:inputType="number" />
             </LinearLayout>
         </LinearLayout>
