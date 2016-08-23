@@ -10,7 +10,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 public class SpDBHelper extends SQLiteOpenHelper {
 
     // If you change the database schema, you must increment the database version.
-    private static final int DATABASE_VERSION = 15;
+    private static final int DATABASE_VERSION = 16;
 
     static final String DATABASE_NAME = "sankalp.db";
 
@@ -22,7 +22,8 @@ public class SpDBHelper extends SQLiteOpenHelper {
             SpTableContract.SpUserTable._ID + " INTEGER PRIMARY KEY," +
             SpTableContract.SpUserTable.COLUMN_USER_NAME + " TEXT NOT NULL, " +
             SpTableContract.SpUserTable.COLUMN_USER_MOBILE + " TEXT, " +
-            SpTableContract.SpUserTable.COLUMN_USER_EMAIL + " TEXT NOT NULL " +
+            SpTableContract.SpUserTable.COLUMN_USER_EMAIL + " TEXT NOT NULL, " +
+            SpTableContract.SpUserTable.COLUMN_USER_CITY + " TEXT NOT NULL " +
             " );";
 
     final String SQL_CREATE_CATEGORY_TABLE = "CREATE TABLE " + SpTableContract.SpCategoryTable.TABLE_NAME + " (" +
@@ -83,7 +84,7 @@ public class SpDBHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
-        //sqLiteDatabase.execSQL(SQL_CREATE_USER_TABLE);
+        sqLiteDatabase.execSQL(SQL_CREATE_USER_TABLE);
         _createCategoryTable(sqLiteDatabase);
         _createItemTable(sqLiteDatabase);
         sqLiteDatabase.execSQL(SQL_CREATE_SANKALP_TABLE);
@@ -103,7 +104,7 @@ public class SpDBHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
-        //sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + SpTableContract.SpUserTable.TABLE_NAME);
+        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + SpTableContract.SpUserTable.TABLE_NAME);
         sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + SpTableContract.SpSankalpTable.TABLE_NAME);
         sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + SpTableContract.SpExTarTable.TABLE_NAME);
         sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + SpTableContract.SpCategoryTable.TABLE_NAME);

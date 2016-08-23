@@ -18,4 +18,5 @@ public interface SpConstants {
     public static final int INTENT_VALUE_SANKALP_LIST_FILTER_YEAR = 7;
 
     public static final String INTENT_KEY_SANKALP_ID = "SANKALP_ID";
+    public static final String IS_USER_ALREADY_CREATED = "IS_USER_ALREADY_CREATED";
 }

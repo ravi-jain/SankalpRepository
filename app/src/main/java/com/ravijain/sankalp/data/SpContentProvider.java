@@ -48,7 +48,8 @@ public class SpContentProvider {
                 return null;
             }
             cursor.moveToFirst();
-            user = new SpUser(cursor.getString(1), cursor.getString(2), cursor.getString(3));
+            user = new SpUser(cursor.getInt(0));
+            user.setProperties(cursor.getString(1), cursor.getString(2), cursor.getString(3), cursor.getString(4));
             cursor.close();
         }
         return user;
@@ -60,10 +61,25 @@ public class SpContentProvider {
         values.put(SpTableContract.SpUserTable.COLUMN_USER_NAME, user.getName());
         values.put(SpTableContract.SpUserTable.COLUMN_USER_MOBILE, user.getMobile());
         values.put(SpTableContract.SpUserTable.COLUMN_USER_EMAIL, user.getEmail());
+        values.put(SpTableContract.SpUserTable.COLUMN_USER_CITY, user.getCity());
 
         // Inserting Row
         db.insert(SpTableContract.SpUserTable.TABLE_NAME, null, values);
         db.close(); // Closing database connection
+    }
+
+    public void updateUser(SpUser user) {
+
+        SQLiteDatabase db = _dbHelper.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(SpTableContract.SpUserTable.COLUMN_USER_NAME, user.getName());
+        values.put(SpTableContract.SpUserTable.COLUMN_USER_MOBILE, user.getMobile());
+        values.put(SpTableContract.SpUserTable.COLUMN_USER_EMAIL, user.getEmail());
+        values.put(SpTableContract.SpUserTable.COLUMN_USER_CITY, user.getCity());
+        /*String selection = SpTableContract.SpUserTable._ID + " = ?";
+        String[] args = {String.valueOf(user.getId())};*/
+        db.update(SpTableContract.SpUserTable.TABLE_NAME, values, SpTableContract.SpUserTable._ID + " = " + String.valueOf(user.getId()), null);
+        db.close();
     }
 
     public Cursor getUserCursor() {
@@ -536,4 +552,5 @@ public class SpContentProvider {
         db.close();
         return sankalp;
     }
+
 }

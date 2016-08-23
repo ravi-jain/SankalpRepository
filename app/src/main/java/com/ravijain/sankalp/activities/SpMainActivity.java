@@ -94,13 +94,17 @@ public class SpMainActivity extends AppCompatActivity implements ListView.OnItem
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
         // Sync the toggle state after onRestoreInstanceState has occurred.
-        _drawerToggle.syncState();
+        if (_drawerToggle != null) {
+            _drawerToggle.syncState();
+        }
     }
 
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-        _drawerToggle.onConfigurationChanged(newConfig);
+        if (_drawerToggle != null) {
+            _drawerToggle.onConfigurationChanged(newConfig);
+        }
     }
 
     @Override
@@ -144,6 +148,9 @@ public class SpMainActivity extends AppCompatActivity implements ListView.OnItem
         else if (_drawerList[i].equals(getString(R.string.UpdateProfile))) {
             if (!(currentFragment instanceof SpUserProfileFragment)) {
                 Fragment f = new SpUserProfileFragment();
+                Bundle b = new Bundle();
+                b.putBoolean(SpConstants.IS_USER_ALREADY_CREATED, true);
+                f.setArguments(b);
                 FragmentManager man = getSupportFragmentManager();
                 man.beginTransaction().replace(R.id.content_frame, f).commit();
 

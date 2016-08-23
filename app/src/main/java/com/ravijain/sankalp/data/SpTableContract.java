@@ -14,6 +14,7 @@ public class SpTableContract {
         public static final String COLUMN_USER_NAME = "name";
         public static final String COLUMN_USER_EMAIL = "email";
         public static final String COLUMN_USER_MOBILE = "mobile";
+        public static final String COLUMN_USER_CITY = "city";
     }
 
     public static final class SpCategoryTable implements BaseColumns {
