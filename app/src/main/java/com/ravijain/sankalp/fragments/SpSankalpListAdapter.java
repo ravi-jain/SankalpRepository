@@ -7,7 +7,6 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Filter;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.ravijain.sankalp.R;
 import com.ravijain.sankalp.activities.SpConstants;
@@ -15,7 +14,7 @@ import com.ravijain.sankalp.data.SpCategory;
 import com.ravijain.sankalp.data.SpCategoryItem;
 import com.ravijain.sankalp.data.SpContentProvider;
 import com.ravijain.sankalp.data.SpDataConstants;
-import com.ravijain.sankalp.data.SpDateUtils;
+import com.ravijain.sankalp.support.SpDateUtils;
 import com.ravijain.sankalp.data.SpExceptionOrTarget;
 import com.ravijain.sankalp.data.SpSankalp;
 
@@ -63,13 +62,13 @@ public class SpSankalpListAdapter extends ArrayAdapter<SpSankalp>{
             Date fromDate = sankalp.getFromDate();
             Date toDate = sankalp.getToDate();
 
-            period = SpDateUtils.getFriendlyPeriodString(fromDate, toDate);
+            period = SpDateUtils.getFriendlyPeriodString(fromDate, toDate, true);
         }
 
 
         // Populate fields with extracted properties
 //            tvCategory.setText(category.getCategoryName());
-        tvItem.setText(cat.getCategoryDisplayName() + "::" + item.getCategoryItemDisplayName());
+        tvItem.setText(item.getCategoryItemDisplayName());
         tvPeriod.setText(String.valueOf(period));
 
         SpExceptionOrTarget exceptionOrTarget = sankalp.getExceptionOrTarget();

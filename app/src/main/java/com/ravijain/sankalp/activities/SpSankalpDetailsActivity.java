@@ -16,16 +16,12 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.ravijain.sankalp.R;
-import com.ravijain.sankalp.data.SpCategory;
-import com.ravijain.sankalp.data.SpCategoryItem;
 import com.ravijain.sankalp.data.SpContentProvider;
 import com.ravijain.sankalp.data.SpDataConstants;
-import com.ravijain.sankalp.data.SpDateUtils;
+import com.ravijain.sankalp.support.SpDateUtils;
 import com.ravijain.sankalp.data.SpSankalp;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.Hashtable;
 
 public class SpSankalpDetailsActivity extends AppCompatActivity {
 
@@ -194,7 +190,7 @@ public class SpSankalpDetailsActivity extends AppCompatActivity {
                     Date fromDate = _sankalp.getFromDate();
                     Date toDate = _sankalp.getToDate();
 
-                    period = SpDateUtils.getFriendlyPeriodString(fromDate, toDate);//SpDateUtils.getFriendlyDateString(fromDate) + " - " + SpDateUtils.getFriendlyDateString(toDate);
+                    period = SpDateUtils.getFriendlyPeriodString(fromDate, toDate, false);//SpDateUtils.getFriendlyDateString(fromDate) + " - " + SpDateUtils.getFriendlyDateString(toDate);
                 }
 
                 _sankalpTypeTV.setText(sankalpType);

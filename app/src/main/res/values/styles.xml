@@ -65,5 +65,13 @@
         <item name="android:textColor">@color/white</item>
     </style>
 
+    <!--<style name="CaldroidDefaultDark1" parent="CaldroidDefault">
+        <item name="styleCaldroidGridView">@style/CalendarCell</item>
+    </style>
+
+    <style name="CalendarCell" parent="CaldroidDefaultGridView">
+        <item name="android:background">@color/caldroid_white</item>
+    </style>
+-->
 
 </resources>

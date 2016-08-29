@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/action_chart_current"
+        android:title="@string/current"
+        />
+    <item
+        android:id="@+id/action_chart_lifetime"
+        android:title="@string/lifetime_db"
+        />
+    <item
+        android:id="@+id/action_chart_upcoming"
+        android:title="@string/upcoming"
+        />
+    <item
+        android:id="@+id/action_chart_all"
+        android:title="@string/all"
+        />
+</menu>

@@ -20,9 +20,15 @@ import com.ravijain.sankalp.R;
 import com.ravijain.sankalp.data.SpUser;
 import com.ravijain.sankalp.data.SpContentProvider;
 import com.ravijain.sankalp.fragments.SpCardDashboardFragment;
+import com.ravijain.sankalp.fragments.SpChartCalendarDashboard;
+import com.ravijain.sankalp.fragments.SpDashboardFragment;
 import com.ravijain.sankalp.fragments.SpUserProfileFragment;
+import com.ravijain.sankalp.support.SpCalendarViewHandler;
+import com.roomorama.caldroid.CaldroidFragment;
 
-public class SpMainActivity extends AppCompatActivity implements ListView.OnItemClickListener{
+import java.util.Calendar;
+
+public class SpMainActivity extends AppCompatActivity implements ListView.OnItemClickListener {
 
     private DrawerLayout _drawerLayout;
     private ListView _drawerListView;
@@ -40,8 +46,7 @@ public class SpMainActivity extends AppCompatActivity implements ListView.OnItem
         if (forceUserScreen || user == null) {
             Intent intent = new Intent(this, SpUserSetupActivity.class);
             startActivity(intent);
-        }
-        else {
+        } else {
             setContentView(R.layout.activity_main);
             _drawerList = getResources().getStringArray(R.array.drawerList);
 
@@ -54,16 +59,21 @@ public class SpMainActivity extends AppCompatActivity implements ListView.OnItem
             // Set the list's click listener
             _drawerListView.setOnItemClickListener(this);
 
-            _loadDashboardFragment();
+            _loadChartCalendarDashboardFragment();
             setupDrawer();
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setHomeButtonEnabled(true);
         }
     }
 
-    private void _loadDashboardFragment()
-    {
+    private void _loadDashboardFragment() {
         Fragment f = new SpCardDashboardFragment();
+        FragmentManager man = getSupportFragmentManager();
+        man.beginTransaction().replace(R.id.content_frame, f).commit();
+    }
+
+    private void _loadChartCalendarDashboardFragment() {
+        Fragment f = new SpChartCalendarDashboard();
         FragmentManager man = getSupportFragmentManager();
         man.beginTransaction().replace(R.id.content_frame, f).commit();
     }
@@ -137,14 +147,22 @@ public class SpMainActivity extends AppCompatActivity implements ListView.OnItem
 
         Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.content_frame);
 
-        if (_drawerList[i].equals(getString(R.string.Dashboard))) {
+        if (_drawerList[i].equals(getString(R.string.Dashboard1))) {
             if (!(currentFragment instanceof SpCardDashboardFragment)) {
                 _loadDashboardFragment();
                 _drawerListView.setItemChecked(i, true);
                 setTitle(getString(R.string.title_activity_sp_sankalp_list));
                 _drawerLayout.closeDrawer(_drawerListView);
             }
+        }else if (_drawerList[i].equals(getString(R.string.Dashboard))) {
+            if (!(currentFragment instanceof SpChartCalendarDashboard)) {
+                _loadChartCalendarDashboardFragment();
+                _drawerListView.setItemChecked(i, true);
+                setTitle(getString(R.string.title_activity_sp_sankalp_list));
+                _drawerLayout.closeDrawer(_drawerListView);
+            }
         }
+
         else if (_drawerList[i].equals(getString(R.string.UpdateProfile))) {
             if (!(currentFragment instanceof SpUserProfileFragment)) {
                 Fragment f = new SpUserProfileFragment();
@@ -158,9 +176,24 @@ public class SpMainActivity extends AppCompatActivity implements ListView.OnItem
                 setTitle(_drawerList[i]);
             }
             _drawerLayout.closeDrawer(_drawerListView);
-        }
-        else {
+        } else if (_drawerList[i].equals(getString(R.string.Dashboard2))) {
+            Fragment f = new SpDashboardFragment();
+            getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, f).commit();
+            setTitle(getString(R.string.title_activity_sp_sankalp_list));
+            _drawerLayout.closeDrawer(_drawerListView);
+        } else if (_drawerList[i].equals(getString(R.string.CalendarView))) {
+            SpCalendarViewHandler cal = new SpCalendarViewHandler(this, SpCalendarViewHandler.CONTEXT_FULL, getSupportFragmentManager(), R.id.content_frame);
+            cal.constructCalendarView();
+
+            // Attach to the activity
+            //getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, calViewFragment).commit();
+
+            setTitle(R.string.calendarViewLabel);
+            _drawerLayout.closeDrawer(_drawerListView);
+        } else {
             Toast.makeText(SpMainActivity.this, _drawerList[i], Toast.LENGTH_SHORT).show();
         }
     }
+
+
 }

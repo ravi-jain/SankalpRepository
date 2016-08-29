@@ -1,0 +1,229 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.ravijain.sankalp.fragments.SpChartCalendarDashboard">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:id="@+id/ll"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:orientation="vertical"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp">
+
+            <TextView
+                android:id="@+id/db_quote_tv"
+                style="@style/SpText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:gravity="center"
+                android:text="@string/quote1"
+                android:textColor="@color/sankalp"
+                android:textStyle="italic" />
+
+            <View
+                style="@style/SpHorizontalDivider"
+                android:layout_width="64dp"
+                android:layout_gravity="center"
+                android:layout_marginBottom="8dp" />
+
+            <android.support.v7.widget.CardView
+                android:id="@+id/card_pieChart"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                card_view:cardCornerRadius="2dp"
+                card_view:cardElevation="@dimen/card_elevation"
+                card_view:cardUseCompatPadding="true">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <RelativeLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="8dp">
+
+                        <TextView
+                            android:id="@+id/card_overview_header"
+                            style="@style/SpLabel"
+
+                            android:text="@string/overviewHeader" />
+
+                        <!-- <Button
+                             android:id="@+id/imageButton"
+                             android:layout_width="wrap_content"
+                             android:layout_height="wrap_content"
+                             android:text="@string/vertical_ellipsis"
+                             android:paddingLeft="8dp"
+                             android:paddingRight="8dp"
+                             android:layout_alignParentRight="true"
+                             android:layout_alignParentTop="true"
+                             android:background="@null"/>-->
+                        <!-- <ImageView
+                             android:id="@+id/db_card_chart_menu"
+                             android:layout_width="30dp"
+                             android:layout_height="30dp"
+                             android:layout_alignParentRight="true"
+                             android:layout_alignParentTop="true"
+                             android:src="@drawable/ic_dots"/>-->
+                        <ImageButton
+                            android:id="@+id/viewDetails_button"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:layout_alignParentTop="true"
+                            android:background="@android:color/transparent"
+                            android:src="@drawable/ic_view_list_black_24dp"
+                            android:text="@string/viewAllHeader" />
+
+                        <!--<Button
+                            android:id="@+id/viewDetails_button"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:layout_alignParentTop="true"
+                            android:text="@string/viewAllHeader"
+                            style="?android:attr/borderlessButtonStyle"
+                            android:gravity="top"
+                            android:minHeight="0dp" android:minWidth="0dp"
+                            android:drawableLeft="@drawable/ic_view_list_black_24dp"/>-->
+                    </RelativeLayout>
+
+                    <com.github.mikephil.charting.charts.PieChart
+                        android:id="@+id/db_pieChart"
+                        android:layout_width="match_parent"
+                        android:layout_height="250dp" />
+                </LinearLayout>
+
+
+            </android.support.v7.widget.CardView>
+
+            <android.support.v7.widget.CardView
+                android:id="@+id/card_calendar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
+                card_view:cardCornerRadius="2dp"
+                card_view:cardElevation="@dimen/card_elevation"
+                card_view:cardUseCompatPadding="true"
+                card_view:contentPadding="8dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/card_calendar_header"
+                        style="@style/SpLabel"
+                        android:text="@string/calendarHeader" />
+
+
+                    <!--<RelativeLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="8dp">
+
+                        <TextView
+                            android:id="@+id/card_calendar_header"
+                            style="@style/SpLabel"
+                            android:text="@string/calendarHeader" />
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:gravity="center"
+                            android:layout_alignParentTop="true">
+                            <View
+                                android:layout_width="12dp"
+                                android:layout_height="12dp"
+                                android:background="@drawable/circle_shape"/>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textAppearance="?android:attr/textAppearanceSmall"
+                                android:text="Atleast 1 Sankalp ends on the day"/>
+                        </LinearLayout>
+                    </RelativeLayout>-->
+
+
+                    <FrameLayout
+                        android:id="@+id/db_calendarView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"></FrameLayout>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="right"
+                        android:layout_marginTop="5dp"
+                        android:gravity="center"
+                        >
+                        <View
+                            android:layout_width="12dp"
+                            android:layout_height="12dp"
+                            android:layout_marginRight="10dp"
+                            android:background="@drawable/circle_shape"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textAppearance="?android:attr/textAppearanceSmall"
+                            android:text="@string/monthViewLegend"/>
+                    </LinearLayout>
+                </LinearLayout>
+
+            </android.support.v7.widget.CardView>
+        </LinearLayout>
+
+    </ScrollView>
+
+    <com.getbase.floatingactionbutton.FloatingActionsMenu
+        android:id="@+id/right_labels"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_margin="@dimen/fab_margin"
+        card_view:fab_addButtonColorNormal="@color/sankalp"
+        card_view:fab_addButtonColorPressed="@color/white_pressed"
+        card_view:fab_addButtonPlusIconColor="@color/black"
+        card_view:fab_labelStyle="@style/menu_labels_style"
+        card_view:fab_labelsPosition="left">
+
+        <com.getbase.floatingactionbutton.FloatingActionButton
+            android:id="@+id/chartCalendarDb_addTyagButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_add_black_24dp"
+            card_view:fab_colorNormal="@color/sankalp_tyag"
+
+            card_view:fab_colorPressed="@color/white_pressed"
+            card_view:fab_plusIconColor="@color/white"
+            card_view:fab_title="@string/tyag" />
+
+        <com.getbase.floatingactionbutton.FloatingActionButton
+            android:id="@+id/chartCalendarDb_addNiyamButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_add_black_24dp"
+            card_view:fab_colorNormal="@color/sankalp_niyam"
+            card_view:fab_colorPressed="@color/white_pressed"
+            card_view:fab_title="@string/niyam" />
+
+    </com.getbase.floatingactionbutton.FloatingActionsMenu>
+
+
+</RelativeLayout>

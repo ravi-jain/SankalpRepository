@@ -65,9 +65,12 @@
                 style="@style/SpText"
                 android:layout_alignParentRight="true"
                 android:layout_marginRight="10dp"
+                android:layout_marginLeft="5dp"
                 android:layout_toRightOf="@+id/list_item_item_textview"
                 android:gravity="right"
-                android:text="Jul 2 - Jul 4" />
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:text="Jul 2 - Jul 4 jkldjklasjdklsajldjsajdklasjdkljaskldja" />
 
         </RelativeLayout>
 

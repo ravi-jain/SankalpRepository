@@ -1,12 +1,14 @@
 package com.ravijain.sankalp.fragments;
 
-import android.app.SearchManager;
-import android.content.Context;
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.SearchView;
 import android.text.TextUtils;
 import android.util.SparseBooleanArray;
@@ -26,15 +28,13 @@ import android.widget.TextView;
 import com.ravijain.sankalp.R;
 import com.ravijain.sankalp.activities.SpConstants;
 import com.ravijain.sankalp.activities.SpSankalpDetailsActivity;
-import com.ravijain.sankalp.data.SpCategoryItem;
+import com.ravijain.sankalp.activities.SpSankalpList;
 import com.ravijain.sankalp.data.SpContentProvider;
 import com.ravijain.sankalp.data.SpDataConstants;
-import com.ravijain.sankalp.data.SpDateUtils;
 import com.ravijain.sankalp.data.SpSankalp;
 
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.Hashtable;
+import java.util.Calendar;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -44,11 +44,11 @@ public class SpSankalpListFragment extends Fragment implements SearchView.OnQuer
     private SpSankalpListAdapter _sankalpAdapter;
     private ListView _sankalpListView;
     private SankalpLoaderTask _loaderTask;
-    private Hashtable<Integer, SpCategoryItem> _categoryItems;
     private TextView _listSummaryTv;
 
-    private int _sankalpType;
+    //private int _sankalpType;
     private int _listFilter;
+    //private Calendar _day = null;
 
     public SpSankalpListFragment() {
     }
@@ -58,14 +58,26 @@ public class SpSankalpListFragment extends Fragment implements SearchView.OnQuer
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_sp_sankalp_list, container, false);
         setHasOptionsMenu(true);
-        _sankalpType = getActivity().getIntent().getIntExtra(SpConstants.INTENT_KEY_SANKALP_TYPE, SpDataConstants.SANKALP_TYPE_BOTH);
-        _listFilter = getActivity().getIntent().getIntExtra(SpConstants.INTENT_KEY_SANKALP_LIST_FILTER, SpConstants.INTENT_VALUE_SANKALP_LIST_FILTER_CURRENT);
+
+        Bundle b = getArguments();
+        int sankalpType = SpDataConstants.SANKALP_TYPE_BOTH;
+        Calendar day = null;
+        if (b != null) {
+            sankalpType = b.getInt(SpConstants.INTENT_KEY_SANKALP_TYPE, SpDataConstants.SANKALP_TYPE_BOTH);
+            _listFilter = b.getInt(SpConstants.INTENT_KEY_SANKALP_LIST_FILTER, SpConstants.INTENT_VALUE_SANKALP_LIST_FILTER_ALL);
+            long time = getArguments().getLong(SpConstants.INTENT_KEY_SANKALP_LIST_FILTER_DATE_VALUE, -1);
+            if (time > -1)
+            {
+                day = Calendar.getInstance();
+                day.setTimeInMillis(time);
+            }
+        }
 
         String title = getString(R.string.title_activity_sp_sankalp_list);
-        if (_sankalpType == SpDataConstants.SANKALP_TYPE_NIYAM) {
+        if (sankalpType == SpDataConstants.SANKALP_TYPE_NIYAM) {
             title = getString(R.string.niyam);
         }
-        else if (_sankalpType == SpDataConstants.SANKALP_TYPE_TYAG) {
+        else if (sankalpType == SpDataConstants.SANKALP_TYPE_TYAG) {
             title = getString(R.string.tyag);
         }
         getActivity().setTitle(title);
@@ -88,26 +100,25 @@ public class SpSankalpListFragment extends Fragment implements SearchView.OnQuer
             }
         });
         _sankalpListView.setEmptyView(rootView.findViewById(R.id.emptyListText));
-
         _listSummaryTv = ((TextView)rootView.findViewById(R.id.listViewShowSummary));
-        _listSummaryTv.setText(_getListSummary());
-        _loaderTask = new SankalpLoaderTask();
-        _loaderTask.execute(_sankalpType, _listFilter);
-
+        _refreshView(sankalpType, _listFilter, day);
         return rootView;
+    }
+
+    private void _refreshView(int sankalpType, int intentFilter, Calendar day)
+    {
+
+        _listSummaryTv.setText(_getListSummary(sankalpType, intentFilter));
+        _loaderTask = new SankalpLoaderTask(sankalpType, intentFilter, day);
+        _loaderTask.execute();
     }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.menu_list, menu);
 
-        // Get the SearchView and set the searchable configuration
-//        SearchManager searchManager = (SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE);
         SearchView searchView = (SearchView) menu.findItem(R.id.list_search).getActionView();
         searchView.setOnQueryTextListener(this);
-        // Assumes current activity is the searchable activity
-//        searchView.setSearchableInfo(searchManager.getSearchableInfo(getActivity().getComponentName()));
-//        searchView.setIconifiedByDefault(false); // Do not iconify the widget; expand it by default
     }
 
     @Override
@@ -117,7 +128,13 @@ public class SpSankalpListFragment extends Fragment implements SearchView.OnQuer
             //_addSankalp();
             SpFilterDialogFragment d = new SpFilterDialogFragment();
             d.setListFilter(_listFilter);
+            d.setParentFragment(this);
             d.show(getFragmentManager(), "SpFilterDialogFragment");
+            return true;
+        }
+        else if (id == R.id.action_list_period) {
+            SpIntervalDialogFragment d = new SpIntervalDialogFragment();
+            d.show(getFragmentManager(), "SpIntervalDialogFragment");
             return true;
         }
 
@@ -149,58 +166,64 @@ public class SpSankalpListFragment extends Fragment implements SearchView.OnQuer
             sankalpType = SpDataConstants.SANKALP_TYPE_BOTH;
         }
 
-        _listSummaryTv.setText(_getListSummary());
+        _filterList(sankalpType, listFilter);
 
+    }
+
+    private void _filterList(int sankalpType, int listFilter)
+    {
+        _listSummaryTv.setText(_getListSummary(sankalpType, listFilter));
         _sankalpAdapter.filter(sankalpType, listFilter);
-
-//        _loaderTask = new SankalpLoaderTask();
-//        _loaderTask.execute(_sankalpType, _listFilter);
     }
 
     public void onDialogNegativeClick(DialogFragment dialog) {
 
     }
 
-    private String _getListSummary()
+    private String _getListSummary(int sankalpType, int listFilter)
     {
-        String sankalpType;
-        if (_sankalpType == SpDataConstants.SANKALP_TYPE_BOTH) {
-            sankalpType = "sankalps";
+        String sankalpTypeLabel;
+        if (sankalpType == SpDataConstants.SANKALP_TYPE_BOTH) {
+            sankalpTypeLabel = "sankalps";
         }
-        else if (_sankalpType == SpDataConstants.SANKALP_TYPE_TYAG) {
-            sankalpType = "tyags";
+        else if (sankalpType == SpDataConstants.SANKALP_TYPE_TYAG) {
+            sankalpTypeLabel = "tyags";
         }
         else {
-            sankalpType = "niyams";
+            sankalpTypeLabel = "niyams";
         }
 
-        String pd;
-        if (_listFilter == SpConstants.INTENT_VALUE_SANKALP_LIST_FILTER_LIFETIME) {
+        String pd = null;
+        if (listFilter == SpConstants.INTENT_VALUE_SANKALP_LIST_FILTER_LIFETIME) {
             pd = "lifetime";
         }
-        else if (_listFilter == SpConstants.INTENT_VALUE_SANKALP_LIST_FILTER_CURRENT) {
+        else if (listFilter == SpConstants.INTENT_VALUE_SANKALP_LIST_FILTER_CURRENT) {
             pd = "current";
         }
-        else if (_listFilter == SpConstants.INTENT_VALUE_SANKALP_LIST_FILTER_UPCOMING) {
+        else if (listFilter == SpConstants.INTENT_VALUE_SANKALP_LIST_FILTER_UPCOMING) {
             pd = "upcoming";
         }
-        else if (_listFilter == SpConstants.INTENT_VALUE_SANKALP_LIST_FILTER_TODAY) {
-            pd = "today's";
-        }
-        else if (_listFilter == SpConstants.INTENT_VALUE_SANKALP_LIST_FILTER_TOMORROW) {
-            pd = "tomorrow's";
-        }
-        else if (_listFilter == SpConstants.INTENT_VALUE_SANKALP_LIST_FILTER_MONTH) {
-            pd = "this month's";
-        }
-        else if (_listFilter == SpConstants.INTENT_VALUE_SANKALP_LIST_FILTER_YEAR) {
-            pd = "this year's";
-        }
-        else {
+//        else if (_listFilter == SpConstants.INTENT_VALUE_SANKALP_LIST_FILTER_TODAY) {
+//            pd = "today's";
+//        }
+//        else if (_listFilter == SpConstants.INTENT_VALUE_SANKALP_LIST_FILTER_TOMORROW) {
+//            pd = "tomorrow's";
+//        }
+//        else if (_listFilter == SpConstants.INTENT_VALUE_SANKALP_LIST_FILTER_MONTH) {
+//            pd = "this month's";
+//        }
+//        else if (_listFilter == SpConstants.INTENT_VALUE_SANKALP_LIST_FILTER_YEAR) {
+//            pd = "this year's";
+//        }
+        else if (listFilter == SpConstants.INTENT_VALUE_SANKALP_LIST_FILTER_ALL){
             pd = "all";
         }
 
-        return "Showing " + pd + " " + sankalpType + ".";
+        StringBuilder sb = new StringBuilder();
+        sb.append("Showing ");
+        if (pd != null) sb.append(pd).append(" ");
+        sb.append(sankalpTypeLabel).append(".");
+        return sb.toString();
     }
 
     public void searchList(String query) {
@@ -223,41 +246,27 @@ public class SpSankalpListFragment extends Fragment implements SearchView.OnQuer
     }
 
 
-    private class SankalpLoaderTask extends AsyncTask<Integer, Integer, Boolean>
+    private class SankalpLoaderTask extends AsyncTask<Void, Void, Boolean>
     {
         private ArrayList<SpSankalp> _sankalps = new ArrayList<SpSankalp>();
+
+        private int _sType, _lFilter;
+        private Calendar _dayFilter = null;
+
+        SankalpLoaderTask(int sankalpType, int listFilter, Calendar day)
+        {
+            _sType = sankalpType;
+            _lFilter = listFilter;
+            _dayFilter = day;
+        }
+
         @Override
-        protected Boolean doInBackground(Integer... integers) {
-            int sankalpType = integers[0];
-            int listFilter = integers[1];
+        protected Boolean doInBackground(Void... params) {
             SpContentProvider provider = SpContentProvider.getInstance(getContext());
-            _sankalps = provider.getSankalps(_sankalpType, _listFilter);
-
-//            _sankalpType = sankalpType;
-//            _listFilter = listFilter;
-
-            /*for (SpSankalp sankalp : sankalps) {
-                if (listFilter == SpConstants.INTENT_VALUE_SANKALP_LIST_FILTER_ALL) {
-                    _sankalps.add(sankalp);
-                }
-                else if (listFilter == SpConstants.INTENT_VALUE_SANKALP_LIST_FILTER_LIFETIME){
-                    if (sankalp.isLifetime() == SpDataConstants.SANKALP_IS_LIFTIME_TRUE) {
-                        _sankalps.add(sankalp);
-                    }
-                }else {
-                    if (listFilter == SpConstants.INTENT_VALUE_SANKALP_LIST_FILTER_UPCOMING && SpDateUtils.isUpcomingDate(sankalp.getFromDate())) {
-                        _sankalps.add(sankalp);
-                    }
-                    else if(listFilter == SpConstants.INTENT_VALUE_SANKALP_LIST_FILTER_CURRENT && SpDateUtils.isCurrentDate(sankalp.getFromDate(), sankalp.getToDate())) {
-                        _sankalps.add(sankalp);
-                    }
-                }
-
-            }*/
+            _sankalps = provider.getSankalps(_sType, _lFilter, _dayFilter);
 
             return true;
         }
-
 
         @Override
         protected void onPostExecute(final Boolean success) {
@@ -266,10 +275,22 @@ public class SpSankalpListFragment extends Fragment implements SearchView.OnQuer
             if (success) {
                 _sankalpAdapter.clearAdapter();
                 _sankalpAdapter.addItems(_sankalps);
+
+//                if (_sankalpTypeFilter != -1) {
+//                    int f = _lFilter;
+//                    if (_lFilter == SpConstants.INTENT_VALUE_SANKALP_LIST_FILTER_TOMORROW ||
+//                            _lFilter == SpConstants.INTENT_VALUE_SANKALP_LIST_FILTER_MONTH ||
+//                            _lFilter == SpConstants.INTENT_VALUE_SANKALP_LIST_FILTER_YEAR) {
+//                        f = -1;
+//                    }
+//                    _filterList(_sankalpTypeFilter, f);
+//                }
+
             } else {
                 // Error
             }
         }
+
     }
 
     private class SpMultiNodeChoiceListener implements AbsListView.MultiChoiceModeListener
@@ -324,4 +345,6 @@ public class SpSankalpListFragment extends Fragment implements SearchView.OnQuer
 
         }
     }
+
+
 }

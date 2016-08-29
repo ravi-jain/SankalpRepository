@@ -1,6 +1,6 @@
 package com.ravijain.sankalp.data;
 
-import com.ravijain.sankalp.activities.SpConstants;
+import com.ravijain.sankalp.support.SpDateUtils;
 
 import java.util.Date;
 
@@ -50,7 +50,7 @@ public class SpSankalp {
         if (isLifetime() == SpDataConstants.SANKALP_IS_LIFTIME_TRUE) {
             s.append("lifetime");
         } else {
-            s.append(SpDateUtils.getFriendlyPeriodString(getFromDate(), getToDate()));
+            s.append(SpDateUtils.getFriendlyPeriodString(getFromDate(), getToDate(), false));
         }
 
         if (getExceptionOrTarget().getExceptionOrTargetCount() > 0) {

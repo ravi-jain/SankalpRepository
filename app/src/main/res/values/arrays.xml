@@ -20,11 +20,16 @@
 
     <string-array name="drawerList">
         <item>@string/Dashboard</item>
+        <item>@string/Dashboard1</item>
+        <item>@string/Dashboard2</item>
+        <item>@string/CalendarView</item>
         <item>@string/UpdateProfile</item>
         <item>@string/SankalpVidhi</item>
         <item>@string/Feedback</item>
     </string-array>
 
 
-
+    <string name="Dashboard2">Summary Dashboard</string>
+    <string name="CalendarView">Calendar View</string>
+    <string name="Dashboard1">Card Dashboard</string>
 </resources>

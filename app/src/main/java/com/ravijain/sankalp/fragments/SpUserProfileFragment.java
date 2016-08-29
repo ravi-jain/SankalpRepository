@@ -127,6 +127,7 @@ public class SpUserProfileFragment extends Fragment {
             return true;
         } else if (id == R.id.action_registerUser) {
             _registerUser();
+            return true;
         }
 
         return super.onOptionsItemSelected(item);
@@ -149,9 +150,10 @@ public class SpUserProfileFragment extends Fragment {
 
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
-            _showProgress(true);
+
             SpUser u = _getCurrentUser();
             if (u != null) {
+                _showProgress(true);
                 mRegisterTask = new UserRegisterTask(u);
                 mRegisterTask.execute((Void) null);
             }
@@ -274,6 +276,7 @@ public class SpUserProfileFragment extends Fragment {
     private void _handleSuccessfulRegistration() {
         //Toast.makeText(getActivity(), "Registration Complete", Toast.LENGTH_SHORT).show();
         //NavUtils.navigateUpFromSameTask(this);
+//        NavUtils.navigateUpFromSameTask(getActivity());
         Intent intent = new Intent(getContext(), SpMainActivity.class);
         startActivity(intent);
     }

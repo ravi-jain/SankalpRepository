@@ -4,7 +4,6 @@ package com.ravijain.sankalp.fragments;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
@@ -18,7 +17,8 @@ import com.ravijain.sankalp.activities.SpConstants;
 import com.ravijain.sankalp.activities.SpSankalpList;
 import com.ravijain.sankalp.data.SpContentProvider;
 import com.ravijain.sankalp.data.SpDataConstants;
-import com.ravijain.sankalp.data.SpDateUtils;
+import com.ravijain.sankalp.support.SpCalendarViewHandler;
+import com.ravijain.sankalp.support.SpDateUtils;
 import com.ravijain.sankalp.data.SpSankalp;
 
 import java.util.ArrayList;
@@ -89,6 +89,8 @@ public class SpCardDashboardFragment extends Fragment implements View.OnClickLis
             }
         });*/
 
+        _setUpCalendarView();
+
         com.getbase.floatingactionbutton.FloatingActionButton fabTyag = (com.getbase.floatingactionbutton.FloatingActionButton) rootView.findViewById(R.id.cardDb_addTyagButton);
         com.getbase.floatingactionbutton.FloatingActionButton niyamTyag = (com.getbase.floatingactionbutton.FloatingActionButton) rootView.findViewById(R.id.cardDb_addNiyamButton);
         fabTyag.setOnClickListener(this);
@@ -98,6 +100,15 @@ public class SpCardDashboardFragment extends Fragment implements View.OnClickLis
         dashboardLoaderTask.execute((Void) null);
 
         return rootView;
+    }
+
+    private void _setUpCalendarView() {
+
+        SpCalendarViewHandler cal = new SpCalendarViewHandler(getActivity(), SpCalendarViewHandler.CONTEXT_LIMITED, getFragmentManager(), R.id.db_calendarView);
+        cal.constructCalendarView();
+
+        // Attach to the activity
+        //getFragmentManager().beginTransaction().replace(R.id.db_calendarView, _calViewFragment).commit();
     }
 
     private void _initializeViews(View rootView) {

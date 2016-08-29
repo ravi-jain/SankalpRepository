@@ -2,8 +2,6 @@ package com.ravijain.sankalp.fragments;
 
 
 import android.content.Intent;
-import android.database.Cursor;
-import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -13,7 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ImageButton;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -22,17 +19,12 @@ import com.ravijain.sankalp.activities.SpAddSankalpActivity;
 import com.ravijain.sankalp.activities.SpConstants;
 import com.ravijain.sankalp.activities.SpSankalpDetailsActivity;
 import com.ravijain.sankalp.activities.SpSankalpList;
-import com.ravijain.sankalp.data.SpCategory;
-import com.ravijain.sankalp.data.SpCategoryItem;
 import com.ravijain.sankalp.data.SpContentProvider;
 import com.ravijain.sankalp.data.SpDataConstants;
-import com.ravijain.sankalp.data.SpDateUtils;
+import com.ravijain.sankalp.support.SpDateUtils;
 import com.ravijain.sankalp.data.SpSankalp;
 
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.Hashtable;
-import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.

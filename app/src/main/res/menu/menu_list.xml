@@ -9,8 +9,12 @@
         app:showAsAction="collapseActionView|ifRoom"
         app:actionViewClass="android.support.v7.widget.SearchView" />
     <item
-        android:id="@+id/action_list_filter"
-        android:title="@string/filterList"
+    android:id="@+id/action_list_filter"
+    android:title="@string/filterList"
+    app:showAsAction="ifRoom"/>
+    <item
+        android:id="@+id/action_list_period"
+        android:title="@string/selectInterval"
         app:showAsAction="ifRoom"/>
 
 </menu>

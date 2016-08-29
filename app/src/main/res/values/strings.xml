@@ -22,13 +22,14 @@
     <string name="title_activity_sp_add_tyag">Add Tyag</string>
     <string name="title_activity_sp_add_niyam">Add Niyam</string>
 
-
+    <string name="vertical_ellipsis">&#8942;</string>
     <!-- I18N Strings -->
     <string name="Dashboard">Dashboard</string>
     <string name="UpdateProfile">Update Profile</string>
     <string name="SankalpVidhi">Sankalp Vidhi</string>
     <string name="Feedback">Contact Us</string>
     <string name="sankalpType">Sankalp type</string>
+    <string name="selectInterval">Select Interval</string>
     <string name="sankalpCategory">Category</string>
     <string name="sankalpItem">Item</string>
     <string name="sankalpPeriod">Period</string>
@@ -86,4 +87,10 @@
     <string name="drawer_open">Open navigation drawer</string>
     <string name="prompt_city">City</string>
     <string name="update">UPDATE</string>
+    <string name="calendarViewLabel">Showing this month\'s sankalps</string>
+    <string name="Day">Day</string>
+    <string name="month">Month</string>
+    <string name="year">Year</string>
+    <string name="calendarHeader"><u>Month View</u></string>
+    <string name="monthViewLegend">Atleast 1 Sankalp ends on the day.</string>
 </resources>

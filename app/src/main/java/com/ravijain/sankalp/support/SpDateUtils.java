@@ -1,4 +1,4 @@
-package com.ravijain.sankalp.data;
+package com.ravijain.sankalp.support;
 
 import android.provider.CalendarContract;
 
@@ -55,12 +55,22 @@ public class SpDateUtils {
     }
 
     public static String getDayString(Calendar cal) {
-        SimpleDateFormat shortenedDateFormat = new SimpleDateFormat("EEE, MMM d, yy");
+        SimpleDateFormat shortenedDateFormat = new SimpleDateFormat("EEEE MMMM dd, yyyy");
+        return shortenedDateFormat.format(cal.getTime());
+    }
+
+    public static String getNumericalDayString(Calendar cal) {
+        SimpleDateFormat shortenedDateFormat = new SimpleDateFormat("d/M/yyyy");
         return shortenedDateFormat.format(cal.getTime());
     }
 
     public static String getMonthString(Calendar cal) {
         SimpleDateFormat shortenedDateFormat = new SimpleDateFormat("MMMM, yyyy");
+        return shortenedDateFormat.format(cal.getTime());
+    }
+
+    public static String getYearString(Calendar cal) {
+        SimpleDateFormat shortenedDateFormat = new SimpleDateFormat("yyyy");
         return shortenedDateFormat.format(cal.getTime());
     }
 
@@ -126,6 +136,11 @@ public class SpDateUtils {
         return dateFormatter.format(date);
     }
 
+    public static String getFriendlyDateShortString(Date date) {
+        SimpleDateFormat dateFormatter = new SimpleDateFormat("MMM dd, yyyy", Locale.US);
+        return dateFormatter.format(date);
+    }
+
     public static String getFriendlyDateString(long milliSeconds) {
         Date date = new Date(milliSeconds);
         return getFriendlyDateString(date);
@@ -141,7 +156,7 @@ public class SpDateUtils {
         return fromDate.after(now);
     }
 
-    public static String getFriendlyPeriodString(Date fromDate, Date toDate) {
+    public static String getFriendlyPeriodString(Date fromDate, Date toDate, boolean shortRepresentation) {
         Calendar c1 = Calendar.getInstance();
         c1.setTime(fromDate);
 
@@ -164,7 +179,7 @@ public class SpDateUtils {
                         } else if (isSameDay(c1, nextDate(Calendar.getInstance()))) {
                             return "Tomorrow";
                         } else {
-                            return getDayString(c1);
+                            return shortRepresentation ? getNumericalDayString(c1) : getDayString(c1);
                         }
 
                     }

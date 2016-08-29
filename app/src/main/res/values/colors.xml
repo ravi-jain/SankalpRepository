@@ -16,8 +16,9 @@
     <!--<color name="sankalp_tyag">#ff64c2f4</color>
     <color name="sankalp_niyam">#FF4081</color>-->
 
-    <color name="sankalp_tyag">#f05858</color>
+    <color name="sankalp_tyag">#ff1ca8f4</color><!--#f05858-->
     <color name="sankalp_niyam">#32b181</color>
+    <color name="sankalp">#FF7043</color>
 
     <color name="black_semi_transparent">#B2000000</color>
     <color name="background">#e5e5e5</color>
