@@ -37,6 +37,7 @@ public class SpSankalpDetailsActivity extends AppCompatActivity {
     private EditText _exTarCurrentCountET;
     private TextView _sankalpDescriptionTV;
     private ShareActionProvider mShareActionProvider;
+    private SpSankalp _sankalp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,7 +97,7 @@ public class SpSankalpDetailsActivity extends AppCompatActivity {
         mShareActionProvider = (ShareActionProvider) MenuItemCompat.getActionProvider(item);
         Intent sendIntent = new Intent();
         sendIntent.setAction(Intent.ACTION_SEND);
-        sendIntent.putExtra(Intent.EXTRA_TEXT, "This is my text to send.");
+        sendIntent.putExtra(Intent.EXTRA_TEXT, _sankalp.getSankalpSummary());
         sendIntent.setType("text/plain");
         setShareIntent(sendIntent);
         // Return true to display menu
@@ -104,10 +105,10 @@ public class SpSankalpDetailsActivity extends AppCompatActivity {
 
     }
 
-//    @Override
-//    public boolean onOptionsItemSelected(MenuItem item) {
-//        int id = item.getItemId();
-//        if (id == R.id.details_menu_item_share) {
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+//        if (id == R.id.details_menu_action_share) {
 //            Intent sendIntent = new Intent();
 //            sendIntent.setAction(Intent.ACTION_SEND);
 //            sendIntent.putExtra(Intent.EXTRA_TEXT, "This is my text to send.");
@@ -115,9 +116,14 @@ public class SpSankalpDetailsActivity extends AppCompatActivity {
 //            setShareIntent(sendIntent);
 //            return true;
 //        }
-//
-//        return super.onOptionsItemSelected(item);
-//    }
+        if (id == R.id.details_menu_action_edit) {
+            Intent intent = new Intent(getApplicationContext(), SpAddSankalpActivity.class);
+            intent.putExtra(SpConstants.INTENT_KEY_SANKALP_ID, _sankalp.getId());
+            startActivity(intent);
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
 
     private void setShareIntent(Intent shareIntent) {
         if (mShareActionProvider != null) {
@@ -148,7 +154,7 @@ public class SpSankalpDetailsActivity extends AppCompatActivity {
 
     private class DetailsLoaderTask extends AsyncTask<Void, Void, Boolean> {
         private int _id;
-        private SpSankalp _sankalp;
+
 
         DetailsLoaderTask(int id) {
             _id = id;

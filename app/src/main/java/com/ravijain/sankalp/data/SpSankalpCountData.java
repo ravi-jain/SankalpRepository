@@ -5,7 +5,7 @@ package com.ravijain.sankalp.data;
  */
 public class SpSankalpCountData {
 
-    int _currentTyags, _currentNiyams, _lifetimeTyags, _lifetimeNiyams, _upcomingTyags, _upcomingNiyams, _allTyags, _allNiyams;
+    private int _currentTyags, _currentNiyams, _lifetimeTyags, _lifetimeNiyams, _upcomingTyags, _upcomingNiyams, _allTyags, _allNiyams;
 
     public int getCurrentSankalps()
     {

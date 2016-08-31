@@ -35,13 +35,16 @@
             <android.support.design.widget.TextInputLayout
                 android:id="@+id/input_layout_name"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:paddingBottom="10dp">
 
                 <EditText
                     android:id="@+id/userName"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/prompt_userName"
+                    android:drawableLeft="@drawable/ic_person_black_24dp"
+                    android:drawablePadding="10dp"
                     android:maxLines="1"
                     android:singleLine="true" />
 
@@ -50,13 +53,16 @@
             <android.support.design.widget.TextInputLayout
                 android:id="@+id/input_layout_mobile"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:paddingBottom="10dp">
 
                 <EditText
                     android:id="@+id/userMobile"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/prompt_userMobile"
+                    android:drawableLeft="@drawable/ic_call_black_24dp"
+                    android:drawablePadding="10dp"
                     android:maxLines="1"
                     android:singleLine="true" />
 
@@ -65,13 +71,16 @@
             <android.support.design.widget.TextInputLayout
                 android:id="@+id/input_layout_email"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:paddingBottom="10dp">
 
                 <EditText
                     android:id="@+id/userEmail"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/prompt_email"
+                    android:drawableLeft="@drawable/ic_email_black_24dp"
+                    android:drawablePadding="10dp"
                     android:inputType="textEmailAddress"
                     android:maxLines="1"
                     android:singleLine="true" />
@@ -81,13 +90,16 @@
             <android.support.design.widget.TextInputLayout
                 android:id="@+id/input_layout_city"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:paddingBottom="10dp">
 
                 <EditText
                     android:id="@+id/userCity"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/prompt_city"
+                    android:drawableLeft="@drawable/ic_home_black_24dp"
+                    android:drawablePadding="10dp"
                     android:maxLines="1"
                     android:singleLine="true" />
 

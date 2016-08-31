@@ -142,7 +142,7 @@ public class SpChartCalendarDashboard extends Fragment implements View.OnClickLi
         mChart.setCenterText(generateCenterSpannableText(getString(R.string.title_activity_sp_sankalp_list)));
 
         mChart.setDrawHoleEnabled(true);
-        mChart.setHoleColor(Color.WHITE);
+        mChart.setHoleColor(getResources().getColor(R.color.sankalp));
 
         mChart.setTransparentCircleColor(Color.WHITE);
         mChart.setTransparentCircleAlpha(110);
@@ -167,20 +167,28 @@ public class SpChartCalendarDashboard extends Fragment implements View.OnClickLi
             public void onValueSelected(Entry e, Highlight h) {
                 if (e instanceof PieEntry) {
                     PieEntry pe = (PieEntry) e;
-//                    int sankalpType = SpDataConstants.SANKALP_TYPE_BOTH;
-//                    if (pe.getLabel().equals(_labels[0])) {
-//                        // tyag;
-//                        sankalpType = SpDataConstants.SANKALP_TYPE_TYAG;
-//                    }
-//                    else {
-//                        // niyam
-//                        sankalpType = SpDataConstants.SANKALP_TYPE_NIYAM;
-//                    }
-//
-//                    Intent intent = new Intent(getContext(), SpSankalpList.class);
-//                    intent.putExtra(SpConstants.INTENT_KEY_SANKALP_TYPE, sankalpType);
-//                    intent.putExtra(SpConstants.INTENT_KEY_SANKALP_LIST_FILTER, _intentListFilter);
-//                    startActivity(intent);
+                    int intentListFilter = SpConstants.INTENT_VALUE_SANKALP_LIST_FILTER_CURRENT;
+                    if (pe.getLabel().equals(_labels[0])) {
+                        // tyag;
+                        intentListFilter = SpConstants.INTENT_VALUE_SANKALP_LIST_FILTER_CURRENT;
+                    }
+                    else if (pe.getLabel().equals(_labels[1])) {
+                        // tyag;
+                        intentListFilter = SpConstants.INTENT_VALUE_SANKALP_LIST_FILTER_LIFETIME;
+                    }
+                    else if (pe.getLabel().equals(_labels[2])) {
+                        // tyag;
+                        intentListFilter = SpConstants.INTENT_VALUE_SANKALP_LIST_FILTER_UPCOMING;
+                    }
+                    else if (pe.getLabel().equals(_labels[3])) {
+                        // tyag;
+                        intentListFilter = SpConstants.INTENT_VALUE_SANKALP_LIST_FILTER_ALL;
+                    }
+
+                    Intent intent = new Intent(getContext(), SpSankalpList.class);
+                    intent.putExtra(SpConstants.INTENT_KEY_SANKALP_TYPE, SpDataConstants.SANKALP_TYPE_BOTH);
+                    intent.putExtra(SpConstants.INTENT_KEY_SANKALP_LIST_FILTER, intentListFilter);
+                    startActivity(intent);
                 }
             }
 
@@ -205,7 +213,7 @@ public class SpChartCalendarDashboard extends Fragment implements View.OnClickLi
         l.setYOffset(25f);
 
         // entry label styling
-        mChart.setEntryLabelColor(Color.WHITE);
+        mChart.setEntryLabelColor(Color.DKGRAY);
 //        mChart.setEntryLabelTypeface(mTfRegular);
         mChart.setEntryLabelTextSize(12f);
 
@@ -229,10 +237,18 @@ public class SpChartCalendarDashboard extends Fragment implements View.OnClickLi
 //        for (int i = 0; i < 3; i++) {
 //            entries.add(new PieEntry((float) ((Math.random() * mult) + mult / 5), labels[i]));
 //        }
-        entries.add(new PieEntry(_currentData.getCurrentSankalps(), _labels[0]));
-        entries.add(new PieEntry(_currentData.getLifetimeSankalps(), _labels[1]));
-        entries.add(new PieEntry(_currentData.getUpcomingSankalps(), _labels[2]));
-        entries.add(new PieEntry(_currentData.getAllSankalps(), _labels[3]));
+        if (_currentData.getCurrentSankalps() > 0) {
+            entries.add(new PieEntry(_currentData.getCurrentSankalps(), _labels[0]));
+        }
+        if (_currentData.getLifetimeSankalps() > 0) {
+            entries.add(new PieEntry(_currentData.getLifetimeSankalps(), _labels[1]));
+        }
+        if (_currentData.getUpcomingSankalps() > 0) {
+            entries.add(new PieEntry(_currentData.getUpcomingSankalps(), _labels[2]));
+        }
+        if (_currentData.getAllSankalps() > 0) {
+            entries.add(new PieEntry(_currentData.getAllSankalps(), _labels[3]));
+        }
 
         PieDataSet dataSet = new PieDataSet(entries, "");
         dataSet.setSliceSpace(3f);
@@ -266,11 +282,11 @@ public class SpChartCalendarDashboard extends Fragment implements View.OnClickLi
         dataSet.setColors(colors);
         //dataSet.setSelectionShift(0f);
 
-//        dataSet.setValueLinePart1OffsetPercentage(20.f);
-//        dataSet.setValueLinePart1Length(1f);
-//        dataSet.setValueLinePart2Length(1f);
-//        dataSet.setXValuePosition(PieDataSet.ValuePosition.OUTSIDE_SLICE);
-//        dataSet.setYValuePosition(PieDataSet.ValuePosition.OUTSIDE_SLICE);
+        dataSet.setValueLinePart1OffsetPercentage(80.f);
+        dataSet.setValueLinePart1Length(0.6f);
+        dataSet.setValueLinePart2Length(0.6f);
+        //dataSet.setXValuePosition(PieDataSet.ValuePosition.OUTSIDE_SLICE);
+        dataSet.setYValuePosition(PieDataSet.ValuePosition.OUTSIDE_SLICE);
 
         PieData data = new PieData(dataSet);
         data.setValueFormatter(new ValueFormatter() {
@@ -279,8 +295,8 @@ public class SpChartCalendarDashboard extends Fragment implements View.OnClickLi
                 return String.valueOf((int) value);
             }
         });
-        data.setValueTextSize(20f);
-        data.setValueTextColor(Color.WHITE);
+        data.setValueTextSize(15f);
+        data.setValueTextColor(Color.DKGRAY);
         //data.setValueTypeface(mTfLight);
         mChart.setData(data);
 
@@ -296,7 +312,7 @@ public class SpChartCalendarDashboard extends Fragment implements View.OnClickLi
         SpannableString s = new SpannableString(text);
         s.setSpan(new RelativeSizeSpan(1.7f), 0, s.length(), 0);
         s.setSpan(new StyleSpan(Typeface.ITALIC), 0, s.length(), 0);
-        s.setSpan(new ForegroundColorSpan(Color.GRAY), 0, s.length(), 0);
+        s.setSpan(new ForegroundColorSpan(Color.DKGRAY), 0, s.length(), 0);
 //        s.setSpan(new RelativeSizeSpan(.8f), 14, s.length() - 15, 0);
 //        s.setSpan(new StyleSpan(Typeface.ITALIC), s.length() - 14, s.length(), 0);
 //        s.setSpan(new ForegroundColorSpan(ColorTemplate.getHoloBlue()), s.length() - 14, s.length(), 0);

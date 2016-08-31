@@ -60,8 +60,12 @@ public class SpDateUtils {
     }
 
     public static String getNumericalDayString(Calendar cal) {
+        return getNumericalDayString(cal.getTime());
+    }
+
+    public static String getNumericalDayString(Date d) {
         SimpleDateFormat shortenedDateFormat = new SimpleDateFormat("d/M/yyyy");
-        return shortenedDateFormat.format(cal.getTime());
+        return shortenedDateFormat.format(d);
     }
 
     public static String getMonthString(Calendar cal) {
@@ -192,7 +196,7 @@ public class SpDateUtils {
             }
         }
 
-        return getFriendlyDateString(fromDate) + " - " + getFriendlyDateString(toDate);
+        return getNumericalDayString(fromDate) + " - " + getNumericalDayString(toDate);
 
     }
 

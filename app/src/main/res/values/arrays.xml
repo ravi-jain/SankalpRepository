@@ -20,16 +20,28 @@
 
     <string-array name="drawerList">
         <item>@string/Dashboard</item>
-        <item>@string/Dashboard1</item>
-        <item>@string/Dashboard2</item>
-        <item>@string/CalendarView</item>
         <item>@string/UpdateProfile</item>
         <item>@string/SankalpVidhi</item>
+        <!--<item>@string/Dashboard1</item>
+        <item>@string/Dashboard2</item>
+        <item>@string/CalendarView</item>-->
+        <item>@string/settings</item>
         <item>@string/Feedback</item>
+    </string-array>
+    <string-array name="pref_languages">
+        <item>@string/english</item>
+        <item>@string/hindi</item>
+    </string-array>
+
+    <string-array name="pref_languages_values">
+        <item>en_US</item>
+        <item>hi</item>
     </string-array>
 
 
     <string name="Dashboard2">Summary Dashboard</string>
     <string name="CalendarView">Calendar View</string>
     <string name="Dashboard1">Card Dashboard</string>
+    <string name="english">English</string>
+    <string name="hindi">Hindi</string>
 </resources>

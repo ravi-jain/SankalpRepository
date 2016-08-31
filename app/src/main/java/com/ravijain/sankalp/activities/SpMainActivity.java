@@ -1,32 +1,44 @@
 package com.ravijain.sankalp.activities;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.graphics.drawable.Drawable;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.ravijain.sankalp.R;
+import com.ravijain.sankalp.data.SpSankalp;
 import com.ravijain.sankalp.data.SpUser;
 import com.ravijain.sankalp.data.SpContentProvider;
 import com.ravijain.sankalp.fragments.SpCardDashboardFragment;
 import com.ravijain.sankalp.fragments.SpChartCalendarDashboard;
 import com.ravijain.sankalp.fragments.SpDashboardFragment;
+import com.ravijain.sankalp.fragments.SpSettingsFragment;
 import com.ravijain.sankalp.fragments.SpUserProfileFragment;
 import com.ravijain.sankalp.support.SpCalendarViewHandler;
 import com.roomorama.caldroid.CaldroidFragment;
 
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Locale;
 
 public class SpMainActivity extends AppCompatActivity implements ListView.OnItemClickListener {
 
@@ -39,6 +51,8 @@ public class SpMainActivity extends AppCompatActivity implements ListView.OnItem
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+//        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+//        setLangRecreate(prefs.getString(SpSettingsFragment.KEY_PREF_LANGUAGE, ""));
 
         SpContentProvider provider = SpContentProvider.getInstance(getApplicationContext());
         SpUser user = provider.getUser();
@@ -54,8 +68,8 @@ public class SpMainActivity extends AppCompatActivity implements ListView.OnItem
             _drawerListView = (ListView) findViewById(R.id.navList);
 
             // Set the adapter for the list view
-            _drawerListView.setAdapter(new ArrayAdapter<String>(this,
-                    android.R.layout.simple_list_item_1, _drawerList));
+            _drawerListView.setAdapter(new DrawerAdapter(this,
+                     _drawerList));
             // Set the list's click listener
             _drawerListView.setOnItemClickListener(this);
 
@@ -190,10 +204,41 @@ public class SpMainActivity extends AppCompatActivity implements ListView.OnItem
 
             setTitle(R.string.calendarViewLabel);
             _drawerLayout.closeDrawer(_drawerListView);
-        } else {
+        } else if (_drawerList[i].equals(getString(R.string.settings))) {
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.content_frame, new SpSettingsFragment())
+                    .commit();
+            setTitle(getString(R.string.settings));
+            _drawerLayout.closeDrawer(_drawerListView);
+        }
+        else {
             Toast.makeText(SpMainActivity.this, _drawerList[i], Toast.LENGTH_SHORT).show();
         }
     }
 
+    private class DrawerAdapter extends ArrayAdapter<String>
+    {
+        int[] icons = {R.drawable.ic_dashboard_black_24dp, R.drawable.ic_person_black_24dp, R.drawable.ic_description_black_24dp, R.drawable.ic_settings_black_24dp, R.drawable.ic_contact_mail_black_24dp};
+        DrawerAdapter(Context context, String[] items)
+        {
+            super(context, 0, items);
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            String item = getItem(position);
+            // Check if an existing view is being reused, otherwise inflate the view
+            if (convertView == null) {
+                convertView = LayoutInflater.from(getContext()).inflate(R.layout.list_item_drawer, parent, false);
+            }
+            TextView title = (TextView) convertView.findViewById(R.id.drawer_list_tv);
+            title.setText(item);
+            ImageView iconView = (ImageView) convertView.findViewById(R.id.drawer_list_icon);
+            iconView.setImageResource(icons[position]);
+
+
+            return convertView;
+        }
+    }
 
 }

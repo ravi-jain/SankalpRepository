@@ -298,7 +298,15 @@ public class SpSankalpListFragment extends Fragment implements SearchView.OnQuer
 
         @Override
         public void onItemCheckedStateChanged(ActionMode actionMode, int i, long l, boolean b) {
-
+            int count = _sankalpListView.getCheckedItemCount();
+            String label = String.valueOf(count) + " ";
+            if (count == 1) {
+                label += getResources().getString(R.string.listSelectedItemLabel);
+            }
+            else if (count > 1) {
+                label += getResources().getString(R.string.listSelectedItemsLabel);
+            }
+            actionMode.setTitle(label);
         }
 
         @Override

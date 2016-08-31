@@ -50,7 +50,9 @@ public class SpSankalpList extends AppCompatActivity {
 
         }
         _viewPager.setAdapter(_pagerAdapter);
-
+        if (_isStatic() && _intentListFilter > 0) {
+            _viewPager.setCurrentItem(_intentListFilter, true);
+        }
 
         ((ViewPager.LayoutParams) (findViewById(R.id.pager_header)).getLayoutParams()).isDecor = true;
 
@@ -134,7 +136,7 @@ public class SpSankalpList extends AppCompatActivity {
 
     private class SpStaticPagerAdapter extends FragmentPagerAdapter {
 
-        int[] _intentListFilter = {SpConstants.INTENT_VALUE_SANKALP_LIST_FILTER_CURRENT, SpConstants.INTENT_VALUE_SANKALP_LIST_FILTER_LIFETIME,
+        int[] _intentListFilters = {SpConstants.INTENT_VALUE_SANKALP_LIST_FILTER_CURRENT, SpConstants.INTENT_VALUE_SANKALP_LIST_FILTER_LIFETIME,
                 SpConstants.INTENT_VALUE_SANKALP_LIST_FILTER_UPCOMING, SpConstants.INTENT_VALUE_SANKALP_LIST_FILTER_ALL};
         String[] _titles = {getString(R.string.current), getString(R.string.lifetime_db), getString(R.string.upcoming), getString(R.string.all)};
 
@@ -145,7 +147,7 @@ public class SpSankalpList extends AppCompatActivity {
         @Override
         public Fragment getItem(int position) {
 
-            return _getListFragment(_sankalpType, _intentListFilter[position], -1);
+            return _getListFragment(_sankalpType, _intentListFilters[position], -1);
         }
 
         @Override

@@ -20,26 +20,33 @@ public class SpExceptionOrTarget {
     private String _label;
     private int _exceptionOrTargetCount;
     private int _exceptionOrTargetCountCurrent = EXCEPTION_OR_TARGET_UNDEFINED;
+    private Context _context;
 
     public SpExceptionOrTarget(int id, Context context)
     {
         _id = id;
+        _context = context;
+        _setLabel(id);
+    }
+
+    private void _setLabel(int id)
+    {
         switch (id) {
             case EXCEPTION_OR_TARGET_YEARLY:
-                _label = context.getString(R.string.yearly);
+                _label = _context.getString(R.string.yearly);
                 break;
             case EXCEPTION_OR_TARGET_MONTHLY:
-                _label = context.getString(R.string.monthly);
+                _label = _context.getString(R.string.monthly);
                 break;
             case EXCEPTION_OR_TARGET_WEEKLY:
-                _label = context.getString(R.string.weekly);
+                _label = _context.getString(R.string.weekly);
                 break;
             case EXCEPTION_OR_TARGET_DAILY:
-                _label = context.getString(R.string.daily);
+                _label = _context.getString(R.string.daily);
                 break;
             case EXCEPTION_OR_TARGET_TOTAL:
             default:
-                _label = context.getString(R.string.total2);
+                _label = _context.getString(R.string.total2);
         }
     }
 
@@ -89,13 +96,11 @@ public class SpExceptionOrTarget {
 
     public void setId(int id) {
         this._id = id;
+        _setLabel(id);
     }
 
     public String getLabel() {
         return _label;
     }
 
-    public void setLabel(String label) {
-        this._label = label;
-    }
 }

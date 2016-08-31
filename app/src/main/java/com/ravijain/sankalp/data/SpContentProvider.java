@@ -158,7 +158,7 @@ public class SpContentProvider {
         return _categoryItems;
     }
 
-    public Hashtable<String, SpCategory> getAllCategoriesBySankalpType(int type) {
+    /*public Hashtable<String, SpCategory> getAllCategoriesBySankalpType(int type) {
         Hashtable<String, SpCategory> categories = new Hashtable<String, SpCategory>();
         SQLiteDatabase db = _dbHelper.getReadableDatabase();
         String query = "SELECT * FROM " + SpTableContract.SpCategoryTable.TABLE_NAME + " WHERE "
@@ -166,7 +166,7 @@ public class SpContentProvider {
         if (type != SpDataConstants.SANKALP_TYPE_BOTH) {
             query += " OR " + SpTableContract.SpCategoryTable.COLUMN_CATEGORY_TYPE + " =" + SpDataConstants.SANKALP_TYPE_BOTH;
         }
-        query += " ORDER BY " + SpTableContract.SpCategoryTable.COLUMN_CATEGORY_NAME + " DESC";
+        query += " ORDER BY " + SpTableContract.SpCategoryTable.COLUMN_CATEGORY_NAME + " ASC";
         Cursor cursor = db.rawQuery(query, null);
         if (cursor != null) {
             cursor.moveToFirst();
@@ -182,14 +182,64 @@ public class SpContentProvider {
         }
         db.close();
         return categories;
+    }*/
+
+    public ArrayList<SpCategory> getAllCategoriesBySankalpType(int type) {
+        ArrayList<SpCategory> categories = new ArrayList<SpCategory>();
+        SQLiteDatabase db = _dbHelper.getReadableDatabase();
+        String query = "SELECT * FROM " + SpTableContract.SpCategoryTable.TABLE_NAME + " WHERE "
+                + SpTableContract.SpCategoryTable.COLUMN_CATEGORY_TYPE + " =" + type;
+        if (type != SpDataConstants.SANKALP_TYPE_BOTH) {
+            query += " OR " + SpTableContract.SpCategoryTable.COLUMN_CATEGORY_TYPE + " =" + SpDataConstants.SANKALP_TYPE_BOTH;
+        }
+        query += " ORDER BY " + SpTableContract.SpCategoryTable.COLUMN_CATEGORY_NAME;
+        Cursor cursor = db.rawQuery(query, null);
+        if (cursor != null) {
+            cursor.moveToFirst();
+            while (cursor.isAfterLast() == false) {
+                SpCategory category = new SpCategory(cursor.getInt(cursor.getColumnIndexOrThrow(SpTableContract.SpCategoryTable._ID)),
+                        cursor.getString(cursor.getColumnIndexOrThrow(SpTableContract.SpCategoryTable.COLUMN_CATEGORY_NAME)),
+                        cursor.getString(cursor.getColumnIndexOrThrow(SpTableContract.SpCategoryTable.COLUMN_CATEGORY_DISPLAYNAME)),
+                        cursor.getInt(cursor.getColumnIndexOrThrow(SpTableContract.SpCategoryTable.COLUMN_CATEGORY_TYPE)));
+                categories.add(category);
+                cursor.moveToNext();
+            }
+            cursor.close();
+        }
+        db.close();
+        return categories;
     }
 
-    public Hashtable<String, SpCategoryItem> getAllCategoryItemsByCategoryId(int id) {
-        Hashtable<String, SpCategoryItem> items = new Hashtable<String, SpCategoryItem>();
+//    public Hashtable<String, SpCategoryItem> getAllCategoryItemsByCategoryId(int id) {
+//        Hashtable<String, SpCategoryItem> items = new Hashtable<String, SpCategoryItem>();
+//        SQLiteDatabase db = _dbHelper.getReadableDatabase();
+//        String query = "SELECT * FROM " + SpTableContract.SpItemTable.TABLE_NAME + " WHERE "
+//                + SpTableContract.SpItemTable.COLUMN_ITEM_CATEGORY_ID + " =" + id;
+//        query += " ORDER BY " + SpTableContract.SpItemTable.COLUMN_ITEM_NAME + " DESC";
+//
+//        Cursor cursor = db.rawQuery(query, null);
+//        if (cursor != null) {
+//            cursor.moveToFirst();
+//            while (cursor.isAfterLast() == false) {
+//                SpCategoryItem item = new SpCategoryItem(cursor.getInt(cursor.getColumnIndexOrThrow(SpTableContract.SpItemTable._ID)),
+//                        cursor.getString(cursor.getColumnIndexOrThrow(SpTableContract.SpItemTable.COLUMN_ITEM_NAME)),
+//                        cursor.getString(cursor.getColumnIndexOrThrow(SpTableContract.SpItemTable.COLUMN_ITEM_DISPLAYNAME)),
+//                        cursor.getInt(cursor.getColumnIndexOrThrow(SpTableContract.SpItemTable.COLUMN_ITEM_CATEGORY_ID)));
+//                items.put(item.getCategoryItemName(), item);
+//                cursor.moveToNext();
+//            }
+//            cursor.close();
+//        }
+//        db.close();
+//        return items;
+//    }
+
+    public ArrayList<SpCategoryItem> getAllCategoryItemsByCategoryId(int id) {
+        ArrayList<SpCategoryItem> items = new ArrayList<SpCategoryItem>();
         SQLiteDatabase db = _dbHelper.getReadableDatabase();
         String query = "SELECT * FROM " + SpTableContract.SpItemTable.TABLE_NAME + " WHERE "
                 + SpTableContract.SpItemTable.COLUMN_ITEM_CATEGORY_ID + " =" + id;
-        query += " ORDER BY " + SpTableContract.SpItemTable.COLUMN_ITEM_NAME + " DESC";
+        query += " ORDER BY " + SpTableContract.SpItemTable.COLUMN_ITEM_NAME;
 
         Cursor cursor = db.rawQuery(query, null);
         if (cursor != null) {
@@ -199,7 +249,7 @@ public class SpContentProvider {
                         cursor.getString(cursor.getColumnIndexOrThrow(SpTableContract.SpItemTable.COLUMN_ITEM_NAME)),
                         cursor.getString(cursor.getColumnIndexOrThrow(SpTableContract.SpItemTable.COLUMN_ITEM_DISPLAYNAME)),
                         cursor.getInt(cursor.getColumnIndexOrThrow(SpTableContract.SpItemTable.COLUMN_ITEM_CATEGORY_ID)));
-                items.put(item.getCategoryItemName(), item);
+                items.add(item);
                 cursor.moveToNext();
             }
             cursor.close();
@@ -317,6 +367,7 @@ public class SpContentProvider {
         String tableName = SpTableContract.SpSankalpTable.TABLE_NAME;
         String userQuery = "SELECT  * FROM " + tableName;
         userQuery += _prepareWhereClause(sankalpType, listFilter, day);
+        userQuery += " ORDER BY " + SpTableContract.SpSankalpTable.COLUMN_TO_DATE + " IS NULL";
         return _runSankalpQuery(userQuery);
     }
 
@@ -341,8 +392,8 @@ public class SpContentProvider {
             }
             else if (listFilter == SpConstants.INTENT_VALUE_SANKALP_LIST_FILTER_CURRENT) {
                 long time = new Date().getTime();
-                whereClause += SpTableContract.SpSankalpTable.COLUMN_ISLIFETIME + " = " + SpDataConstants.SANKALP_IS_LIFTIME_TRUE
-                        + " OR " + time + " BETWEEN " + SpTableContract.SpSankalpTable.COLUMN_FROM_DATE + " AND " + SpTableContract.SpSankalpTable.COLUMN_TO_DATE;
+                whereClause += "(" + SpTableContract.SpSankalpTable.COLUMN_ISLIFETIME + " = " + SpDataConstants.SANKALP_IS_LIFTIME_TRUE
+                        + " OR " + time + " BETWEEN " + SpTableContract.SpSankalpTable.COLUMN_FROM_DATE + " AND " + SpTableContract.SpSankalpTable.COLUMN_TO_DATE + ")";
             }
             else if (listFilter == SpConstants.INTENT_VALUE_SANKALP_LIST_FILTER_UPCOMING) {
                 long time = new Date().getTime();
@@ -447,7 +498,6 @@ public class SpContentProvider {
                 + "( SELECT * FROM " + tableName + " ORDER BY " + SpTableContract.SpSankalpTable.COLUMN_CREATION_DATE
                 + " DESC LIMIT " + String.valueOf(recentCount) + ") ORDER BY "
                 + SpTableContract.SpSankalpTable.COLUMN_CREATION_DATE;
-        // select * from (select * from tblmessage order by sortfield ASC limit 10) order by sortfield DESC;
 
         return _runSankalpQuery(userQuery);
     }
@@ -459,18 +509,20 @@ public class SpContentProvider {
 
         ArrayList<SpSankalp> sankalps = new ArrayList<SpSankalp>();
         if (cursor != null) {
-            cursor.moveToFirst();
-            while (cursor.isAfterLast() == false) {
-                SpSankalp sankalp = _createSankalpByCursor(cursor);
-                if (sankalp != null) {
-                    sankalps.add(sankalp);
+            try {
+                cursor.moveToFirst();
+                while (cursor.isAfterLast() == false) {
+                    SpSankalp sankalp = _createSankalpByCursor(cursor);
+                    if (sankalp != null) {
+                        sankalps.add(sankalp);
+                    }
+                    cursor.moveToNext();
                 }
-                cursor.moveToNext();
+            }finally {
+                cursor.close();
             }
-            cursor.close();
         }
 
-        cursor.close();
         db.close();
         return sankalps;
     }
@@ -506,29 +558,12 @@ public class SpContentProvider {
         exceptionOrTarget.setExceptionOrTargetCount(exceptionOrTargetCount);
         //exceptionOrTarget.setExceptionOrTargetCountCurrent(exceptionOrTargetCurrentCount);
         if (exceptionOrTargetCount > 0) {
-            int currentCount = getExTarCurrentCount(id);
+            int currentCount = getExTarCurrentCount(exceptionOrTargetid, id);
             exceptionOrTarget.setExceptionOrTargetCountCurrent(currentCount);
         }
         sankalp.setExceptionOrTarget(exceptionOrTarget);
 
         return sankalp;
-    }
-
-    public int getExTarCurrentCount(int id) {
-        int count = -1;
-        SQLiteDatabase db = _dbHelper.getReadableDatabase();
-        String userQuery = "SELECT " + SpTableContract.SpExTarTable.COLUMN_CURRENT_COUNT + " FROM " + SpTableContract.SpExTarTable.TABLE_NAME
-                + " WHERE " + SpTableContract.SpExTarTable.COLUMN_SANKALP_ID + " = " + id +
-                " ORDER BY " + SpTableContract.SpExTarTable.COLUMN_UPDATED_ON + " DESC LIMIT 1";
-        Cursor c = db.rawQuery(userQuery, null);
-        if (c != null) {
-            c.moveToFirst();
-            count = c.getInt(c.getColumnIndexOrThrow(SpTableContract.SpExTarTable.COLUMN_CURRENT_COUNT));
-            c.close();
-        }
-
-        db.close();
-        return count;
     }
 
     public void deleteSankalps(ArrayList<SpSankalp> sankalpsToBeDeleted) {
@@ -560,6 +595,46 @@ public class SpContentProvider {
 
         db.close();
         return sankalp;
+    }
+
+    public int getExTarCurrentCount(int exceptionOrTargetid, int sankalpId) {
+        int count = 0;
+        String userQuery = "SELECT " + SpTableContract.SpExTarTable.COLUMN_CURRENT_COUNT + " FROM " + SpTableContract.SpExTarTable.TABLE_NAME
+                + " WHERE " + SpTableContract.SpExTarTable.COLUMN_SANKALP_ID + " = " + sankalpId;
+        Calendar today = Calendar.getInstance();
+        long begin = 0;
+        long end = 0;
+        if (exceptionOrTargetid == SpExceptionOrTarget.EXCEPTION_OR_TARGET_DAILY) {
+            begin = SpDateUtils.beginOfDate(today).getTime();
+            end = SpDateUtils.endOfDate(today).getTime();
+        }
+        else if (exceptionOrTargetid == SpExceptionOrTarget.EXCEPTION_OR_TARGET_MONTHLY) {
+            begin = SpDateUtils.beginOfMonth(today).getTime();
+            end = SpDateUtils.endOfMonth(today).getTime();
+        }
+        else if (exceptionOrTargetid == SpExceptionOrTarget.EXCEPTION_OR_TARGET_YEARLY) {
+            begin = SpDateUtils.beginOfYear(today).getTime();
+            end = SpDateUtils.endOfYear(today).getTime();
+        }
+        if (begin > 0 && end > 0) {
+            userQuery += " AND " + SpTableContract.SpExTarTable.COLUMN_UPDATED_ON + " BETWEEN " + begin + " AND " + end;
+        }
+
+        userQuery += " ORDER BY " + SpTableContract.SpExTarTable.COLUMN_UPDATED_ON + " DESC LIMIT 1";
+
+        SQLiteDatabase db = _dbHelper.getReadableDatabase();
+        Cursor c = db.rawQuery(userQuery, null);
+        if (c != null && c.getCount() > 0) {
+            try {
+                c.moveToFirst();
+                count = c.getInt(c.getColumnIndexOrThrow(SpTableContract.SpExTarTable.COLUMN_CURRENT_COUNT));
+            }finally {
+                c.close();
+            }
+        }
+
+        db.close();
+        return count;
     }
 
 }

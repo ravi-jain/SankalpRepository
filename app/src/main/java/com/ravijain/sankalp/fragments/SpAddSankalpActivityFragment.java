@@ -6,7 +6,9 @@ import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -43,7 +45,7 @@ import java.util.Hashtable;
  */
 public class SpAddSankalpActivityFragment extends Fragment {
 
-//    private RadioGroup _sankalpRGView;
+    private TextView _sankalpSummaryTV;
     private Spinner _categoriesSpinnerView;
     private Spinner _itemsSpinnerView;
     private Spinner _rangeLabelsSpinnerView;
@@ -68,11 +70,14 @@ public class SpAddSankalpActivityFragment extends Fragment {
     private ArrayAdapter<SpCategoryItem> _itemsAdapter;
     private ArrayAdapter<SpExceptionOrTarget> _exceptionsFrequencyAdapter;
 
-    private Hashtable<Integer, Hashtable<String, SpCategory>> _categoriesTable;
-    private Hashtable<Integer, Hashtable<String, SpCategoryItem>> _categoryItemsTable;
+//    private Hashtable<Integer, Hashtable<String, SpCategory>> _categoriesTable;
+//    private Hashtable<Integer, Hashtable<String, SpCategoryItem>> _categoryItemsTable;
     private Date _fromDate = null;
     private Date _toDate = null;
     private int _sankalpType;
+    private SpSankalp _editedSankalp;
+
+    private boolean _isDocumentReady = false;
 
     public SpAddSankalpActivityFragment() {
     }
@@ -86,13 +91,18 @@ public class SpAddSankalpActivityFragment extends Fragment {
         _sankalpType = getActivity().getIntent().getIntExtra(SpConstants.INTENT_KEY_SANKALP_TYPE, SpDataConstants.SANKALP_TYPE_TYAG);
         if (_sankalpType == SpDataConstants.SANKALP_TYPE_TYAG) {
             getActivity().setTitle(R.string.title_activity_sp_add_tyag);
-        }
-        else {
+        } else {
             getActivity().setTitle(R.string.title_activity_sp_add_niyam);
         }
 
-        _categoriesTable = new Hashtable<Integer, Hashtable<String, SpCategory>>();
-        _categoryItemsTable = new Hashtable<Integer, Hashtable<String, SpCategoryItem>>();
+        int sankalpId = getActivity().getIntent().getIntExtra(SpConstants.INTENT_KEY_SANKALP_ID, -1);
+        if (sankalpId > -1) {
+            DataLoaderTask dlt = new DataLoaderTask(sankalpId, DataLoaderTask.REQUEST_TYPE_SANKALP);
+            dlt.execute((Void) null);
+        }
+
+//        _categoriesTable = new Hashtable<Integer, Hashtable<String, SpCategory>>();
+//        _categoryItemsTable = new Hashtable<Integer, Hashtable<String, SpCategoryItem>>();
 
         Calendar today = Calendar.getInstance();
         _fromDatePickerDialog = new DatePickerDialog(getContext(), new DatePickerDialog.OnDateSetListener() {
@@ -119,8 +129,6 @@ public class SpAddSankalpActivityFragment extends Fragment {
 
 
         _populateAndBindFormFields(fragmentView);
-//        _sankalpRGView.check(R.id.radio_tyag);
-        //_populateData();
 
         return fragmentView;
     }
@@ -146,6 +154,8 @@ public class SpAddSankalpActivityFragment extends Fragment {
 
     private void _populateAndBindFormFields(View view) {
 
+        _sankalpSummaryTV = (TextView) view.findViewById(R.id.add_sankalpSummary_tv);
+
         _exceptionOrTargetTitleTextView = (TextView) view.findViewById(R.id.exceptionOrTargetTitle);
         _exceptionOrTargetCurrentCount_ll = view.findViewById(R.id.exceptionOrTargetCurrentCount_ll);
         _exceptionOrTargetCurrentCount_label = (TextView) view.findViewById(R.id.exceptionOrTargetCurrentCount_label);
@@ -155,8 +165,7 @@ public class SpAddSankalpActivityFragment extends Fragment {
             _exceptionOrTargetTitleTextView.setText(R.string.tyagExceptions);
             _exceptionOrTargetCurrentCount_label.setText(R.string.exception_left_label);
             _populateCategories(SpDataConstants.SANKALP_TYPE_TYAG);
-        }
-        else {
+        } else {
             _exceptionOrTargetTitleTextView.setText(R.string.niyamFrequency);
             _exceptionOrTargetCurrentCount_label.setText(R.string.frequency_done_label);
             _populateCategories(SpDataConstants.SANKALP_TYPE_NIYAM);
@@ -171,6 +180,7 @@ public class SpAddSankalpActivityFragment extends Fragment {
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
                 // your code here
                 _populateItems(((SpCategory) parentView.getSelectedItem()).getId());
+//                _updateSummary();
             }
 
             @Override
@@ -189,7 +199,7 @@ public class SpAddSankalpActivityFragment extends Fragment {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
                 // your code here
-                Toast.makeText(getActivity(), ((SpCategoryItem)parentView.getSelectedItem()).getCategoryItemName(), Toast.LENGTH_SHORT).show();
+                _updateSummary();
             }
 
             @Override
@@ -246,6 +256,7 @@ public class SpAddSankalpActivityFragment extends Fragment {
                 }
                 _exceptionsFrequencyAdapter.clear();
                 _exceptionsFrequencyAdapter.addAll(_getExceptionFrequencyList(label));
+                _updateSummary();
             }
 
             @Override
@@ -263,6 +274,7 @@ public class SpAddSankalpActivityFragment extends Fragment {
         _exceptionsOrTargetSpinnerView.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+                _updateSummary();
             }
 
             @Override
@@ -294,6 +306,7 @@ public class SpAddSankalpActivityFragment extends Fragment {
                     _exceptionOrTargetCurrentCount_ll.setVisibility(View.GONE);
                     _exceptionOrTargetCurrentCount_tv.setText("");
                 }
+                _updateSummary();
             }
 
             @Override
@@ -315,12 +328,28 @@ public class SpAddSankalpActivityFragment extends Fragment {
 
     }
 
-    private void _addSankalp() {
+    private void _setSummaryTextView(SpSankalp editedSankalp) {
 
-        int categoryId = ((SpCategory) _categoriesSpinnerView.getSelectedItem()).getId();
-        int itemId = ((SpCategoryItem) _itemsSpinnerView.getSelectedItem()).getId();
+        _sankalpSummaryTV.setText(editedSankalp.getSankalpSummary());
+    }
 
-        SpSankalp sankalp = SpSankalpFactory.getNewSankalp(_sankalpType, categoryId, itemId);
+    private void _updateSummary()
+    {
+        if (_isDocumentReady) {
+            Log.i("Add", "Summary updating");
+            _editedSankalp = _getSankalpFromInput();
+            _setSummaryTextView(_editedSankalp);
+        }
+
+    }
+
+    private SpSankalp _getSankalpFromInput() {
+        SpCategory category = ((SpCategory) _categoriesSpinnerView.getSelectedItem());
+        SpCategoryItem item = ((SpCategoryItem) _itemsSpinnerView.getSelectedItem());
+
+        SpSankalp sankalp = SpSankalpFactory.getNewSankalp(_sankalpType, category.getId(), item.getId());
+        sankalp.setCategory(category);
+        sankalp.setItem(item);
         sankalp.setFromDate(_fromDate);
         sankalp.setToDate(_toDate);
         if (_rangeValueTextView.getText().equals(getString(R.string.Lifetime))) {
@@ -329,25 +358,28 @@ public class SpAddSankalpActivityFragment extends Fragment {
 
         SpExceptionOrTarget exceptionOrTarget = new SpExceptionOrTarget(SpExceptionOrTarget.EXCEPTION_OR_TARGET_UNDEFINED, getContext());
         String count = _exceptionFrequencyCount.getText().toString();
-        if (count != "") {
+        if (!TextUtils.isEmpty(count)) {
             int countValue = Integer.valueOf(count);
             if (countValue == 0 && _sankalpType == SpDataConstants.SANKALP_TYPE_TYAG) {
                 exceptionOrTarget.setId(SpExceptionOrTarget.EXCEPTION_OR_TARGET_TOTAL);
-            }
-            else {
+            } else {
                 exceptionOrTarget.setExceptionOrTargetCount(countValue);
                 exceptionOrTarget.setId(((SpExceptionOrTarget) _exceptionsOrTargetSpinnerView.getSelectedItem()).getId());
             }
 
             String currentCount = _exceptionOrTargetCurrentCount_tv.getText().toString();
-            if (!currentCount.equals("")) {
+            if (!TextUtils.isEmpty(currentCount)) {
                 exceptionOrTarget.setExceptionOrTargetCountCurrent(Integer.valueOf(currentCount));
             }
         }
 
         sankalp.setExceptionOrTarget(exceptionOrTarget);
         sankalp.setDescription(_descriptionView.getText().toString());
+        return sankalp;
+    }
 
+    private void _addSankalp() {
+        SpSankalp sankalp = _getSankalpFromInput();
         SpContentProvider.getInstance(getContext()).addSankalp(sankalp);
         NavUtils.navigateUpFromSameTask(getActivity());
     }
@@ -391,41 +423,31 @@ public class SpAddSankalpActivityFragment extends Fragment {
     }
 
     private void _populateCategories(int sankalpType) {
-        Hashtable<String, SpCategory> cats = _categoriesTable.get(sankalpType);
-        if (cats == null) {
-            // Database request
-            DataLoaderTask dlt = new DataLoaderTask(sankalpType, DataLoaderTask.REQUEST_TYPE_CATEGORY);
-            dlt.execute((Void) null);
-        } else {
-            _populateCategories(cats.values());
-        }
+        // Database request
+        DataLoaderTask dlt = new DataLoaderTask(sankalpType, DataLoaderTask.REQUEST_TYPE_CATEGORY);
+        dlt.execute((Void) null);
     }
 
     private void _populateCategories(Collection<SpCategory> values) {
         _categoriesAdapter.clear();
         _categoriesAdapter.addAll(values);
         _categoriesSpinnerView.setSelection(0);
-//        Object o = _categoriesSpinnerView.getSelectedItem();
-//        if (o != null && o instanceof SpCategory) {
-//            _populateItems(((SpCategory) o).getId());
-//        }
     }
 
     private void _populateItems(int categoryId) {
-        Hashtable<String, SpCategoryItem> items = _categoryItemsTable.get(categoryId);
-        if (items == null) {
-            // Database request
-            DataLoaderTask dlt = new DataLoaderTask(categoryId, DataLoaderTask.REQUEST_TYPE_ITEM);
-            dlt.execute((Void) null);
-        } else {
-            _populateItems(items.values());
-
-        }
+        // Database request
+        _isDocumentReady = false;
+        DataLoaderTask dlt = new DataLoaderTask(categoryId, DataLoaderTask.REQUEST_TYPE_ITEM);
+        dlt.execute((Void) null);
     }
 
     private void _populateItems(Collection<SpCategoryItem> values) {
+
         _itemsAdapter.clear();
         _itemsAdapter.addAll(values);
+        _itemsSpinnerView.setSelection(0);
+        _isDocumentReady = true;
+        _updateSummary();
     }
 
     private void _setDate(EditText dateTextView, DatePicker view, int year, int monthOfYear, int dayOfMonth) {
@@ -440,7 +462,7 @@ public class SpAddSankalpActivityFragment extends Fragment {
         } else if (dateTextView == _toDateTextView) {
             _toDate = date;
         }
-        dateTextView.setText(SpDateUtils.getFriendlyDateString(date));
+        dateTextView.setText(SpDateUtils.getFriendlyDateShortString(date));
     }
 
     private class DateFieldClickListener implements View.OnClickListener {
@@ -470,12 +492,14 @@ public class SpAddSankalpActivityFragment extends Fragment {
 
 
     private class DataLoaderTask extends AsyncTask<Void, Void, Boolean> {
+
         private int _id;
         private int _requestType;
         final static int REQUEST_TYPE_CATEGORY = 0;
         final static int REQUEST_TYPE_ITEM = 1;
-        private Hashtable<String, SpCategory> _cats = null;
-        private Hashtable<String, SpCategoryItem> _items = null;
+        static final int REQUEST_TYPE_SANKALP = 2;
+        private ArrayList<SpCategory> _cats = null;
+        private ArrayList<SpCategoryItem> _items = null;
 
         DataLoaderTask(int id, int requestType) {
             _id = id;
@@ -489,6 +513,8 @@ public class SpAddSankalpActivityFragment extends Fragment {
                 _cats = provider.getAllCategoriesBySankalpType(_id);
             } else if (_requestType == REQUEST_TYPE_ITEM) {
                 _items = provider.getAllCategoryItemsByCategoryId(_id);
+            } else if (_requestType == REQUEST_TYPE_SANKALP) {
+                _editedSankalp = provider.getSankalpById(_id);
             }
             return true;
         }
@@ -499,20 +525,19 @@ public class SpAddSankalpActivityFragment extends Fragment {
             if (success) {
                 if (_requestType == REQUEST_TYPE_CATEGORY) {
                     if (_cats != null) {
-                        _categoriesTable.put(_id, _cats);
-                        _populateCategories(_cats.values());
+                        _populateCategories(_cats);
                     }
                 } else if (_requestType == REQUEST_TYPE_ITEM) {
                     if (_items != null) {
-                        _categoryItemsTable.put(_id, _items);
-                        _populateItems(_items.values());
+                        _populateItems(_items);
                     }
+                } else if (_requestType == REQUEST_TYPE_SANKALP) {
+                    _setSummaryTextView(_editedSankalp);
                 }
             } else {
                 // Error
             }
         }
     }
-
 
 }
