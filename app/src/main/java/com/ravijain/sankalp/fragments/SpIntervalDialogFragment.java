@@ -33,7 +33,7 @@ public class SpIntervalDialogFragment extends DialogFragment {
                 .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         RadioGroup sTRG = (RadioGroup) ((AlertDialog) dialog).findViewById(R.id.rg_interval);
-
+                        if (sTRG == null) return;
                         int id1 = sTRG.getCheckedRadioButtonId();
                         int listFilter = SpConstants.INTENT_VALUE_SANKALP_LIST_FILTER_DAY;
                         if (id1 == R.id.rb_day) {

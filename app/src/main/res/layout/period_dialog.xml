@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    style="@style/AlertDialog.AppCompat"
+    android:padding="16dp">
+
+    <TextView
+        android:id="@+id/period_title"
+        style="@style/SpLabel"
+        android:text="@string/selectPeriod" />
+
+    <View
+        style="@style/SpHorizontalDivider"
+        android:layout_marginBottom="10dp" />
+
+
+    <FrameLayout
+        android:id="@+id/period_calendarView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone">
+        <com.prolificinteractive.materialcalendarview.MaterialCalendarView
+            android:id="@+id/period_calendar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            />
+    </FrameLayout>
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/month_year_picker"
+        android:orientation="horizontal" android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        android:weightSum="1">
+
+        <NumberPicker
+            android:id="@+id/month_picker"
+            android:layout_width="0dp"
+            android:layout_weight="0.5"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="8dp"></NumberPicker>
+
+        <NumberPicker
+            android:id="@+id/year_picker"
+            android:layout_width="0dp"
+            android:layout_weight="0.5"
+            android:layout_marginLeft="8dp"
+            android:layout_height="wrap_content"></NumberPicker>
+
+    </LinearLayout>
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/year_picker_ll"
+        android:orientation="horizontal" android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        android:gravity="center"
+        >
+
+        <!--<TextView
+            style="@style/SpLabel"
+            android:text="@string/year"
+            android:layout_marginRight="8dp"></TextView>-->
+
+        <NumberPicker
+            android:id="@+id/year_picker_solo"
+            android:layout_width="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:layout_height="wrap_content"></NumberPicker>
+
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="bottom|right">
+        <Button
+            android:id="@+id/pd_cancel_action"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/cancel"
+            style="@style/Base.Widget.AppCompat.Button.ButtonBar.AlertDialog"/>
+        <Button
+            android:id="@+id/pd_ok_action"
+            android:layout_toRightOf="@id/pd_cancel_action"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/ok"
+            style="@style/Base.Widget.AppCompat.Button.ButtonBar.AlertDialog"/>
+
+    </RelativeLayout>
+
+</LinearLayout>

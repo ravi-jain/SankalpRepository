@@ -2,82 +2,71 @@ package com.ravijain.sankalp.support;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
-import android.graphics.drawable.LayerDrawable;
 import android.os.AsyncTask;
-import android.os.Bundle;
-import android.support.v4.app.FragmentManager;
+import android.support.annotation.NonNull;
 import android.view.View;
 import android.widget.Toast;
 
+import com.prolificinteractive.materialcalendarview.CalendarDay;
+import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
+import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
+import com.prolificinteractive.materialcalendarview.OnMonthChangedListener;
+import com.prolificinteractive.materialcalendarview.OnRangeSelectedListener;
 import com.ravijain.sankalp.R;
 import com.ravijain.sankalp.activities.SpConstants;
 import com.ravijain.sankalp.activities.SpSankalpList;
 import com.ravijain.sankalp.data.SpContentProvider;
 import com.ravijain.sankalp.data.SpDataConstants;
 import com.ravijain.sankalp.data.SpSankalp;
-import com.roomorama.caldroid.CaldroidFragment;
-import com.roomorama.caldroid.CaldroidListener;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 
 /**
- * Created by ravijain on 8/25/2016.
+ * Created by ravijain on 9/2/2016.
  */
-public class SpCalendarViewHandler {
+public class SpCalendarViewHandler implements OnDateSelectedListener, OnMonthChangedListener {
 
-    private CaldroidFragment _calViewFragment;
-    private int _contentFrameId;
-    private FragmentManager _fragmentManager;
-    private String _context;
+    private View _view;
     private Context _applicationContext;
+    private MaterialCalendarView _widget;
+    private ArrayList<CalendarDay> _events;
+    private int _selectionMode;
 
-    public static final String CONTEXT_FULL = "CONTEXT_FULL";
-    public static final String CONTEXT_LIMITED = "CONTEXT_LIMITED";
+    public static final int SELECTION_MODE_NONE = 0;
+    public static final int SELECTION_MODE_SINGLE = 1;
+    public static final int SELECTION_MODE_RANGE = 2;
 
-    public SpCalendarViewHandler(Context applicationContext, String context, FragmentManager manager, int contentFrameId)
+    public SpCalendarViewHandler(Context applicationContext, View view)
     {
-        _context = context;
-        _contentFrameId = contentFrameId;
-        _fragmentManager = manager;
         _applicationContext = applicationContext;
+        _view = view;
     }
 
-    public void constructCalendarView()
+    public void constructCalendar(int viewId, int selectionMode)
     {
-        _calViewFragment = new CaldroidFragment();
+        _selectionMode = selectionMode;
+        _widget = (MaterialCalendarView) _view.findViewById(viewId);
+        _widget.setOnDateChangedListener(this);
 
-        Bundle args = new Bundle();
-        Calendar cal = Calendar.getInstance();
-        args.putInt(CaldroidFragment.MONTH, cal.get(Calendar.MONTH) + 1);
-        args.putInt(CaldroidFragment.YEAR, cal.get(Calendar.YEAR));
 
-        boolean enableSwipe = false;
-        boolean showNavigationArrows = false;
-        if (_context == CONTEXT_FULL) {
-            enableSwipe = true;
-            showNavigationArrows = true;
+        if (selectionMode == SELECTION_MODE_NONE) {
+            _widget.setOnMonthChangedListener(this);
+            EventsLoader l = new EventsLoader();
+            l.execute(Calendar.getInstance());
         }
-
-        args.putBoolean(CaldroidFragment.ENABLE_SWIPE, enableSwipe);
-        args.putBoolean(CaldroidFragment.SHOW_NAVIGATION_ARROWS, showNavigationArrows);
-
-        //args.putBoolean(CaldroidFragment.SQUARE_TEXT_VIEW_CELL, false);
-        args.putBoolean(CaldroidFragment.SIX_WEEKS_IN_CALENDAR, false);
-
-        //args.putInt(CaldroidFragment.THEME_RESOURCE, R.style.CaldroidDefaultDark1);
-
-        _calViewFragment.setArguments(args);
-
-        // Attach to the activity
-        _fragmentManager.beginTransaction().replace(_contentFrameId, _calViewFragment).commit();
-
-        // Setup Caldroid
-        _calViewFragment.setCaldroidListener(new CalendarEventListener());
-
+        else if (selectionMode == SELECTION_MODE_RANGE){
+            _widget.setSelectionMode(MaterialCalendarView.SELECTION_MODE_RANGE);
+        }
+        else if (selectionMode == SELECTION_MODE_SINGLE) {
+            _widget.setSelectionMode(MaterialCalendarView.SELECTION_MODE_SINGLE);
+        }
     }
 
     private void _launchSankalpList(Date date)
@@ -89,38 +78,55 @@ public class SpCalendarViewHandler {
         _applicationContext.startActivity(intent);
     }
 
-    private class CalendarEventListener extends CaldroidListener
-    {
-
-        @Override
-        public void onSelectDate(Date date, View view) {
-
-            if (view.getBackground() instanceof LayerDrawable) {
-                _launchSankalpList(date);
+    @Override
+    public void onDateSelected(MaterialCalendarView widget, CalendarDay date, boolean selected) {
+        if (_selectionMode == SELECTION_MODE_NONE) {
+            widget.clearSelection();
+            if (_events.contains(date)) {
+                _launchSankalpList(date.getDate());
             }
             else {
                 Toast.makeText(_applicationContext, _applicationContext.getString(R.string.EmptyList), Toast.LENGTH_SHORT).show();
             }
         }
 
-        @Override
-        public void onChangeMonth(int month, int year) {
-            Calendar cal = Calendar.getInstance();
-            cal.set(year, month - 1, 1);
+    }
+
+    @Override
+    public void onMonthChanged(MaterialCalendarView widget, CalendarDay date) {
+
+        if (_selectionMode == SELECTION_MODE_NONE) {
             // Add events
             EventsLoader l = new EventsLoader();
-            l.execute(cal);
+            l.execute(date.getCalendar());
         }
 
-        @Override
-        public void onLongClickDate(Date date, View view) {
+    }
+
+    public Date[] getRangeDates()
+    {
+        Date[] dates = new Date[2];
+        List<CalendarDay> selectedDates = _widget.getSelectedDates();
+        if (selectedDates.size() > 0) {
+            Date fromDate = selectedDates.get(0).getDate();
+            Date toDate = selectedDates.get(0).getDate();
+            if (selectedDates.size() > 1) {
+                for (int i = 1; i < selectedDates.size(); i++) {
+                    Date d = selectedDates.get(i).getDate();
+                    if (d.compareTo(fromDate) < 0) {
+                        fromDate = d;
+                        continue;
+                    }
+                    if (d.compareTo(toDate) > 0) {
+                        toDate = d;
+                        continue;
+                    }
+                }
+            }
+            dates[0] = fromDate;
+            dates[1] = toDate;
         }
-
-        @Override
-        public void onCaldroidViewCreated() {
-        }
-
-
+        return dates;
     }
 
     private class EventsLoader extends AsyncTask<Calendar, Void, Boolean> {
@@ -137,22 +143,12 @@ public class SpCalendarViewHandler {
 
         protected void onPostExecute(final Boolean success) {
 
-            HashMap<Date, Drawable> events = new HashMap<Date, Drawable>();
+            _events = new ArrayList<>();
             for (SpSankalp sankalp : sankalps) {
-
-                if (events.get(sankalp.getToDate()) == null) {
-                    events.put(sankalp.getToDate(), _applicationContext.getResources().getDrawable(R.drawable.niyam_calendar_drawable));
-                }
-//                if (sankalp.getSankalpType() == SpDataConstants.SANKALP_TYPE_TYAG) {
-//                    _calViewFragment.setBackgroundDrawableForDate(_applicationContext.getResources().getDrawable(R.drawable.niyam_calendar_drawable), sankalp.getToDate());
-//                }
-//                else {
-//                    _calViewFragment.setBackgroundDrawableForDate(_applicationContext.getResources().getDrawable(R.drawable.niyam_calendar_drawable), sankalp.getToDate());
-//                }
+                _events.add(CalendarDay.from(sankalp.getToDate()));
             }
-            if (events.size() > 0) {
-                _calViewFragment.setBackgroundDrawableForDates(events);
-                _calViewFragment.refreshView();
+            if (_events.size() > 0) {
+                _widget.addDecorator(new SpCalendarEventDecorator(_applicationContext.getResources().getColor(R.color.sankalp), _events));
             }
 
         }

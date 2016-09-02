@@ -30,4 +30,5 @@ dependencies {
     compile 'com.getbase:floatingactionbutton:1.10.1'
     compile 'com.roomorama:caldroid:3.0.1'
     compile 'com.github.PhilJay:MPAndroidChart:v3.0.0-beta1'
+    compile 'com.prolificinteractive:material-calendarview:1.4.0'
 }

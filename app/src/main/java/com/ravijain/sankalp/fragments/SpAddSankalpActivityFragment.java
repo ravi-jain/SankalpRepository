@@ -17,11 +17,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.ravijain.sankalp.R;
 import com.ravijain.sankalp.activities.SpConstants;
@@ -29,6 +27,7 @@ import com.ravijain.sankalp.data.SpCategory;
 import com.ravijain.sankalp.data.SpCategoryItem;
 import com.ravijain.sankalp.data.SpContentProvider;
 import com.ravijain.sankalp.data.SpDataConstants;
+import com.ravijain.sankalp.support.SpCustomSpinner;
 import com.ravijain.sankalp.support.SpDateUtils;
 import com.ravijain.sankalp.data.SpExceptionOrTarget;
 import com.ravijain.sankalp.data.SpSankalp;
@@ -38,7 +37,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
-import java.util.Hashtable;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -48,14 +46,14 @@ public class SpAddSankalpActivityFragment extends Fragment {
     private TextView _sankalpSummaryTV;
     private Spinner _categoriesSpinnerView;
     private Spinner _itemsSpinnerView;
-    private Spinner _rangeLabelsSpinnerView;
+    private SpCustomSpinner _rangeLabelsSpinnerView;
 
-    private EditText _fromDateTextView;
-    private EditText _toDateTextView;
+//    private EditText _fromDateTextView;
+//    private EditText _toDateTextView;
     private EditText _descriptionView;
     private EditText _exceptionFrequencyCount;
     private TextView _rangeValueTextView;
-    private View _fromToDateContainer;
+//    private View _fromToDateContainer;
 
     private Spinner _exceptionsOrTargetSpinnerView;
     private TextView _exceptionOrTargetTitleTextView;
@@ -70,8 +68,6 @@ public class SpAddSankalpActivityFragment extends Fragment {
     private ArrayAdapter<SpCategoryItem> _itemsAdapter;
     private ArrayAdapter<SpExceptionOrTarget> _exceptionsFrequencyAdapter;
 
-//    private Hashtable<Integer, Hashtable<String, SpCategory>> _categoriesTable;
-//    private Hashtable<Integer, Hashtable<String, SpCategoryItem>> _categoryItemsTable;
     private Date _fromDate = null;
     private Date _toDate = null;
     private int _sankalpType;
@@ -104,34 +100,111 @@ public class SpAddSankalpActivityFragment extends Fragment {
 //        _categoriesTable = new Hashtable<Integer, Hashtable<String, SpCategory>>();
 //        _categoryItemsTable = new Hashtable<Integer, Hashtable<String, SpCategoryItem>>();
 
-        Calendar today = Calendar.getInstance();
-        _fromDatePickerDialog = new DatePickerDialog(getContext(), new DatePickerDialog.OnDateSetListener() {
-            @Override
-            public void onDateSet(DatePicker view, int year, int monthOfYear,
-                                  int dayOfMonth) {
-                _setDate(_fromDateTextView, view, year, monthOfYear, dayOfMonth);
-            }
-
-
-        }, today.get(Calendar.YEAR), today.get(Calendar.MONTH),
-                today.get(Calendar.DAY_OF_MONTH));
-
-        _toDatePickerDialog = new DatePickerDialog(getContext(), new DatePickerDialog.OnDateSetListener() {
-            @Override
-            public void onDateSet(DatePicker view, int year, int monthOfYear,
-                                  int dayOfMonth) {
-                _setDate(_toDateTextView, view, year, monthOfYear, dayOfMonth);
-            }
-
-
-        }, today.get(Calendar.YEAR), today.get(Calendar.MONTH),
-                today.get(Calendar.DAY_OF_MONTH));
+//        Calendar today = Calendar.getInstance();
+//        _fromDatePickerDialog = new DatePickerDialog(getContext(), new DatePickerDialog.OnDateSetListener() {
+//            @Override
+//            public void onDateSet(DatePicker view, int year, int monthOfYear,
+//                                  int dayOfMonth) {
+//                _setDate(_fromDateTextView, view, year, monthOfYear, dayOfMonth);
+//            }
+//
+//
+//        }, today.get(Calendar.YEAR), today.get(Calendar.MONTH),
+//                today.get(Calendar.DAY_OF_MONTH));
+//
+//        //_hideDateItems();
+//
+//        _toDatePickerDialog = new DatePickerDialog(getContext(), new DatePickerDialog.OnDateSetListener() {
+//            @Override
+//            public void onDateSet(DatePicker view, int year, int monthOfYear,
+//                                  int dayOfMonth) {
+//                _setDate(_toDateTextView, view, year, monthOfYear, dayOfMonth);
+//            }
+//
+//
+//        }, today.get(Calendar.YEAR), today.get(Calendar.MONTH),
+//                today.get(Calendar.DAY_OF_MONTH));
 
 
         _populateAndBindFormFields(fragmentView);
 
         return fragmentView;
     }
+
+//    private void _hideDateItems() {
+//
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
+//            int daySpinnerId = Resources.getSystem().getIdentifier("day", "id", "android");
+//            if (daySpinnerId != 0)
+//            {
+//                View daySpinner = _fromDatePickerDialog.findViewById(daySpinnerId);
+//                if (daySpinner != null)
+//                {
+//                    daySpinner.setVisibility(View.GONE);
+//                }
+//            }
+//
+//            int monthSpinnerId = Resources.getSystem().getIdentifier("month", "id", "android");
+//            if (monthSpinnerId != 0)
+//            {
+//                View monthSpinner = _fromDatePickerDialog.findViewById(monthSpinnerId);
+//                if (monthSpinner != null)
+//                {
+//                    monthSpinner.setVisibility(View.VISIBLE);
+//                }
+//            }
+//
+//            int yearSpinnerId = Resources.getSystem().getIdentifier("year", "id", "android");
+//            if (yearSpinnerId != 0)
+//            {
+//                View yearSpinner = _fromDatePickerDialog.findViewById(yearSpinnerId);
+//                if (yearSpinner != null)
+//                {
+//                    yearSpinner.setVisibility(View.GONE);
+//                }
+//            }
+//        } else { //Older SDK versions
+//            Field f[] = _fromDatePickerDialog.getClass().getDeclaredFields();
+//            for (Field field : f)
+//            {
+//                if(field.getName().equals("mDayPicker") || field.getName().equals("mDaySpinner"))
+//                {
+//                    field.setAccessible(true);
+//                    Object dayPicker = null;
+//                    try {
+//                        dayPicker = field.get(_fromDatePickerDialog);
+//                    } catch (IllegalAccessException e) {
+//                        e.printStackTrace();
+//                    }
+//                    ((View) dayPicker).setVisibility(View.GONE);
+//                }
+//
+//                if(field.getName().equals("mMonthPicker") || field.getName().equals("mMonthSpinner"))
+//                {
+//                    field.setAccessible(true);
+//                    Object monthPicker = null;
+//                    try {
+//                        monthPicker = field.get(_fromDatePickerDialog);
+//                    } catch (IllegalAccessException e) {
+//                        e.printStackTrace();
+//                    }
+//                    ((View) monthPicker).setVisibility(View.VISIBLE);
+//                }
+//
+//                if(field.getName().equals("mYearPicker") || field.getName().equals("mYearSpinner"))
+//                {
+//                    field.setAccessible(true);
+//                    Object yearPicker = null;
+//                    try {
+//                        yearPicker = field.get(_fromDatePickerDialog);
+//                    } catch (IllegalAccessException e) {
+//                        e.printStackTrace();
+//                    }
+//                    ((View) yearPicker).setVisibility(View.GONE);
+//                }
+//            }
+//        }
+//    }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -175,114 +248,29 @@ public class SpAddSankalpActivityFragment extends Fragment {
         _categoriesAdapter = new ArrayAdapter<SpCategory>(getContext(), R.layout.spinner_item, new ArrayList<SpCategory>());
         _categoriesAdapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
         _categoriesSpinnerView.setAdapter(_categoriesAdapter);
-        _categoriesSpinnerView.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
-                // your code here
-                _populateItems(((SpCategory) parentView.getSelectedItem()).getId());
-//                _updateSummary();
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parentView) {
-                // your code here
-
-            }
-
-        });
+        _categoriesSpinnerView.setOnItemSelectedListener(new SpinnerItemSelectionListener());
 
         _itemsSpinnerView = (Spinner) view.findViewById(R.id.items_spinner);
         _itemsAdapter = new ArrayAdapter<SpCategoryItem>(getContext(), R.layout.spinner_item, new ArrayList<SpCategoryItem>());
         _itemsAdapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
         _itemsSpinnerView.setAdapter(_itemsAdapter);
-        _itemsSpinnerView.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
-                // your code here
-                _updateSummary();
-            }
+        _itemsSpinnerView.setOnItemSelectedListener(new SpinnerItemSelectionListener());
 
-            @Override
-            public void onNothingSelected(AdapterView<?> parentView) {
-                // your code here
-            }
 
-        });
-
-        _fromToDateContainer = view.findViewById(R.id.fromToDateContainer);
+//        _fromToDateContainer = view.findViewById(R.id.fromToDateContainer);
         _rangeValueTextView = (TextView) view.findViewById(R.id.rangeValue_textView);
-        _rangeLabelsSpinnerView = (Spinner) view.findViewById(R.id.rangeLabels_spinner);
-        ArrayAdapter adapter = ArrayAdapter.createFromResource(getContext(), R.array.rangeLabelsList, R.layout.spinner_item);
+        _rangeLabelsSpinnerView = (SpCustomSpinner) view.findViewById(R.id.rangeLabels_spinner);
+        ArrayAdapter adapter = ArrayAdapter.createFromResource(getContext(), R.array.periodLabelsList, R.layout.spinner_item);
         adapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
         _rangeLabelsSpinnerView.setAdapter(adapter);
-        _rangeLabelsSpinnerView.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
-                String label = (String) parentView.getSelectedItem();
-                Calendar today = Calendar.getInstance();
-                if (label.equals(getString(R.string.Range))) {
-                    _togglePeriodViewVisibility(false);
-                    _setDate(_fromDateTextView, SpDateUtils.beginOfDate(today));
-                    _setDate(_toDateTextView, SpDateUtils.endOfDate(today));
-                } else if (label.equals(getString(R.string.thisDay))) {
-                    _setDate(_fromDateTextView, SpDateUtils.beginOfDate(today));
-                    _setDate(_toDateTextView, SpDateUtils.endOfDate(today));
-                    _togglePeriodViewVisibility(true);
-                    _rangeValueTextView.setText(SpDateUtils.getDayString(today));
-
-                } else if (label.equals(getString(R.string.tomorrow))) {
-                    _togglePeriodViewVisibility(true);
-                    Calendar nextDate = SpDateUtils.nextDate(today);
-                    _setDate(_fromDateTextView, SpDateUtils.beginOfDate(nextDate));
-                    _setDate(_toDateTextView, SpDateUtils.endOfDate(nextDate));
-                    _rangeValueTextView.setText(SpDateUtils.getDayString(nextDate));
-                } else if (label.equals(getString(R.string.thisMonth))) {
-                    _togglePeriodViewVisibility(true);
-                    _setDate(_fromDateTextView, SpDateUtils.beginOfMonth(today));
-                    _setDate(_toDateTextView, SpDateUtils.endOfMonth(today));
-                    _rangeValueTextView.setText(SpDateUtils.getMonthString(today));
-                } else if (label.equals(getString(R.string.thisYear))) {
-                    _togglePeriodViewVisibility(true);
-                    _setDate(_fromDateTextView, SpDateUtils.beginOfYear(today));
-                    _setDate(_toDateTextView, SpDateUtils.endOfYear(today));
-                    _rangeValueTextView.setText(SpDateUtils.yearOfDate(today));
-                } else if (label.equals(getString(R.string.Lifetime))) {
-                    _togglePeriodViewVisibility(true);
-                    _fromDate = null;
-                    _toDate = null;
-                    _setDate(_fromDateTextView, SpDateUtils.beginOfDate(today));
-                    _toDateTextView.setText(getString(R.string.Lifetime));
-                    _rangeValueTextView.setText(R.string.Lifetime);
-                }
-                _exceptionsFrequencyAdapter.clear();
-                _exceptionsFrequencyAdapter.addAll(_getExceptionFrequencyList(label));
-                _updateSummary();
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parentView) {
-                // your code here
-            }
-
-        });
+        _rangeLabelsSpinnerView.setOnItemSelectedListener(new SpinnerItemSelectionListener());
 
         _exceptionsOrTargetSpinnerView = (Spinner) view.findViewById(R.id.exceptionOrTarget_spinner);
         _exceptionsFrequencyAdapter = new ArrayAdapter<SpExceptionOrTarget>(getContext(), R.layout.spinner_item,
                 _getExceptionFrequencyList(null));
         _exceptionsFrequencyAdapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
         _exceptionsOrTargetSpinnerView.setAdapter(_exceptionsFrequencyAdapter);
-        _exceptionsOrTargetSpinnerView.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
-                _updateSummary();
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-
-            }
-
-        });
+        _exceptionsOrTargetSpinnerView.setOnItemSelectedListener(new SpinnerItemSelectionListener());
         _exceptionFrequencyCount = (EditText) view.findViewById(R.id.exceptionOrTargetCount_textView);
         _exceptionFrequencyCount.addTextChangedListener(new TextWatcher() {
             @Override
@@ -315,14 +303,14 @@ public class SpAddSankalpActivityFragment extends Fragment {
             }
         });
 
-        _fromDateTextView = (EditText) view.findViewById(R.id.fromdate_textView);
-        _toDateTextView = (EditText) view.findViewById(R.id.todate_textView);
-        DateFieldClickListener clickListener = new DateFieldClickListener();
-        _fromDateTextView.setOnClickListener(clickListener);
-        _toDateTextView.setOnClickListener(clickListener);
-        DateFieldFocusChangeListener focusChangeListener = new DateFieldFocusChangeListener();
-        _fromDateTextView.setOnFocusChangeListener(focusChangeListener);
-        _toDateTextView.setOnFocusChangeListener(focusChangeListener);
+//        _fromDateTextView = (EditText) view.findViewById(R.id.fromdate_textView);
+//        _toDateTextView = (EditText) view.findViewById(R.id.todate_textView);
+//        DateFieldClickListener clickListener = new DateFieldClickListener();
+//        _fromDateTextView.setOnClickListener(clickListener);
+//        _toDateTextView.setOnClickListener(clickListener);
+//        DateFieldFocusChangeListener focusChangeListener = new DateFieldFocusChangeListener();
+//        _fromDateTextView.setOnFocusChangeListener(focusChangeListener);
+//        _toDateTextView.setOnFocusChangeListener(focusChangeListener);
 
         _descriptionView = (EditText) view.findViewById(R.id.sankalpDescription);
 
@@ -336,7 +324,6 @@ public class SpAddSankalpActivityFragment extends Fragment {
     private void _updateSummary()
     {
         if (_isDocumentReady) {
-            Log.i("Add", "Summary updating");
             _editedSankalp = _getSankalpFromInput();
             _setSummaryTextView(_editedSankalp);
         }
@@ -388,16 +375,16 @@ public class SpAddSankalpActivityFragment extends Fragment {
         NavUtils.navigateUpFromSameTask(getActivity());
     }
 
-    private void _togglePeriodViewVisibility(boolean isLabelVisible) {
-        if (isLabelVisible) {
-            _rangeValueTextView.setVisibility(View.VISIBLE);
-            _fromToDateContainer.setVisibility(View.GONE);
-        } else {
-            _rangeValueTextView.setVisibility(View.GONE);
-            _fromToDateContainer.setVisibility(View.VISIBLE);
-        }
-
-    }
+//    private void _togglePeriodViewVisibility(boolean isLabelVisible) {
+//        if (isLabelVisible) {
+//            _rangeValueTextView.setVisibility(View.VISIBLE);
+//            _fromToDateContainer.setVisibility(View.GONE);
+//        } else {
+//            _rangeValueTextView.setVisibility(View.GONE);
+//            _fromToDateContainer.setVisibility(View.VISIBLE);
+//        }
+//
+//    }
 
     private ArrayList<SpExceptionOrTarget> _getExceptionFrequencyList(String range) {
         ArrayList<SpExceptionOrTarget> frequencies = new ArrayList<SpExceptionOrTarget>();
@@ -405,10 +392,10 @@ public class SpAddSankalpActivityFragment extends Fragment {
         if (range != null) {
             if (range.equals(getString(R.string.Range))) {
                 // Add date maths logic
-            } else if (range.equals(getString(R.string.thisMonth))) {
+            } else if (range.equals(getString(R.string.month))) {
                 frequencies.add(new SpExceptionOrTarget(SpExceptionOrTarget.EXCEPTION_OR_TARGET_WEEKLY, getContext()));
                 frequencies.add(new SpExceptionOrTarget(SpExceptionOrTarget.EXCEPTION_OR_TARGET_DAILY, getContext()));
-            } else if (range.equals(getString(R.string.thisYear))) {
+            } else if (range.equals(getString(R.string.year))) {
                 frequencies.add(new SpExceptionOrTarget(SpExceptionOrTarget.EXCEPTION_OR_TARGET_MONTHLY, getContext()));
                 frequencies.add(new SpExceptionOrTarget(SpExceptionOrTarget.EXCEPTION_OR_TARGET_WEEKLY, getContext()));
                 frequencies.add(new SpExceptionOrTarget(SpExceptionOrTarget.EXCEPTION_OR_TARGET_DAILY, getContext()));
@@ -450,45 +437,150 @@ public class SpAddSankalpActivityFragment extends Fragment {
         _updateSummary();
     }
 
-    private void _setDate(EditText dateTextView, DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-        Calendar cal = Calendar.getInstance();
-        cal.set(year, monthOfYear, dayOfMonth);
-        _setDate(dateTextView, cal.getTime());
+//    private void _setDate(EditText dateTextView, DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+//        Calendar cal = Calendar.getInstance();
+//        cal.set(year, monthOfYear, dayOfMonth);
+//        _setDate(dateTextView, cal.getTime());
+//    }
+
+//    private void _setDate(EditText dateTextView, Date date) {
+//        if (dateTextView == _fromDateTextView) {
+//            _fromDate = date;
+//        } else if (dateTextView == _toDateTextView) {
+//            _toDate = date;
+//        }
+//        dateTextView.setText(SpDateUtils.getFriendlyDateShortString(date));
+//    }
+
+    public void setFromDate(Date date) {
+
+        _fromDate = date;
     }
 
-    private void _setDate(EditText dateTextView, Date date) {
-        if (dateTextView == _fromDateTextView) {
-            _fromDate = date;
-        } else if (dateTextView == _toDateTextView) {
-            _toDate = date;
-        }
-        dateTextView.setText(SpDateUtils.getFriendlyDateShortString(date));
+    public void setToDate(Date date) {
+        _toDate = date;
     }
 
-    private class DateFieldClickListener implements View.OnClickListener {
+    public void setDate(Date fromDate, Date toDate)
+    {
+        setFromDate(fromDate);
+        setToDate(toDate);
+        _rangeValueTextView.setText(SpDateUtils.getFriendlyPeriodString(fromDate, toDate, false));
+        _updateSummary();
+    }
+
+    private void _showDialog(int periodKey)
+    {
+        SpPeriodDialog d = new SpPeriodDialog();
+        d.setParentFragment(this);
+        Bundle args = new Bundle();
+        args.putInt(SpConstants.INTENT_KEY_SANKALP_PERIOD, periodKey);
+        d.setArguments(args);
+        d.show(getFragmentManager(), "SpPeriodDialog");
+    }
+
+    private class SpinnerItemSelectionListener implements AdapterView.OnItemSelectedListener
+    {
+
+        private boolean isFirstTime = true;
         @Override
-        public void onClick(View view) {
-            if (view == _fromDateTextView) {
-                _fromDatePickerDialog.show();
-            } else if (view == _toDateTextView) {
-                _toDatePickerDialog.show();
+        public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+
+            if (parentView.getId() == R.id.rangeLabels_spinner) {
+                _handleRangeLabelSpinnerSelection(parentView);
             }
+            else if (parentView.getId() == R.id.categories_spinner) {
+                _handleCategoriesSpinnerSelection(parentView);
+            }
+            else if (parentView.getId() == R.id.items_spinner) {
+                _handleItemsSpinnerSelection(parentView);
+            }
+            else if (parentView.getId() == R.id.exceptionOrTarget_spinner) {
+                _handleExTarSpinnerSelection(parentView);
+            }
+
+            if (isFirstTime) isFirstTime = false;
         }
-    }
 
-    private class DateFieldFocusChangeListener implements View.OnFocusChangeListener {
+        private void _handleExTarSpinnerSelection(AdapterView<?> parentView) {
+            _updateSummary();
+        }
 
-        @Override
-        public void onFocusChange(View view, boolean hasFocus) {
-            if (hasFocus) {
-                if (view == _fromDateTextView) {
-                    _fromDatePickerDialog.show();
-                } else if (view == _toDateTextView) {
-                    _toDatePickerDialog.show();
+        private void _handleItemsSpinnerSelection(AdapterView<?> parentView) {
+            _updateSummary();
+        }
+
+        private void _handleCategoriesSpinnerSelection(AdapterView<?> parentView) {
+
+            _populateItems(((SpCategory) parentView.getSelectedItem()).getId());
+        }
+
+
+
+        private void _handleRangeLabelSpinnerSelection(AdapterView<?> parentView)
+        {
+            String label = (String) parentView.getSelectedItem();
+            Calendar today = Calendar.getInstance();
+            if (label.equals(getString(R.string.Range))) {
+                _showDialog(SpConstants.INTENT_VALUE_SANKALP_LIST_FILTER_RANGE);
+            } else if (label.equals(getString(R.string.Day))) {
+
+                if (!isFirstTime) {
+                    _showDialog(SpConstants.INTENT_VALUE_SANKALP_LIST_FILTER_DAY);
                 }
+                else {
+                    _fromDate = SpDateUtils.beginOfDate(new Date());
+                    _toDate = SpDateUtils.endOfDate(new Date());
+                }
+
+
+            } else if (label.equals(getString(R.string.month))) {
+                _showDialog(SpConstants.INTENT_VALUE_SANKALP_LIST_FILTER_MONTH);
+            } else if (label.equals(getString(R.string.year))) {
+                _showDialog(SpConstants.INTENT_VALUE_SANKALP_LIST_FILTER_YEAR);
+            } else if (label.equals(getString(R.string.Lifetime))) {
+//                _togglePeriodViewVisibility(true);
+                _fromDate = null;
+                _toDate = null;
+                setFromDate(SpDateUtils.beginOfDate(today));
+//                _toDateTextView.setText(getString(R.string.Lifetime));
+                _rangeValueTextView.setText(R.string.Lifetime);
             }
+            _exceptionsFrequencyAdapter.clear();
+            _exceptionsFrequencyAdapter.addAll(_getExceptionFrequencyList(label));
+        }
+        @Override
+        public void onNothingSelected(AdapterView<?> adapterView) {
+            Log.i("Spinner", "nothing selected");
+
         }
     }
+
+//    private class DateFieldClickListener implements View.OnClickListener {
+//        @Override
+//        public void onClick(View view) {
+//            if (view == _fromDateTextView) {
+//                _fromDatePickerDialog.show();
+//            } else if (view == _toDateTextView) {
+//                _toDatePickerDialog.show();
+//            }
+//        }
+//    }
+//
+//    private class DateFieldFocusChangeListener implements View.OnFocusChangeListener {
+//
+//        @Override
+//        public void onFocusChange(View view, boolean hasFocus) {
+//            if (hasFocus) {
+//                if (view == _fromDateTextView) {
+//                    //_fromDatePickerDialog.requestWindowFeature(getTargetRequestCode());
+//                    _fromDatePickerDialog.show();
+//                } else if (view == _toDateTextView) {
+//                    _toDatePickerDialog.show();
+//                }
+//            }
+//        }
+//    }
 
 
     private class DataLoaderTask extends AsyncTask<Void, Void, Boolean> {

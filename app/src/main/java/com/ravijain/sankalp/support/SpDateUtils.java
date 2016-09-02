@@ -29,6 +29,18 @@ public class SpDateUtils {
         return cal.getTime();
     }
 
+    public static Date beginOfDate(Date d) {
+        Calendar c = Calendar.getInstance();
+        c.setTime(d);
+        return beginOfDate(c);
+    }
+
+    public static Date endOfDate(Date d) {
+        Calendar c = Calendar.getInstance();
+        c.setTime(d);
+        return endOfDate(c);
+    }
+
     /**
      * Given a date, a proper TimeZone, return the last millisecond date of the
      * specified date and TimeZone. If TimeZone is null, meaning use Defult
@@ -52,6 +64,17 @@ public class SpDateUtils {
     public static Calendar nextDate(Calendar cal) {
         cal.add(Calendar.DAY_OF_YEAR, 1);
         return cal;
+    }
+
+    public static String[] getMonthStrings()
+    {
+        String[] months = new String[12];
+        Calendar c = Calendar.getInstance();
+        for (int i = 0; i < 12; i++) {
+            c.set(Calendar.MONTH, i);
+            months[i] = new SimpleDateFormat("MMMM").format(c.getTime());
+        }
+        return months;
     }
 
     public static String getDayString(Calendar cal) {

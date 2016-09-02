@@ -2,10 +2,7 @@ package com.ravijain.sankalp.activities;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.res.Configuration;
-import android.graphics.drawable.Drawable;
-import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
@@ -25,7 +22,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.ravijain.sankalp.R;
-import com.ravijain.sankalp.data.SpSankalp;
 import com.ravijain.sankalp.data.SpUser;
 import com.ravijain.sankalp.data.SpContentProvider;
 import com.ravijain.sankalp.fragments.SpCardDashboardFragment;
@@ -33,12 +29,7 @@ import com.ravijain.sankalp.fragments.SpChartCalendarDashboard;
 import com.ravijain.sankalp.fragments.SpDashboardFragment;
 import com.ravijain.sankalp.fragments.SpSettingsFragment;
 import com.ravijain.sankalp.fragments.SpUserProfileFragment;
-import com.ravijain.sankalp.support.SpCalendarViewHandler;
-import com.roomorama.caldroid.CaldroidFragment;
-
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Locale;
+import com.ravijain.sankalp.support.SpCaldroidCalendarViewHandler;
 
 public class SpMainActivity extends AppCompatActivity implements ListView.OnItemClickListener {
 
@@ -87,6 +78,7 @@ public class SpMainActivity extends AppCompatActivity implements ListView.OnItem
     }
 
     private void _loadChartCalendarDashboardFragment() {
+//        getSupportActionBar().setBackgroundDrawable(getResources().getDrawable(R.drawable.edittextbox));
         Fragment f = new SpChartCalendarDashboard();
         FragmentManager man = getSupportFragmentManager();
         man.beginTransaction().replace(R.id.content_frame, f).commit();
@@ -173,6 +165,7 @@ public class SpMainActivity extends AppCompatActivity implements ListView.OnItem
                 _loadChartCalendarDashboardFragment();
                 _drawerListView.setItemChecked(i, true);
                 setTitle(getString(R.string.title_activity_sp_sankalp_list));
+
                 _drawerLayout.closeDrawer(_drawerListView);
             }
         }
@@ -196,7 +189,7 @@ public class SpMainActivity extends AppCompatActivity implements ListView.OnItem
             setTitle(getString(R.string.title_activity_sp_sankalp_list));
             _drawerLayout.closeDrawer(_drawerListView);
         } else if (_drawerList[i].equals(getString(R.string.CalendarView))) {
-            SpCalendarViewHandler cal = new SpCalendarViewHandler(this, SpCalendarViewHandler.CONTEXT_FULL, getSupportFragmentManager(), R.id.content_frame);
+            SpCaldroidCalendarViewHandler cal = new SpCaldroidCalendarViewHandler(this, SpCaldroidCalendarViewHandler.CONTEXT_FULL, getSupportFragmentManager(), R.id.content_frame);
             cal.constructCalendarView();
 
             // Attach to the activity

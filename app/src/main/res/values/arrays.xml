@@ -10,6 +10,14 @@
         <item>@string/Range</item>
     </string-array>
 
+    <string-array name="periodLabelsList">
+        <item>@string/Day</item>
+        <item>@string/month</item>
+        <item>@string/year</item>
+        <item>@string/Lifetime</item>
+        <item>@string/Range</item>
+    </string-array>
+
     <string-array name="exceptionsFrequencyList">
         <item>@string/total</item>
         <item>@string/yearly</item>

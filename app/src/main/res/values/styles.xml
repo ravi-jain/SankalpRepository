@@ -3,10 +3,11 @@
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light">
         <!-- Customize your theme here. -->
-       <!-- <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+       <!--<item name="colorPrimary">@color/sankalp</item>-->
+        <!-- <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>-->
         <item name="preferenceTheme">@style/PreferenceThemeOverlay</item>
+
     </style>
 
     <!--<style name="AppTheme.NoActionBar">
@@ -22,6 +23,12 @@
         <item name="android:layout_width">fill_parent</item>
         <item name="android:background">#888888</item>
         <item name="android:layout_height">1dip</item>
+    </style>
+
+    <style name="SpHorizontalDividerLight">
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:background">@color/caldroid_middle_gray</item>
+        <item name="android:layout_height">.5dip</item>
     </style>
 
     <style name="SpLabel2">

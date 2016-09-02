@@ -88,6 +88,7 @@ public class SpSankalpListAdapter extends ArrayAdapter<SpSankalp>{
                 convertView.findViewById(R.id.listBar).setBackgroundColor(getContext().getResources().getColor(R.color.sankalp_tyag));
             }
             else if (sankalp.getSankalpType() == SpDataConstants.SANKALP_TYPE_NIYAM) {
+//                title.setText(R.string.niyamFrequency);
                 title.setText(R.string.niyamFrequency);
                 currentCountLabel.setText(R.string.frequency_done_label);
 //                convertView.findViewById(R.id.listBar).setVisibility(View.GONE);

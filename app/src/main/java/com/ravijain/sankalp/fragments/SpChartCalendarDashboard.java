@@ -1,17 +1,12 @@
 package com.ravijain.sankalp.fragments;
 
 
-import android.app.Activity;
-import android.app.Dialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.PopupMenu;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
@@ -23,10 +18,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.RadioGroup;
 
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.Chart;
@@ -36,7 +29,6 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
-import com.github.mikephil.charting.formatter.PercentFormatter;
 import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
@@ -48,11 +40,12 @@ import com.ravijain.sankalp.activities.SpConstants;
 import com.ravijain.sankalp.activities.SpSankalpList;
 import com.ravijain.sankalp.data.SpContentProvider;
 import com.ravijain.sankalp.data.SpDataConstants;
-import com.ravijain.sankalp.data.SpSankalp;
 import com.ravijain.sankalp.data.SpSankalpCountData;
+import com.ravijain.sankalp.support.SpCaldroidCalendarViewHandler;
 import com.ravijain.sankalp.support.SpCalendarViewHandler;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -63,6 +56,7 @@ public class SpChartCalendarDashboard extends Fragment implements View.OnClickLi
     private PieChart mChart;
     private ImageView _menuView;
     private ImageButton _viewDetailsButton;
+    private ImageButton _viewMonthDetailsButton;
     private String[] _labels;
     private int _intentListFilter;
     private SpSankalpCountData _currentData;
@@ -78,13 +72,15 @@ public class SpChartCalendarDashboard extends Fragment implements View.OnClickLi
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_sp_chart_calendar_dashboard, container, false);
 
-        _setUpCalendarView();
-
-        mChart = (PieChart) rootView.findViewById(R.id.db_pieChart);
-        _setUpPieChart();
+        _viewMonthDetailsButton = (ImageButton) rootView.findViewById(R.id.viewMonthDetails_button);
+        _setUpCalendarCard(rootView);
 
         _viewDetailsButton = (ImageButton) rootView.findViewById(R.id.viewDetails_button);
-        _setUpViewButton();
+        mChart = (PieChart) rootView.findViewById(R.id.db_pieChart);
+        _setUpChartCard();
+
+
+
 
 //        _menuView = (ImageView) rootView.findViewById(R.id.db_card_chart_menu);
 //        _setUpMenu();
@@ -122,13 +118,26 @@ public class SpChartCalendarDashboard extends Fragment implements View.OnClickLi
         });
     }
 
-    private void _setUpCalendarView() {
+    private void _setUpCalendarCard(View rootView) {
 
-        SpCalendarViewHandler cal = new SpCalendarViewHandler(getActivity(), SpCalendarViewHandler.CONTEXT_FULL, getFragmentManager(), R.id.db_calendarView);
-        cal.constructCalendarView();
+        SpCalendarViewHandler cv = new SpCalendarViewHandler(getContext(), rootView);
+        cv.constructCalendar(R.id.db_calendarView, SpCalendarViewHandler.SELECTION_MODE_NONE);
+
+        _viewMonthDetailsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getContext(), SpSankalpList.class);
+                intent.putExtra(SpConstants.INTENT_KEY_SANKALP_TYPE, SpDataConstants.SANKALP_TYPE_BOTH);
+                intent.putExtra(SpConstants.INTENT_KEY_SANKALP_LIST_FILTER, SpConstants.INTENT_VALUE_SANKALP_LIST_FILTER_MONTH);
+                intent.putExtra(SpConstants.INTENT_KEY_SANKALP_LIST_FILTER_DATE_VALUE, new Date().getTime());
+                startActivity(intent);
+            }
+        });
     }
 
-    private void _setUpPieChart() {
+    private void _setUpChartCard() {
+
+        _setUpViewButton();
 
         _labels = new String[]{getString(R.string.current), getString(R.string.lifetime_db), getString(R.string.upcoming), getString(R.string.all)};
 
