@@ -99,6 +99,9 @@
     <string name="monthViewLegend">Atleast 1 Sankalp ends on the day.</string>
     <string name="language">Language</string>
     <string name="selectLanguage">Select Language</string>
+    <string name="showReminders">Show Reminders</string>
+    <string name="showRemindersEnabled">Enabled</string>
+    <string name="showRemindersDisabled">Disabled</string>
     <string name="edit">Edit</string>
     <string name="listSelectedItemLabel">item selected</string>
     <string name="listSelectedItemsLabel">items selected</string>

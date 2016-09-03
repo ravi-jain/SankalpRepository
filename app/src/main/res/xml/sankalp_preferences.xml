@@ -7,4 +7,9 @@
         android:entries="@array/pref_languages"
         android:entryValues="@array/pref_languages_values"
         android:defaultValue="en" />
+    <SwitchPreferenceCompat
+        android:key="pref_reminders"
+        android:title="@string/showReminders"
+        android:defaultValue="true"
+        />
 </PreferenceScreen>

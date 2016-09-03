@@ -10,6 +10,7 @@ import android.support.v7.preference.PreferenceFragmentCompat;
 import android.support.v7.preference.PreferenceManager;
 
 import com.ravijain.sankalp.R;
+import com.ravijain.sankalp.support.SpUtils;
 
 import java.util.Locale;
 
@@ -19,14 +20,8 @@ import java.util.Locale;
 public class SpSettingsFragment extends PreferenceFragmentCompat implements SharedPreferences.OnSharedPreferenceChangeListener{
 
     public static final String KEY_PREF_LANGUAGE = "pref_language";
-
-//    @Override
-//    public void onCreate(Bundle savedInstanceState) {
-//        super.onCreate(savedInstanceState);
-//
-//        // Load the preferences from an XML resource
-//        addPreferencesFromResource(R.xml.sankalp_preferences);
-//    }
+    public static final String KEY_PREF_REMINDERS = "pref_reminders";
+    public static final String KEY_PREF_ALARM_REGISTERED = "pref_alarm_registered";
 
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
@@ -35,14 +30,24 @@ public class SpSettingsFragment extends PreferenceFragmentCompat implements Shar
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
         sharedPreferences.registerOnSharedPreferenceChangeListener(this);
         _updateSummary(sharedPreferences, KEY_PREF_LANGUAGE);
+        _updateSummary(sharedPreferences, KEY_PREF_REMINDERS);
     }
 
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences,
                                           String key) {
         if (key.equals(KEY_PREF_LANGUAGE)) {
-            setLangRecreate(sharedPreferences.getString(key, ""));
-            _updateSummary(sharedPreferences, key);
+            setLangRecreate(sharedPreferences.getString(key, "en_US"));
+
         }
+        else if (key.equals(KEY_PREF_REMINDERS)) {
+            if (sharedPreferences.getBoolean(SpSettingsFragment.KEY_PREF_REMINDERS, true)) {
+                SpUtils.startAlarm(getContext());
+            }
+            else {
+                SpUtils.stopAlarm(getContext());
+            }
+        }
+        _updateSummary(sharedPreferences, key);
     }
 
     public void setLangRecreate(String langval) {
@@ -60,9 +65,17 @@ public class SpSettingsFragment extends PreferenceFragmentCompat implements Shar
         if (key.equals(KEY_PREF_LANGUAGE)) {
             ListPreference listPreference = (ListPreference) findPreference(key);
             // Set summary to be the user-description for the selected value
-            int prefIndex = listPreference.findIndexOfValue(sharedPreferences.getString(key, ""));
+            int prefIndex = listPreference.findIndexOfValue(sharedPreferences.getString(key, "en_US"));
             if (prefIndex >= 0) {
                 listPreference.setSummary(listPreference.getEntries()[prefIndex]);
+            }
+        }
+        else if (key.equals(KEY_PREF_REMINDERS)) {
+            if (sharedPreferences.getBoolean(key, true)) {
+                findPreference(key).setSummary(getString(R.string.showRemindersEnabled));
+            }
+            else {
+                findPreference(key).setSummary(getString(R.string.showRemindersDisabled));
             }
         }
     }

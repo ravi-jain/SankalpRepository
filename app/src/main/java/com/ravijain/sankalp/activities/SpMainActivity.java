@@ -1,7 +1,12 @@
 package com.ravijain.sankalp.activities;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -9,6 +14,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -29,7 +35,11 @@ import com.ravijain.sankalp.fragments.SpChartCalendarDashboard;
 import com.ravijain.sankalp.fragments.SpDashboardFragment;
 import com.ravijain.sankalp.fragments.SpSettingsFragment;
 import com.ravijain.sankalp.fragments.SpUserProfileFragment;
+import com.ravijain.sankalp.support.SpAlarmReceiver;
 import com.ravijain.sankalp.support.SpCaldroidCalendarViewHandler;
+import com.ravijain.sankalp.support.SpUtils;
+
+import java.util.Calendar;
 
 public class SpMainActivity extends AppCompatActivity implements ListView.OnItemClickListener {
 
@@ -42,7 +52,7 @@ public class SpMainActivity extends AppCompatActivity implements ListView.OnItem
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-//        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+
 //        setLangRecreate(prefs.getString(SpSettingsFragment.KEY_PREF_LANGUAGE, ""));
 
         SpContentProvider provider = SpContentProvider.getInstance(getApplicationContext());
@@ -52,6 +62,9 @@ public class SpMainActivity extends AppCompatActivity implements ListView.OnItem
             Intent intent = new Intent(this, SpUserSetupActivity.class);
             startActivity(intent);
         } else {
+
+            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+
             setContentView(R.layout.activity_main);
             _drawerList = getResources().getStringArray(R.array.drawerList);
 
@@ -60,12 +73,16 @@ public class SpMainActivity extends AppCompatActivity implements ListView.OnItem
 
             // Set the adapter for the list view
             _drawerListView.setAdapter(new DrawerAdapter(this,
-                     _drawerList));
+                    _drawerList));
             // Set the list's click listener
             _drawerListView.setOnItemClickListener(this);
 
             _loadChartCalendarDashboardFragment();
             setupDrawer();
+
+
+            SpUtils.startAlarm(getApplicationContext());
+
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setHomeButtonEnabled(true);
         }
@@ -160,7 +177,7 @@ public class SpMainActivity extends AppCompatActivity implements ListView.OnItem
                 setTitle(getString(R.string.title_activity_sp_sankalp_list));
                 _drawerLayout.closeDrawer(_drawerListView);
             }
-        }else if (_drawerList[i].equals(getString(R.string.Dashboard))) {
+        } else if (_drawerList[i].equals(getString(R.string.Dashboard))) {
             if (!(currentFragment instanceof SpChartCalendarDashboard)) {
                 _loadChartCalendarDashboardFragment();
                 _drawerListView.setItemChecked(i, true);
@@ -168,9 +185,7 @@ public class SpMainActivity extends AppCompatActivity implements ListView.OnItem
 
                 _drawerLayout.closeDrawer(_drawerListView);
             }
-        }
-
-        else if (_drawerList[i].equals(getString(R.string.UpdateProfile))) {
+        } else if (_drawerList[i].equals(getString(R.string.UpdateProfile))) {
             if (!(currentFragment instanceof SpUserProfileFragment)) {
                 Fragment f = new SpUserProfileFragment();
                 Bundle b = new Bundle();
@@ -203,17 +218,15 @@ public class SpMainActivity extends AppCompatActivity implements ListView.OnItem
                     .commit();
             setTitle(getString(R.string.settings));
             _drawerLayout.closeDrawer(_drawerListView);
-        }
-        else {
+        } else {
             Toast.makeText(SpMainActivity.this, _drawerList[i], Toast.LENGTH_SHORT).show();
         }
     }
 
-    private class DrawerAdapter extends ArrayAdapter<String>
-    {
+    private class DrawerAdapter extends ArrayAdapter<String> {
         int[] icons = {R.drawable.ic_dashboard_black_24dp, R.drawable.ic_person_black_24dp, R.drawable.ic_description_black_24dp, R.drawable.ic_settings_black_24dp, R.drawable.ic_contact_mail_black_24dp};
-        DrawerAdapter(Context context, String[] items)
-        {
+
+        DrawerAdapter(Context context, String[] items) {
             super(context, 0, items);
         }
 

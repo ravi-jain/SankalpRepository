@@ -291,11 +291,11 @@ public class SpChartCalendarDashboard extends Fragment implements View.OnClickLi
         dataSet.setColors(colors);
         //dataSet.setSelectionShift(0f);
 
-        dataSet.setValueLinePart1OffsetPercentage(80.f);
-        dataSet.setValueLinePart1Length(0.6f);
-        dataSet.setValueLinePart2Length(0.6f);
+//        dataSet.setValueLinePart1OffsetPercentage(80.f);
+//        dataSet.setValueLinePart1Length(0.6f);
+//        dataSet.setValueLinePart2Length(0.6f);
         //dataSet.setXValuePosition(PieDataSet.ValuePosition.OUTSIDE_SLICE);
-        dataSet.setYValuePosition(PieDataSet.ValuePosition.OUTSIDE_SLICE);
+//        dataSet.setYValuePosition(PieDataSet.ValuePosition.OUTSIDE_SLICE);
 
         PieData data = new PieData(dataSet);
         data.setValueFormatter(new ValueFormatter() {
