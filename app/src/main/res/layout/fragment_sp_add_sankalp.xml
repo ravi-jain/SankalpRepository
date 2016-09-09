@@ -7,14 +7,21 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/touch_selector"
-        android:focusable="true"
-        android:focusableInTouchMode="true"
+
         android:minHeight="?android:attr/listPreferredItemHeight"
         android:orientation="vertical"
         android:paddingBottom="@dimen/activity_vertical_margin"
         android:paddingLeft="@dimen/activity_horizontal_margin"
         android:paddingRight="@dimen/activity_horizontal_margin"
         android:paddingTop="@dimen/activity_vertical_margin">
+
+        <!--android:focusable="true"
+        android:focusableInTouchMode="true"-->
+
+        <include layout="@layout/activity_main"
+            android:id="@+id/as">
+
+        </include>
 
         <TextView
             android:id="@+id/add_sankalpSummary_tv"
@@ -31,10 +38,24 @@
             android:layout_gravity="center"
             android:layout_marginBottom="8dp" />
 
-        <TextView
-            style="@style/SpLabel"
-            android:paddingTop="@dimen/activity_vertical_margin"
-            android:text="@string/sankalpCategory" />
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/activity_vertical_margin"
+            >
+            <TextView
+                style="@style/SpLabel"
+                android:text="@string/sankalpCategory" />
+
+            <!--<ImageButton
+                android:id="@+id/addCategory"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:background="@android:color/transparent"
+                android:src="@drawable/ic_add_grey_24dp"/>-->
+            </RelativeLayout>
+
 
         <View style="@style/SpHorizontalDivider" />
 
@@ -44,10 +65,23 @@
             android:layout_height="wrap_content"
             android:spinnerMode="dropdown" />
 
-        <TextView
-            style="@style/SpLabel"
-            android:paddingTop="@dimen/activity_vertical_margin"
-            android:text="@string/sankalpItem" />
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/activity_vertical_margin"
+            >
+            <TextView
+                style="@style/SpLabel"
+                android:text="@string/sankalpItem" />
+            <!--<ImageButton
+                android:id="@+id/addItem"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:background="@android:color/transparent"
+                android:src="@drawable/ic_add_grey_24dp"/>-->
+            </RelativeLayout>
+
 
         <View style="@style/SpHorizontalDivider" />
 
@@ -57,10 +91,26 @@
             android:layout_height="wrap_content"
             android:spinnerMode="dialog" />
 
-        <TextView
-            style="@style/SpLabel"
-            android:paddingTop="@dimen/activity_vertical_margin"
-            android:text="@string/sankalpPeriod" />
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/activity_vertical_margin"
+            >
+            <TextView
+                style="@style/SpLabel"
+
+                android:text="@string/sankalpPeriod" />
+
+            <ImageButton
+                android:id="@+id/editPeriod"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:background="@android:color/transparent"
+                android:src="@drawable/ic_more_vert_black_24dp"/>
+
+        </RelativeLayout>
+
 
         <View style="@style/SpHorizontalDivider" />
 
@@ -78,13 +128,13 @@
 
                  />
 
-            <com.ravijain.sankalp.support.SpCustomSpinner
+            <!--<com.ravijain.sankalp.support.SpCustomSpinner
                 android:id="@+id/rangeLabels_spinner"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:prompt="@string/sankalpPeriod"
                 android:layout_alignParentRight="true"
-                android:spinnerMode="dropdown" />
+                android:spinnerMode="dropdown" />-->
         </RelativeLayout>
 
         <!--<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -171,11 +221,11 @@
                 android:layout_marginLeft="5dp"
                 android:background="@drawable/round_button"
                 android:gravity="center_vertical|center_horizontal"
-                android:text="+"
+                android:drawableLeft="@drawable/ic_add_black_24dp"
                 android:textSize="15sp"
                  />-->
 
-            <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            <LinearLayout
                 android:id="@+id/exceptionOrTargetCurrentCount_ll"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

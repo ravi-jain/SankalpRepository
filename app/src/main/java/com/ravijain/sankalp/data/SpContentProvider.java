@@ -189,8 +189,8 @@ public class SpContentProvider {
         SQLiteDatabase db = _dbHelper.getReadableDatabase();
         String query = "SELECT * FROM " + SpTableContract.SpCategoryTable.TABLE_NAME + " WHERE "
                 + SpTableContract.SpCategoryTable.COLUMN_CATEGORY_TYPE + " =" + type;
-        if (type != SpDataConstants.SANKALP_TYPE_BOTH) {
-            query += " OR " + SpTableContract.SpCategoryTable.COLUMN_CATEGORY_TYPE + " =" + SpDataConstants.SANKALP_TYPE_BOTH;
+        if (type != SpConstants.SANKALP_TYPE_BOTH) {
+            query += " OR " + SpTableContract.SpCategoryTable.COLUMN_CATEGORY_TYPE + " =" + SpConstants.SANKALP_TYPE_BOTH;
         }
         query += " ORDER BY " + SpTableContract.SpCategoryTable.COLUMN_CATEGORY_NAME;
         Cursor cursor = db.rawQuery(query, null);
@@ -371,47 +371,40 @@ public class SpContentProvider {
         return _runSankalpQuery(userQuery);
     }
 
-    private String _prepareWhereClause(int sankalpType, int listFilter, Calendar day)
-    {
+    private String _prepareWhereClause(int sankalpType, int listFilter, Calendar day) {
         String whereClause = "";
         boolean isWhereClauseAdded = false;
-        if (sankalpType != SpDataConstants.SANKALP_TYPE_BOTH) {
+        if (sankalpType != SpConstants.SANKALP_TYPE_BOTH) {
             whereClause += " WHERE " + SpTableContract.SpSankalpTable.COLUMN_SANKALP_TYPE + " = " + sankalpType;
             isWhereClauseAdded = true;
         }
         if (listFilter != SpConstants.INTENT_VALUE_SANKALP_LIST_FILTER_ALL) {
             if (!isWhereClauseAdded) {
                 whereClause += " WHERE ";
-            }
-            else {
+            } else {
                 whereClause += " AND ";
             }
 
             if (listFilter == SpConstants.INTENT_VALUE_SANKALP_LIST_FILTER_LIFETIME) {
-                whereClause += SpTableContract.SpSankalpTable.COLUMN_ISLIFETIME + " = " + SpDataConstants.SANKALP_IS_LIFTIME_TRUE;
-            }
-            else if (listFilter == SpConstants.INTENT_VALUE_SANKALP_LIST_FILTER_CURRENT) {
+                whereClause += SpTableContract.SpSankalpTable.COLUMN_ISLIFETIME + " = " + SpConstants.SANKALP_IS_LIFTIME_TRUE;
+            } else if (listFilter == SpConstants.INTENT_VALUE_SANKALP_LIST_FILTER_CURRENT) {
                 long time = new Date().getTime();
-                whereClause += "(" + SpTableContract.SpSankalpTable.COLUMN_ISLIFETIME + " = " + SpDataConstants.SANKALP_IS_LIFTIME_TRUE
+                whereClause += "(" + SpTableContract.SpSankalpTable.COLUMN_ISLIFETIME + " = " + SpConstants.SANKALP_IS_LIFTIME_TRUE
                         + " OR " + time + " BETWEEN " + SpTableContract.SpSankalpTable.COLUMN_FROM_DATE + " AND " + SpTableContract.SpSankalpTable.COLUMN_TO_DATE + ")";
-            }
-            else if (listFilter == SpConstants.INTENT_VALUE_SANKALP_LIST_FILTER_UPCOMING) {
+            } else if (listFilter == SpConstants.INTENT_VALUE_SANKALP_LIST_FILTER_UPCOMING) {
                 long time = new Date().getTime();
                 whereClause += SpTableContract.SpSankalpTable.COLUMN_FROM_DATE + " > " + time;
-            }
-            else if (listFilter == SpConstants.INTENT_VALUE_SANKALP_LIST_FILTER_TODAY ) {
+            } else if (listFilter == SpConstants.INTENT_VALUE_SANKALP_LIST_FILTER_TODAY) {
                 Calendar today = Calendar.getInstance();
                 long begin = SpDateUtils.beginOfDate(today).getTime();
                 long end = SpDateUtils.endOfDate(today).getTime();
                 whereClause += SpTableContract.SpSankalpTable.COLUMN_TO_DATE + " BETWEEN " + begin + " AND " + end;
-            }
-            else if (listFilter == SpConstants.INTENT_VALUE_SANKALP_LIST_FILTER_TOMORROW) {
+            } else if (listFilter == SpConstants.INTENT_VALUE_SANKALP_LIST_FILTER_TOMORROW) {
                 Calendar tomorrow = SpDateUtils.nextDate(Calendar.getInstance());
                 long begin = SpDateUtils.beginOfDate(tomorrow).getTime();
                 long end = SpDateUtils.endOfDate(tomorrow).getTime();
                 whereClause += SpTableContract.SpSankalpTable.COLUMN_TO_DATE + " BETWEEN " + begin + " AND " + end;
-            }
-            else if (listFilter == SpConstants.INTENT_VALUE_SANKALP_LIST_FILTER_DAY) {
+            } else if (listFilter == SpConstants.INTENT_VALUE_SANKALP_LIST_FILTER_DAY) {
                 if (day == null) {
                     day = Calendar.getInstance();
                 }
@@ -419,16 +412,14 @@ public class SpContentProvider {
                 long begin = SpDateUtils.beginOfDate(day).getTime();
                 long end = SpDateUtils.endOfDate(day).getTime();
                 whereClause += SpTableContract.SpSankalpTable.COLUMN_TO_DATE + " BETWEEN " + begin + " AND " + end;
-            }
-            else if (listFilter == SpConstants.INTENT_VALUE_SANKALP_LIST_FILTER_MONTH) {
+            } else if (listFilter == SpConstants.INTENT_VALUE_SANKALP_LIST_FILTER_MONTH) {
                 if (day == null) {
                     day = Calendar.getInstance();
                 }
                 long begin = SpDateUtils.beginOfMonth(day).getTime();
                 long end = SpDateUtils.endOfMonth(day).getTime();
                 whereClause += SpTableContract.SpSankalpTable.COLUMN_TO_DATE + " BETWEEN " + begin + " AND " + end;
-            }
-            else if (listFilter == SpConstants.INTENT_VALUE_SANKALP_LIST_FILTER_YEAR) {
+            } else if (listFilter == SpConstants.INTENT_VALUE_SANKALP_LIST_FILTER_YEAR) {
                 if (day == null) {
                     day = Calendar.getInstance();
                 }
@@ -441,8 +432,7 @@ public class SpContentProvider {
         return whereClause;
     }
 
-    public int getSankalpsCount(int sankalpType, int listFilter, Calendar day)
-    {
+    public int getSankalpsCount(int sankalpType, int listFilter, Calendar day) {
         SQLiteDatabase db = _dbHelper.getReadableDatabase();
         int count = getSankalpsCount(db, sankalpType, listFilter, day);
         db.close();
@@ -466,21 +456,20 @@ public class SpContentProvider {
         return -1;
     }
 
-    public SpSankalpCountData getSankalpCountData()
-    {
+    public SpSankalpCountData getSankalpCountData() {
         SpSankalpCountData data = new SpSankalpCountData();
         SQLiteDatabase db = _dbHelper.getReadableDatabase();
 //        db.beginTransaction();
 //        try {
-            // Current Tyags
-            data.setCurrentTyags(getSankalpsCount(db, SpDataConstants.SANKALP_TYPE_TYAG, SpConstants.INTENT_VALUE_SANKALP_LIST_FILTER_CURRENT, null));
-            data.setCurrentNiyams(getSankalpsCount(db, SpDataConstants.SANKALP_TYPE_NIYAM, SpConstants.INTENT_VALUE_SANKALP_LIST_FILTER_CURRENT, null));
-            data.setLifetimeTyags(getSankalpsCount(db, SpDataConstants.SANKALP_TYPE_TYAG, SpConstants.INTENT_VALUE_SANKALP_LIST_FILTER_LIFETIME, null));
-            data.setLifetimeNiyams(getSankalpsCount(db, SpDataConstants.SANKALP_TYPE_NIYAM, SpConstants.INTENT_VALUE_SANKALP_LIST_FILTER_LIFETIME, null));
-            data.setUpcomingTyags(getSankalpsCount(db, SpDataConstants.SANKALP_TYPE_TYAG, SpConstants.INTENT_VALUE_SANKALP_LIST_FILTER_UPCOMING, null));
-            data.setUpcomingNiyams(getSankalpsCount(db, SpDataConstants.SANKALP_TYPE_NIYAM, SpConstants.INTENT_VALUE_SANKALP_LIST_FILTER_UPCOMING, null));
-            data.setAllTyags(getSankalpsCount(db, SpDataConstants.SANKALP_TYPE_TYAG, SpConstants.INTENT_VALUE_SANKALP_LIST_FILTER_ALL, null));
-            data.setAllNiyams(getSankalpsCount(db, SpDataConstants.SANKALP_TYPE_NIYAM, SpConstants.INTENT_VALUE_SANKALP_LIST_FILTER_ALL, null));
+        // Current Tyags
+        data.setCurrentTyags(getSankalpsCount(db, SpConstants.SANKALP_TYPE_TYAG, SpConstants.INTENT_VALUE_SANKALP_LIST_FILTER_CURRENT, null));
+        data.setCurrentNiyams(getSankalpsCount(db, SpConstants.SANKALP_TYPE_NIYAM, SpConstants.INTENT_VALUE_SANKALP_LIST_FILTER_CURRENT, null));
+        data.setLifetimeTyags(getSankalpsCount(db, SpConstants.SANKALP_TYPE_TYAG, SpConstants.INTENT_VALUE_SANKALP_LIST_FILTER_LIFETIME, null));
+        data.setLifetimeNiyams(getSankalpsCount(db, SpConstants.SANKALP_TYPE_NIYAM, SpConstants.INTENT_VALUE_SANKALP_LIST_FILTER_LIFETIME, null));
+        data.setUpcomingTyags(getSankalpsCount(db, SpConstants.SANKALP_TYPE_TYAG, SpConstants.INTENT_VALUE_SANKALP_LIST_FILTER_UPCOMING, null));
+        data.setUpcomingNiyams(getSankalpsCount(db, SpConstants.SANKALP_TYPE_NIYAM, SpConstants.INTENT_VALUE_SANKALP_LIST_FILTER_UPCOMING, null));
+        data.setAllTyags(getSankalpsCount(db, SpConstants.SANKALP_TYPE_TYAG, SpConstants.INTENT_VALUE_SANKALP_LIST_FILTER_ALL, null));
+        data.setAllNiyams(getSankalpsCount(db, SpConstants.SANKALP_TYPE_NIYAM, SpConstants.INTENT_VALUE_SANKALP_LIST_FILTER_ALL, null));
 
 //            db.setTransactionSuccessful();
 //        }
@@ -512,13 +501,13 @@ public class SpContentProvider {
             try {
                 cursor.moveToFirst();
                 while (cursor.isAfterLast() == false) {
-                    SpSankalp sankalp = _createSankalpByCursor(cursor);
+                    SpSankalp sankalp = createSankalpByCursor(cursor);
                     if (sankalp != null) {
                         sankalps.add(sankalp);
                     }
                     cursor.moveToNext();
                 }
-            }finally {
+            } finally {
                 cursor.close();
             }
         }
@@ -527,7 +516,7 @@ public class SpContentProvider {
         return sankalps;
     }
 
-    private SpSankalp _createSankalpByCursor(Cursor cursor) {
+    public SpSankalp createSankalpByCursor(Cursor cursor) {
         int categoryId = cursor.getInt(cursor.getColumnIndexOrThrow(SpTableContract.SpSankalpTable.COLUMN_CATEGORY_ID));
         int itemId = cursor.getInt(cursor.getColumnIndexOrThrow(SpTableContract.SpSankalpTable.COLUMN_ITEM_ID));
         int sankalpType = cursor.getInt(cursor.getColumnIndexOrThrow(SpTableContract.SpSankalpTable.COLUMN_SANKALP_TYPE));
@@ -566,6 +555,28 @@ public class SpContentProvider {
         return sankalp;
     }
 
+    public void updateSankalp(SpSankalp sankalp) {
+        SQLiteDatabase db = _dbHelper.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(SpTableContract.SpSankalpTable.COLUMN_CREATION_DATE, new Date().getTime());
+        values.put(SpTableContract.SpSankalpTable.COLUMN_SANKALP_TYPE, sankalp.getSankalpType());
+        values.put(SpTableContract.SpSankalpTable.COLUMN_CATEGORY_ID, sankalp.getCategoryID());
+        values.put(SpTableContract.SpSankalpTable.COLUMN_ITEM_ID, sankalp.getItemId());
+        values.put(SpTableContract.SpSankalpTable.COLUMN_ISLIFETIME, sankalp.isLifetime());
+        values.put(SpTableContract.SpSankalpTable.COLUMN_FROM_DATE, sankalp.getFromDate().getTime());
+        if (sankalp.getToDate() != null) {
+            values.put(SpTableContract.SpSankalpTable.COLUMN_TO_DATE, sankalp.getToDate().getTime());
+        }
+
+        int targetCount = sankalp.getExceptionOrTarget().getExceptionOrTargetCount();
+        values.put(SpTableContract.SpSankalpTable.COLUMN_EXCEPTION_TARGET_ID, sankalp.getExceptionOrTarget().getId());
+        values.put(SpTableContract.SpSankalpTable.COLUMN_EXCEPTION_TARGET_COUNT, targetCount);
+
+        values.put(SpTableContract.SpSankalpTable.COLUMN_DESCRIPTION, sankalp.getDescription());
+        db.update(SpTableContract.SpSankalpTable.TABLE_NAME, values, SpTableContract.SpSankalpTable._ID + " = " + String.valueOf(sankalp.getId()), null);
+        db.close();
+    }
+
     public void deleteSankalps(ArrayList<SpSankalp> sankalpsToBeDeleted) {
         int size = sankalpsToBeDeleted.size();
         if (size > 0) {
@@ -589,7 +600,7 @@ public class SpContentProvider {
         Cursor cursor = db.rawQuery(userQuery, null);
         if (cursor != null) {
             cursor.moveToFirst();
-            sankalp = _createSankalpByCursor(cursor);
+            sankalp = createSankalpByCursor(cursor);
             cursor.close();
         }
 
@@ -607,12 +618,10 @@ public class SpContentProvider {
         if (exceptionOrTargetid == SpExceptionOrTarget.EXCEPTION_OR_TARGET_DAILY) {
             begin = SpDateUtils.beginOfDate(today).getTime();
             end = SpDateUtils.endOfDate(today).getTime();
-        }
-        else if (exceptionOrTargetid == SpExceptionOrTarget.EXCEPTION_OR_TARGET_MONTHLY) {
+        } else if (exceptionOrTargetid == SpExceptionOrTarget.EXCEPTION_OR_TARGET_MONTHLY) {
             begin = SpDateUtils.beginOfMonth(today).getTime();
             end = SpDateUtils.endOfMonth(today).getTime();
-        }
-        else if (exceptionOrTargetid == SpExceptionOrTarget.EXCEPTION_OR_TARGET_YEARLY) {
+        } else if (exceptionOrTargetid == SpExceptionOrTarget.EXCEPTION_OR_TARGET_YEARLY) {
             begin = SpDateUtils.beginOfYear(today).getTime();
             end = SpDateUtils.endOfYear(today).getTime();
         }
@@ -628,7 +637,7 @@ public class SpContentProvider {
             try {
                 c.moveToFirst();
                 count = c.getInt(c.getColumnIndexOrThrow(SpTableContract.SpExTarTable.COLUMN_CURRENT_COUNT));
-            }finally {
+            } finally {
                 c.close();
             }
         }
@@ -636,5 +645,6 @@ public class SpContentProvider {
         db.close();
         return count;
     }
+
 
 }

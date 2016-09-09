@@ -14,7 +14,6 @@ import com.ravijain.sankalp.R;
 import com.ravijain.sankalp.activities.SpConstants;
 import com.ravijain.sankalp.activities.SpSankalpList;
 import com.ravijain.sankalp.data.SpContentProvider;
-import com.ravijain.sankalp.data.SpDataConstants;
 import com.ravijain.sankalp.data.SpSankalp;
 import com.roomorama.caldroid.CaldroidFragment;
 import com.roomorama.caldroid.CaldroidListener;
@@ -83,7 +82,7 @@ public class SpCaldroidCalendarViewHandler {
     private void _launchSankalpList(Date date)
     {
         Intent intent = new Intent(_applicationContext, SpSankalpList.class);
-        intent.putExtra(SpConstants.INTENT_KEY_SANKALP_TYPE, SpDataConstants.SANKALP_TYPE_BOTH);
+        intent.putExtra(SpConstants.INTENT_KEY_SANKALP_TYPE, SpConstants.SANKALP_TYPE_BOTH);
         intent.putExtra(SpConstants.INTENT_KEY_SANKALP_LIST_FILTER, SpConstants.INTENT_VALUE_SANKALP_LIST_FILTER_DAY);
         intent.putExtra(SpConstants.INTENT_KEY_SANKALP_LIST_FILTER_DATE_VALUE, date.getTime());
         _applicationContext.startActivity(intent);
@@ -122,7 +121,7 @@ public class SpCaldroidCalendarViewHandler {
         protected Boolean doInBackground(Calendar... calendars) {
             Calendar c = calendars[0];
             SpContentProvider p = SpContentProvider.getInstance(_applicationContext);
-            sankalps = p.getSankalps(SpDataConstants.SANKALP_TYPE_BOTH, SpConstants.INTENT_VALUE_SANKALP_LIST_FILTER_MONTH, c);
+            sankalps = p.getSankalps(SpConstants.SANKALP_TYPE_BOTH, SpConstants.INTENT_VALUE_SANKALP_LIST_FILTER_MONTH, c);
             return true;
         }
 

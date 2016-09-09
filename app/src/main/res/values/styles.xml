@@ -1,12 +1,23 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light">
+    <style name="AppTheme" parent="Theme.AppCompat.DayNight">
         <!-- Customize your theme here. -->
-       <!--<item name="colorPrimary">@color/sankalp</item>-->
+        <!--<item name="colorPrimary">@color/sankalp</item>-->
         <!-- <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>-->
         <item name="preferenceTheme">@style/PreferenceThemeOverlay</item>
+
+    </style>
+
+    <style name="SankalpTheme" parent="Theme.AppCompat.Light">
+        <item name="colorPrimary">@color/sankalp_primary</item>
+        <item name="colorPrimaryDark">@color/sankalp_primary_dark</item>
+        <!--<item name="colorPrimaryLight">@color/sankalp_primary_light</item>-->
+        <item name="colorAccent">@color/sankalp_accent</item>
+        <item name="android:textColorPrimary">@color/sankalp_primary_text</item>
+        <item name="android:textColorSecondary">@color/sankalp_secondary_text</item>
+        <item name="android:divider">@color/sankalp_divider</item>
 
     </style>
 
@@ -18,6 +29,12 @@
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />-->
+
+    <style name="SpHorizontalDividerMaterial">
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:background">#1f000000</item>
+        <item name="android:layout_height">1dp</item>
+    </style>
 
     <style name="SpHorizontalDivider">
         <item name="android:layout_width">fill_parent</item>
@@ -71,6 +88,15 @@
     <style name="menu_labels_style">
         <item name="android:background">@drawable/fab_label_background</item>
         <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="SpDialogTitleCustom">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:paddingTop">18dp</item>
+        <item name="android:paddingLeft">?attr/dialogPreferredPadding</item>
+        <item name="android:paddingRight">?attr/dialogPreferredPadding</item>
+        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Title</item>
     </style>
 
     <!--<style name="CaldroidDefaultDark1" parent="CaldroidDefault">

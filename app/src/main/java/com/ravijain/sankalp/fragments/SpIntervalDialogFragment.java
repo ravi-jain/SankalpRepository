@@ -3,7 +3,6 @@ package com.ravijain.sankalp.fragments;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.icu.util.Calendar;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
@@ -14,7 +13,6 @@ import android.widget.RadioGroup;
 import com.ravijain.sankalp.R;
 import com.ravijain.sankalp.activities.SpConstants;
 import com.ravijain.sankalp.activities.SpSankalpList;
-import com.ravijain.sankalp.data.SpDataConstants;
 
 import java.util.Date;
 
@@ -47,7 +45,7 @@ public class SpIntervalDialogFragment extends DialogFragment {
                         }
 
                         Intent intent = new Intent(getContext(), SpSankalpList.class);
-                        intent.putExtra(SpConstants.INTENT_KEY_SANKALP_TYPE, SpDataConstants.SANKALP_TYPE_BOTH);
+                        intent.putExtra(SpConstants.INTENT_KEY_SANKALP_TYPE, SpConstants.SANKALP_TYPE_BOTH);
                         intent.putExtra(SpConstants.INTENT_KEY_SANKALP_LIST_FILTER, listFilter);
                         intent.putExtra(SpConstants.INTENT_KEY_SANKALP_LIST_FILTER_DATE_VALUE, new Date().getTime());
                         getContext().startActivity(intent);

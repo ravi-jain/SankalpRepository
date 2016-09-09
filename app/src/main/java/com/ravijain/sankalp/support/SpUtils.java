@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.support.v7.preference.PreferenceManager;
 
 import com.ravijain.sankalp.fragments.SpSettingsFragment;
@@ -65,6 +66,15 @@ public class SpUtils {
                     PackageManager.COMPONENT_ENABLED_STATE_DISABLED,
                     PackageManager.DONT_KILL_APP);
         }
+    }
+
+    public static Intent getEmailIntent()
+    {
+        Intent intent = new Intent(Intent.ACTION_SENDTO);
+        intent.setData(Uri.parse("mailto:")); // only email apps should handle this
+        intent.putExtra(Intent.EXTRA_EMAIL, "findravi@gmail.com");
+        //intent.putExtra(Intent.EXTRA_SUBJECT, subject);
+        return intent;
     }
 
 }

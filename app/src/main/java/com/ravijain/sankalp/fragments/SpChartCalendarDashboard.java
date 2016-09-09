@@ -39,9 +39,7 @@ import com.ravijain.sankalp.activities.SpAddSankalpActivity;
 import com.ravijain.sankalp.activities.SpConstants;
 import com.ravijain.sankalp.activities.SpSankalpList;
 import com.ravijain.sankalp.data.SpContentProvider;
-import com.ravijain.sankalp.data.SpDataConstants;
 import com.ravijain.sankalp.data.SpSankalpCountData;
-import com.ravijain.sankalp.support.SpCaldroidCalendarViewHandler;
 import com.ravijain.sankalp.support.SpCalendarViewHandler;
 
 import java.util.ArrayList;
@@ -97,11 +95,11 @@ public class SpChartCalendarDashboard extends Fragment implements View.OnClickLi
     public void onClick(View view) {
         if (view.getId() == R.id.chartCalendarDb_addTyagButton) {
             Intent intent = new Intent(getActivity(), SpAddSankalpActivity.class);
-            intent.putExtra(SpConstants.INTENT_KEY_SANKALP_TYPE, SpDataConstants.SANKALP_TYPE_TYAG);
+            intent.putExtra(SpConstants.INTENT_KEY_SANKALP_TYPE, SpConstants.SANKALP_TYPE_TYAG);
             startActivity(intent);
         } else if (view.getId() == R.id.chartCalendarDb_addNiyamButton) {
             Intent intent = new Intent(getActivity(), SpAddSankalpActivity.class);
-            intent.putExtra(SpConstants.INTENT_KEY_SANKALP_TYPE, SpDataConstants.SANKALP_TYPE_NIYAM);
+            intent.putExtra(SpConstants.INTENT_KEY_SANKALP_TYPE, SpConstants.SANKALP_TYPE_NIYAM);
             startActivity(intent);
         }
     }
@@ -111,7 +109,7 @@ public class SpChartCalendarDashboard extends Fragment implements View.OnClickLi
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getContext(), SpSankalpList.class);
-                intent.putExtra(SpConstants.INTENT_KEY_SANKALP_TYPE, SpDataConstants.SANKALP_TYPE_BOTH);
+                intent.putExtra(SpConstants.INTENT_KEY_SANKALP_TYPE, SpConstants.SANKALP_TYPE_BOTH);
                 intent.putExtra(SpConstants.INTENT_KEY_SANKALP_LIST_FILTER, SpConstants.INTENT_VALUE_SANKALP_LIST_FILTER_CURRENT);
                 startActivity(intent);
             }
@@ -127,7 +125,7 @@ public class SpChartCalendarDashboard extends Fragment implements View.OnClickLi
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getContext(), SpSankalpList.class);
-                intent.putExtra(SpConstants.INTENT_KEY_SANKALP_TYPE, SpDataConstants.SANKALP_TYPE_BOTH);
+                intent.putExtra(SpConstants.INTENT_KEY_SANKALP_TYPE, SpConstants.SANKALP_TYPE_BOTH);
                 intent.putExtra(SpConstants.INTENT_KEY_SANKALP_LIST_FILTER, SpConstants.INTENT_VALUE_SANKALP_LIST_FILTER_MONTH);
                 intent.putExtra(SpConstants.INTENT_KEY_SANKALP_LIST_FILTER_DATE_VALUE, new Date().getTime());
                 startActivity(intent);
@@ -195,7 +193,7 @@ public class SpChartCalendarDashboard extends Fragment implements View.OnClickLi
                     }
 
                     Intent intent = new Intent(getContext(), SpSankalpList.class);
-                    intent.putExtra(SpConstants.INTENT_KEY_SANKALP_TYPE, SpDataConstants.SANKALP_TYPE_BOTH);
+                    intent.putExtra(SpConstants.INTENT_KEY_SANKALP_TYPE, SpConstants.SANKALP_TYPE_BOTH);
                     intent.putExtra(SpConstants.INTENT_KEY_SANKALP_LIST_FILTER, intentListFilter);
                     startActivity(intent);
                 }
@@ -270,14 +268,14 @@ public class SpChartCalendarDashboard extends Fragment implements View.OnClickLi
         for (int c : ColorTemplate.VORDIPLOM_COLORS)
             colors.add(c);
 
-        for (int c : ColorTemplate.JOYFUL_COLORS)
-            colors.add(c);
+//        for (int c : ColorTemplate.JOYFUL_COLORS)
+//            colors.add(c);
 
-        for (int c : ColorTemplate.COLORFUL_COLORS)
-            colors.add(c);
-
-        for (int c : ColorTemplate.LIBERTY_COLORS)
-            colors.add(c);
+//        for (int c : ColorTemplate.COLORFUL_COLORS)
+//            colors.add(c);
+//
+//        for (int c : ColorTemplate.LIBERTY_COLORS)
+//            colors.add(c);
 //
 //        for (int c : ColorTemplate.PASTEL_COLORS)
 //            colors.add(c);
@@ -397,13 +395,13 @@ public class SpChartCalendarDashboard extends Fragment implements View.OnClickLi
             public void onValueSelected(Entry e, Highlight h) {
                 if (e instanceof PieEntry) {
                     PieEntry pe = (PieEntry) e;
-                    int sankalpType = SpDataConstants.SANKALP_TYPE_BOTH;
+                    int sankalpType = SpConstants.SANKALP_TYPE_BOTH;
                     if (pe.getLabel().equals(_labels[0])) {
                         // tyag;
-                        sankalpType = SpDataConstants.SANKALP_TYPE_TYAG;
+                        sankalpType = SpConstants.SANKALP_TYPE_TYAG;
                     } else {
                         // niyam
-                        sankalpType = SpDataConstants.SANKALP_TYPE_NIYAM;
+                        sankalpType = SpConstants.SANKALP_TYPE_NIYAM;
                     }
 
                     Intent intent = new Intent(getContext(), SpSankalpList.class);

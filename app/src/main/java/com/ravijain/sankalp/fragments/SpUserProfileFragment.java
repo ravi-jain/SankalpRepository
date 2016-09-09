@@ -279,6 +279,7 @@ public class SpUserProfileFragment extends Fragment {
 //        NavUtils.navigateUpFromSameTask(getActivity());
         Intent intent = new Intent(getContext(), SpMainActivity.class);
         startActivity(intent);
+        getActivity().finish();
     }
 
     private class FormInputTextWatcher implements TextWatcher {

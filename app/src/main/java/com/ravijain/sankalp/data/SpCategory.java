@@ -1,5 +1,7 @@
 package com.ravijain.sankalp.data;
 
+import com.ravijain.sankalp.activities.SpConstants;
+
 import java.util.Hashtable;
 
 /**
@@ -21,13 +23,13 @@ public class SpCategory implements SpDataConstants{
     static {
         int id = 0;
         for (String categoryName: SpCategory.tyagCategoryNames) {
-            defaultCategories.put(categoryName, new SpCategory(id++, categoryName, categoryName, SANKALP_TYPE_TYAG));
+            defaultCategories.put(categoryName, new SpCategory(id++, categoryName, categoryName, SpConstants.SANKALP_TYPE_TYAG));
         }
         for (String categoryName: SpCategory.niyamCategoryNames) {
-            defaultCategories.put(categoryName, new SpCategory(id++, categoryName, categoryName, SANKALP_TYPE_NIYAM));
+            defaultCategories.put(categoryName, new SpCategory(id++, categoryName, categoryName, SpConstants.SANKALP_TYPE_NIYAM));
         }
         for (String categoryName: SpCategory.sankalpCategoryNames) {
-            defaultCategories.put(categoryName, new SpCategory(id++, categoryName, categoryName, SANKALP_TYPE_BOTH));
+            defaultCategories.put(categoryName, new SpCategory(id++, categoryName, categoryName, SpConstants.SANKALP_TYPE_BOTH));
         }
     }
 

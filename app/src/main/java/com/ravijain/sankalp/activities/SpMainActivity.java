@@ -32,6 +32,7 @@ import com.ravijain.sankalp.data.SpUser;
 import com.ravijain.sankalp.data.SpContentProvider;
 import com.ravijain.sankalp.fragments.SpCardDashboardFragment;
 import com.ravijain.sankalp.fragments.SpChartCalendarDashboard;
+import com.ravijain.sankalp.fragments.SpContactUsFragment;
 import com.ravijain.sankalp.fragments.SpDashboardFragment;
 import com.ravijain.sankalp.fragments.SpSettingsFragment;
 import com.ravijain.sankalp.fragments.SpUserProfileFragment;
@@ -217,8 +218,17 @@ public class SpMainActivity extends AppCompatActivity implements ListView.OnItem
                     .replace(R.id.content_frame, new SpSettingsFragment())
                     .commit();
             setTitle(getString(R.string.settings));
+            _drawerListView.setItemChecked(i, true);
             _drawerLayout.closeDrawer(_drawerListView);
-        } else {
+        }
+        else if (_drawerList[i].equals(getString(R.string.Feedback))) {
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.content_frame, new SpContactUsFragment())
+                    .commit();
+            setTitle(getString(R.string.Feedback));
+            _drawerListView.setItemChecked(i, true);
+            _drawerLayout.closeDrawer(_drawerListView);
+        }else {
             Toast.makeText(SpMainActivity.this, _drawerList[i], Toast.LENGTH_SHORT).show();
         }
     }

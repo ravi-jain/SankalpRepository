@@ -105,4 +105,12 @@
     <string name="edit">Edit</string>
     <string name="listSelectedItemLabel">item selected</string>
     <string name="listSelectedItemsLabel">items selected</string>
+    <string name="categorySelectPrompt">Touch to select category</string>
+    <string name="itemSelectPrompt">Touch to select item</string>
+    <string name="periodSelectPrompt">Touch to select period</string>
+    <string name="exTarSelectPrompt">Touch to select</string>
+    <string name="descriptionAddPrompt">Touch to add description</string>
+    <string name="selectCategoryTitle">Select Category</string>
+    <string name="selectItemTitle">Select Item</string>
+    <string name="selectCategoryFirst">Please select category first</string>
 </resources>

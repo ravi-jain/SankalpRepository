@@ -5,6 +5,7 @@ import android.os.AsyncTask;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
+import android.support.v7.widget.PopupMenu;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -18,6 +19,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -26,7 +28,6 @@ import com.ravijain.sankalp.activities.SpConstants;
 import com.ravijain.sankalp.data.SpCategory;
 import com.ravijain.sankalp.data.SpCategoryItem;
 import com.ravijain.sankalp.data.SpContentProvider;
-import com.ravijain.sankalp.data.SpDataConstants;
 import com.ravijain.sankalp.support.SpCustomSpinner;
 import com.ravijain.sankalp.support.SpDateUtils;
 import com.ravijain.sankalp.data.SpExceptionOrTarget;
@@ -53,6 +54,7 @@ public class SpAddSankalpActivityFragment extends Fragment {
     private EditText _descriptionView;
     private EditText _exceptionFrequencyCount;
     private TextView _rangeValueTextView;
+    private ImageButton _periodMenuView;
 //    private View _fromToDateContainer;
 
     private Spinner _exceptionsOrTargetSpinnerView;
@@ -84,8 +86,8 @@ public class SpAddSankalpActivityFragment extends Fragment {
         View fragmentView = inflater.inflate(R.layout.fragment_sp_add_sankalp, container, false);
         setHasOptionsMenu(true);
 
-        _sankalpType = getActivity().getIntent().getIntExtra(SpConstants.INTENT_KEY_SANKALP_TYPE, SpDataConstants.SANKALP_TYPE_TYAG);
-        if (_sankalpType == SpDataConstants.SANKALP_TYPE_TYAG) {
+        _sankalpType = getActivity().getIntent().getIntExtra(SpConstants.INTENT_KEY_SANKALP_TYPE, SpConstants.SANKALP_TYPE_TYAG);
+        if (_sankalpType == SpConstants.SANKALP_TYPE_TYAG) {
             getActivity().setTitle(R.string.title_activity_sp_add_tyag);
         } else {
             getActivity().setTitle(R.string.title_activity_sp_add_niyam);
@@ -234,14 +236,14 @@ public class SpAddSankalpActivityFragment extends Fragment {
         _exceptionOrTargetCurrentCount_label = (TextView) view.findViewById(R.id.exceptionOrTargetCurrentCount_label);
         _exceptionOrTargetCurrentCount_tv = (EditText) view.findViewById(R.id.exceptionOrTargetCurrentCount_tv);
 
-        if (_sankalpType == SpDataConstants.SANKALP_TYPE_TYAG) {
+        if (_sankalpType == SpConstants.SANKALP_TYPE_TYAG) {
             _exceptionOrTargetTitleTextView.setText(R.string.tyagExceptions);
             _exceptionOrTargetCurrentCount_label.setText(R.string.exception_left_label);
-            _populateCategories(SpDataConstants.SANKALP_TYPE_TYAG);
+            _populateCategories(SpConstants.SANKALP_TYPE_TYAG);
         } else {
             _exceptionOrTargetTitleTextView.setText(R.string.niyamFrequency);
             _exceptionOrTargetCurrentCount_label.setText(R.string.frequency_done_label);
-            _populateCategories(SpDataConstants.SANKALP_TYPE_NIYAM);
+            _populateCategories(SpConstants.SANKALP_TYPE_NIYAM);
         }
 
         _categoriesSpinnerView = (Spinner) view.findViewById(R.id.categories_spinner);
@@ -259,11 +261,65 @@ public class SpAddSankalpActivityFragment extends Fragment {
 
 //        _fromToDateContainer = view.findViewById(R.id.fromToDateContainer);
         _rangeValueTextView = (TextView) view.findViewById(R.id.rangeValue_textView);
-        _rangeLabelsSpinnerView = (SpCustomSpinner) view.findViewById(R.id.rangeLabels_spinner);
-        ArrayAdapter adapter = ArrayAdapter.createFromResource(getContext(), R.array.periodLabelsList, R.layout.spinner_item);
-        adapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
-        _rangeLabelsSpinnerView.setAdapter(adapter);
-        _rangeLabelsSpinnerView.setOnItemSelectedListener(new SpinnerItemSelectionListener());
+        _periodMenuView = (ImageButton) view.findViewById(R.id.editPeriod) ;
+        _fromDate = SpDateUtils.beginOfDate(new Date());
+        _toDate = SpDateUtils.endOfDate(new Date());
+        _periodMenuView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                PopupMenu popup = new PopupMenu(getContext(), _periodMenuView);
+                MenuInflater inflater = popup.getMenuInflater();
+                inflater.inflate(R.menu.menu_edit_period, popup.getMenu());
+                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+                        String label = null;
+                        int intentFilter = -1;
+                        switch (item.getItemId()) {
+
+                            case R.id.action_day:
+                                label = getString(R.string.Day);
+                                intentFilter = SpConstants.INTENT_VALUE_SANKALP_LIST_FILTER_DAY;
+                                break;
+                            case R.id.action_month:
+                                label = getString(R.string.month);
+                                intentFilter = SpConstants.INTENT_VALUE_SANKALP_LIST_FILTER_MONTH;
+                                break;
+                            case R.id.action_year:
+                                label = getString(R.string.year);
+                                intentFilter = SpConstants.INTENT_VALUE_SANKALP_LIST_FILTER_YEAR;
+                                break;
+                            case R.id.action_lifetime:
+                                label = getString(R.string.lifetime_db);
+                                _fromDate = null;
+                                _toDate = null;
+                                setFromDate(SpDateUtils.beginOfDate(Calendar.getInstance()));
+                                _rangeValueTextView.setText(R.string.Lifetime);
+                                break;
+                            case R.id.action_range:
+                                label = getString(R.string.Range);
+                                intentFilter = SpConstants.INTENT_VALUE_SANKALP_LIST_FILTER_RANGE;
+                                break;
+                        }
+                        if (intentFilter > -1) {
+                            _showDialog(intentFilter);
+                        }
+                        if (label != null) {
+                            _exceptionsFrequencyAdapter.clear();
+                            _exceptionsFrequencyAdapter.addAll(_getExceptionFrequencyList(label));
+                            return true;
+                        }
+                        return false;
+                    }
+                });
+                popup.show();
+            }
+        });
+//        _rangeLabelsSpinnerView = (SpCustomSpinner) view.findViewById(R.id.rangeLabels_spinner);
+//        ArrayAdapter adapter = ArrayAdapter.createFromResource(getContext(), R.array.periodLabelsList, R.layout.spinner_item);
+//        adapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
+//        _rangeLabelsSpinnerView.setAdapter(adapter);
+//        _rangeLabelsSpinnerView.setOnItemSelectedListener(new SpinnerItemSelectionListener());
 
         _exceptionsOrTargetSpinnerView = (Spinner) view.findViewById(R.id.exceptionOrTarget_spinner);
         _exceptionsFrequencyAdapter = new ArrayAdapter<SpExceptionOrTarget>(getContext(), R.layout.spinner_item,
@@ -324,8 +380,8 @@ public class SpAddSankalpActivityFragment extends Fragment {
     private void _updateSummary()
     {
         if (_isDocumentReady) {
-            _editedSankalp = _getSankalpFromInput();
-            _setSummaryTextView(_editedSankalp);
+            SpSankalp editedSankalp = _getSankalpFromInput();
+            _setSummaryTextView(editedSankalp);
         }
 
     }
@@ -340,14 +396,14 @@ public class SpAddSankalpActivityFragment extends Fragment {
         sankalp.setFromDate(_fromDate);
         sankalp.setToDate(_toDate);
         if (_rangeValueTextView.getText().equals(getString(R.string.Lifetime))) {
-            sankalp.setLifetime(SpDataConstants.SANKALP_IS_LIFTIME_TRUE);
+            sankalp.setLifetime(SpConstants.SANKALP_IS_LIFTIME_TRUE);
         }
 
         SpExceptionOrTarget exceptionOrTarget = new SpExceptionOrTarget(SpExceptionOrTarget.EXCEPTION_OR_TARGET_UNDEFINED, getContext());
         String count = _exceptionFrequencyCount.getText().toString();
         if (!TextUtils.isEmpty(count)) {
             int countValue = Integer.valueOf(count);
-            if (countValue == 0 && _sankalpType == SpDataConstants.SANKALP_TYPE_TYAG) {
+            if (countValue == 0 && _sankalpType == SpConstants.SANKALP_TYPE_TYAG) {
                 exceptionOrTarget.setId(SpExceptionOrTarget.EXCEPTION_OR_TARGET_TOTAL);
             } else {
                 exceptionOrTarget.setExceptionOrTargetCount(countValue);
@@ -463,16 +519,19 @@ public class SpAddSankalpActivityFragment extends Fragment {
 
     public void setDate(Date fromDate, Date toDate)
     {
-        setFromDate(fromDate);
-        setToDate(toDate);
-        _rangeValueTextView.setText(SpDateUtils.getFriendlyPeriodString(fromDate, toDate, false));
-        _updateSummary();
+        if (fromDate != null && toDate != null) {
+            setFromDate(fromDate);
+            setToDate(toDate);
+            _rangeValueTextView.setText(SpDateUtils.getFriendlyPeriodString(fromDate, toDate, false));
+            _updateSummary();
+        }
+
     }
 
     private void _showDialog(int periodKey)
     {
         SpPeriodDialog d = new SpPeriodDialog();
-        d.setParentFragment(this);
+        //d.setParentFragment(this);
         Bundle args = new Bundle();
         args.putInt(SpConstants.INTENT_KEY_SANKALP_PERIOD, periodKey);
         d.setArguments(args);
@@ -486,10 +545,10 @@ public class SpAddSankalpActivityFragment extends Fragment {
         @Override
         public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
 
-            if (parentView.getId() == R.id.rangeLabels_spinner) {
+            /*if (parentView.getId() == R.id.rangeLabels_spinner) {
                 _handleRangeLabelSpinnerSelection(parentView);
             }
-            else if (parentView.getId() == R.id.categories_spinner) {
+            else*/ if (parentView.getId() == R.id.categories_spinner) {
                 _handleCategoriesSpinnerSelection(parentView);
             }
             else if (parentView.getId() == R.id.items_spinner) {

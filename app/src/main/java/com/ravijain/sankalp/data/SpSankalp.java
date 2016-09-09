@@ -1,5 +1,8 @@
 package com.ravijain.sankalp.data;
 
+import android.content.Context;
+
+import com.ravijain.sankalp.activities.SpConstants;
 import com.ravijain.sankalp.support.SpDateUtils;
 
 import java.util.Date;
@@ -17,7 +20,7 @@ public class SpSankalp {
     private String _description = "";
     private Date _creationDate;
     private SpExceptionOrTarget _exceptionOrTarget;
-    private int _isLifetime = SpDataConstants.SANKALP_IS_LIFTIME_FALSE;
+    private int _isLifetime = SpConstants.SANKALP_IS_LIFTIME_FALSE;
     private int _sankalpType;
 
     private SpCategory _category = null;
@@ -33,6 +36,18 @@ public class SpSankalp {
 
     }
 
+    public SpSankalp(int sankalpType) {
+        _sankalpType = sankalpType;
+    }
+
+    public SpSankalp(Context context, int sankalpType) {
+    }
+
+    public static SpSankalp getDefaultSankalp(int sankalpType, Context context)
+    {
+        return new SpSankalp();
+    }
+
     public boolean isMatch(String query) {
         if (_item != null && _item.getCategoryItemName().equalsIgnoreCase(query)) {
             return true;
@@ -43,20 +58,39 @@ public class SpSankalp {
         return false;
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null || ! (obj instanceof SpSankalp)) return false;
+        SpSankalp s = (SpSankalp)obj;
+        if (getSankalpType() != s.getSankalpType()) return false;
+        if (getCategoryID() != s.getCategoryID()) return false;
+        if (getItemId() != s.getItemId()) return false;
+        if (!getFromDate().equals(s.getFromDate())) return false;
+        if (getToDate() == null && s.getToDate() != null) return false;
+        else if (getToDate() != null && !getToDate().equals(s.getToDate())) return false;
+        if (!getDescription().equals(s.getDescription())) return false;
+        if (!getExceptionOrTarget().equals(s.getExceptionOrTarget())) return false;
+        return true;
+    }
+
     public String getSankalpSummary() {
         StringBuilder s = new StringBuilder();
-        String sankalpType = getSankalpType() == SpDataConstants.SANKALP_TYPE_TYAG ? "Tyag" : "Niyam";
+        String sankalpType = getSankalpType() == SpConstants.SANKALP_TYPE_TYAG ? "Tyag" : "Niyam";
         s.append("I take ").append(sankalpType).append(" of ").append(getItem().getCategoryItemName()).append(" for ");
-        if (isLifetime() == SpDataConstants.SANKALP_IS_LIFTIME_TRUE) {
-            s.append("lifetime");
-        } else {
-            s.append(SpDateUtils.getFriendlyPeriodString(getFromDate(), getToDate(), false));
+
+        if (getFromDate() != null) {
+            if (isLifetime() == SpConstants.SANKALP_IS_LIFTIME_TRUE) {
+                s.append("lifetime");
+            } else {
+                s.append(SpDateUtils.getFriendlyPeriodString(getFromDate(), getToDate(), false));
+            }
         }
 
-        if (getExceptionOrTarget().getExceptionOrTargetCount() > 0) {
-            if (getSankalpType() == SpDataConstants.SANKALP_TYPE_TYAG) {
+
+        if (getExceptionOrTarget() != null && getExceptionOrTarget().getExceptionOrTargetCount() > 0) {
+            if (getSankalpType() == SpConstants.SANKALP_TYPE_TYAG) {
                 s.append(" except ");
-            } else if (getSankalpType() == SpDataConstants.SANKALP_TYPE_NIYAM) {
+            } else if (getSankalpType() == SpConstants.SANKALP_TYPE_NIYAM) {
                 s.append(" with a target of ");
             }
             s.append(getExceptionOrTarget().getRepresentationalSummary());

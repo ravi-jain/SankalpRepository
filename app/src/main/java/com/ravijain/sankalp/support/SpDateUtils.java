@@ -30,12 +30,14 @@ public class SpDateUtils {
     }
 
     public static Date beginOfDate(Date d) {
+        if (d == null) return null;
         Calendar c = Calendar.getInstance();
         c.setTime(d);
         return beginOfDate(c);
     }
 
     public static Date endOfDate(Date d) {
+        if (d == null) return null;
         Calendar c = Calendar.getInstance();
         c.setTime(d);
         return endOfDate(c);
@@ -66,8 +68,7 @@ public class SpDateUtils {
         return cal;
     }
 
-    public static String[] getMonthStrings()
-    {
+    public static String[] getMonthStrings() {
         String[] months = new String[12];
         Calendar c = Calendar.getInstance();
         for (int i = 0; i < 12; i++) {
@@ -304,5 +305,90 @@ public class SpDateUtils {
         int day = c.get(Calendar.DAY_OF_MONTH);
         int maxDay = c.getActualMaximum(Calendar.DAY_OF_MONTH);
         return day == maxDay;
+    }
+
+    /**
+     * Date Arithmetic function (date2 - date1). subtract a date from another
+     * date, return the difference as the required fields. E.g. if specified
+     * Calendar.Date, the smaller range of fields is ignored and this method
+     * return the difference of days.
+     *
+     * @param date2 The date2.
+     * @param field The time field; e.g., Calendar.DATE, Calendar.YEAR, it's default
+     *              value is Calendar.DATE
+     * @param date1 The date1.
+     */
+    public static final long subtract(Date date2, Date date1, int field) {
+
+        boolean negative = false;
+        if (date1.after(date2)) {
+            negative = true;
+            final Date d = date1;
+            date1 = date2;
+            date2 = d;
+        }
+
+        final Calendar cal1 = Calendar.getInstance();
+        cal1.setTimeInMillis(date1.getTime());// don't call cal.setTime(Date) which
+        // will reset the TimeZone.
+
+        final Calendar cal2 = Calendar.getInstance();
+        cal2.setTimeInMillis(date2.getTime());// don't call cal.setTime(Date) which
+        // will reset the TimeZone.
+
+        int year1 = cal1.get(Calendar.YEAR);
+        int year2 = cal2.get(Calendar.YEAR);
+
+        switch (field) {
+            case Calendar.YEAR: {
+                return negative ? (year1 - year2) : (year2 - year1);
+            }
+            case Calendar.MONTH: {
+                int month1 = cal1.get(Calendar.MONTH);
+                int month2 = cal2.get(Calendar.MONTH);
+                int months = 12 * (year2 - year1) + month2 - month1;
+                return negative ? -months : months;
+            }
+            case Calendar.HOUR: {
+                long time1 = date1.getTime();
+                long time2 = date2.getTime();
+                long min1 = (time1 < 0 ? (time1 - (1000 * 60 * 60 - 1)) : time1) / (1000 * 60 * 60);
+                long min2 = (time2 < 0 ? (time2 - (1000 * 60 * 60 - 1)) : time2) / (1000 * 60 * 60);
+                return negative ? (min1 - min2) : (min2 - min1);
+            }
+            case Calendar.MINUTE: {
+                long time1 = date1.getTime();
+                long time2 = date2.getTime();
+                long min1 = (time1 < 0 ? (time1 - (1000 * 60 - 1)) : time1) / (1000 * 60);
+                long min2 = (time2 < 0 ? (time2 - (1000 * 60 - 1)) : time2) / (1000 * 60);
+                return negative ? (min1 - min2) : (min2 - min1);
+            }
+            case Calendar.SECOND: {
+                long time1 = date1.getTime();
+                long time2 = date2.getTime();
+                long sec1 = (time1 < 0 ? (time1 - (1000 - 1)) : time1) / 1000;
+                long sec2 = (time2 < 0 ? (time2 - (1000 - 1)) : time2) / 1000;
+
+                return negative ? (sec1 - sec2) : (sec2 - sec1);
+            }
+            case Calendar.MILLISECOND: {
+                return negative ? (date1.getTime() - date2.getTime()) : (date2.getTime() - date1.getTime());
+            }
+            case Calendar.DATE:
+            default: /* default, like -1 */ {
+                int day1 = cal1.get(Calendar.DAY_OF_YEAR);
+                int day2 = cal2.get(Calendar.DAY_OF_YEAR);
+
+                int maxDay1 = year1 == year2 ? 0 : cal1.getActualMaximum(Calendar.DAY_OF_YEAR);
+                int days = maxDay1 - day1 + day2;
+
+                final Calendar cal = Calendar.getInstance();
+                for (int year = year1 + 1; year < year2; year++) {
+                    cal.set(Calendar.YEAR, year);
+                    days += cal.getActualMaximum(Calendar.DAY_OF_YEAR);
+                }
+                return negative ? -days : days;
+            }
+        }
     }
 }

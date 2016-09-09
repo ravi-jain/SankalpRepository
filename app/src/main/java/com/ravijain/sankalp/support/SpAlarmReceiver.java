@@ -12,7 +12,6 @@ import com.ravijain.sankalp.R;
 import com.ravijain.sankalp.activities.SpConstants;
 import com.ravijain.sankalp.activities.SpSankalpList;
 import com.ravijain.sankalp.data.SpContentProvider;
-import com.ravijain.sankalp.data.SpDataConstants;
 import com.ravijain.sankalp.data.SpSankalp;
 
 import java.util.ArrayList;
@@ -30,7 +29,7 @@ public class SpAlarmReceiver extends BroadcastReceiver {
             SpUtils.startAlarm(context);
         } else {
             SpContentProvider p = SpContentProvider.getInstance(context);
-            ArrayList<SpSankalp> sankalps = p.getSankalps(SpDataConstants.SANKALP_TYPE_BOTH,
+            ArrayList<SpSankalp> sankalps = p.getSankalps(SpConstants.SANKALP_TYPE_BOTH,
                     SpConstants.INTENT_VALUE_SANKALP_LIST_FILTER_DAY, SpDateUtils.nextDate(Calendar.getInstance()));
 
             if (sankalps.size() == 0) return;
@@ -41,7 +40,7 @@ public class SpAlarmReceiver extends BroadcastReceiver {
                             .setContentText("You have " + sankalps.size() + " sankalps ending tomorrow");
             // Creates an explicit intent for an Activity in your app
             Intent intent = new Intent(context, SpSankalpList.class);
-            intent.putExtra(SpConstants.INTENT_KEY_SANKALP_TYPE, SpDataConstants.SANKALP_TYPE_BOTH);
+            intent.putExtra(SpConstants.INTENT_KEY_SANKALP_TYPE, SpConstants.SANKALP_TYPE_BOTH);
             intent.putExtra(SpConstants.INTENT_KEY_SANKALP_LIST_FILTER, SpConstants.INTENT_VALUE_SANKALP_LIST_FILTER_DAY);
             intent.putExtra(SpConstants.INTENT_KEY_SANKALP_LIST_FILTER_DATE_VALUE, SpDateUtils.nextDate(Calendar.getInstance()).getTimeInMillis());
 

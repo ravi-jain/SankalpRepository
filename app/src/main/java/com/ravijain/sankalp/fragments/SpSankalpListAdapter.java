@@ -13,7 +13,6 @@ import com.ravijain.sankalp.activities.SpConstants;
 import com.ravijain.sankalp.data.SpCategory;
 import com.ravijain.sankalp.data.SpCategoryItem;
 import com.ravijain.sankalp.data.SpContentProvider;
-import com.ravijain.sankalp.data.SpDataConstants;
 import com.ravijain.sankalp.support.SpDateUtils;
 import com.ravijain.sankalp.data.SpExceptionOrTarget;
 import com.ravijain.sankalp.data.SpSankalp;
@@ -39,7 +38,7 @@ public class SpSankalpListAdapter extends ArrayAdapter<SpSankalp>{
         SpSankalp sankalp = getItem(position);
         // Check if an existing view is being reused, otherwise inflate the view
         if (convertView == null) {
-            convertView = LayoutInflater.from(getContext()).inflate(R.layout.list_item_dashboard, parent, false);
+            convertView = LayoutInflater.from(getContext()).inflate(R.layout.list_item_dashboard_material, parent, false);
         }
 
 
@@ -55,7 +54,7 @@ public class SpSankalpListAdapter extends ArrayAdapter<SpSankalp>{
         int isLifetime = sankalp.isLifetime();
 
         String period;
-        if (isLifetime == SpDataConstants.SANKALP_IS_LIFTIME_TRUE) {
+        if (isLifetime == SpConstants.SANKALP_IS_LIFTIME_TRUE) {
             period = getContext().getString(R.string.Lifetime);
         }
         else {
@@ -80,14 +79,14 @@ public class SpSankalpListAdapter extends ArrayAdapter<SpSankalp>{
             TextView title = (TextView) convertView.findViewById(R.id.exceptionOrTarget_li_title);
             TextView currentCountLabel = (TextView) convertView.findViewById(R.id.exceptionOrTargetCurrentCount_li_label);
 
-            if (sankalp.getSankalpType() == SpDataConstants.SANKALP_TYPE_TYAG) {
+            if (sankalp.getSankalpType() == SpConstants.SANKALP_TYPE_TYAG) {
                 title.setText(R.string.tyagExceptions);
                 currentCountLabel.setText(R.string.exception_left_label);
                 //convertView.findViewById(R.id.listBarNiyam).setVisibility(View.GONE);
                 //convertView.findViewById(R.id.listBar).setVisibility(View.VISIBLE);
                 convertView.findViewById(R.id.listBar).setBackgroundColor(getContext().getResources().getColor(R.color.sankalp_tyag));
             }
-            else if (sankalp.getSankalpType() == SpDataConstants.SANKALP_TYPE_NIYAM) {
+            else if (sankalp.getSankalpType() == SpConstants.SANKALP_TYPE_NIYAM) {
 //                title.setText(R.string.niyamFrequency);
                 title.setText(R.string.niyamFrequency);
                 currentCountLabel.setText(R.string.frequency_done_label);
@@ -130,7 +129,7 @@ public class SpSankalpListAdapter extends ArrayAdapter<SpSankalp>{
         ArrayList<SpSankalp> filteredList = new ArrayList<SpSankalp>();
         for (int i = 0; i < _sankalps.size(); i++) {
             SpSankalp s = _sankalps.get(i);
-            if (sankalpType == SpDataConstants.SANKALP_TYPE_BOTH || s.getSankalpType() == sankalpType) {
+            if (sankalpType == SpConstants.SANKALP_TYPE_BOTH || s.getSankalpType() == sankalpType) {
                 if (listFilter == -1 || listFilter == SpConstants.INTENT_VALUE_SANKALP_LIST_FILTER_ALL ||
                         (listFilter == SpConstants.INTENT_VALUE_SANKALP_LIST_FILTER_CURRENT &&
                                 SpDateUtils.isCurrentDate(s.getFromDate(), s.getToDate())) ||

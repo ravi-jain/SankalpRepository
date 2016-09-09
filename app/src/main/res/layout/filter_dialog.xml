@@ -2,65 +2,70 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="16dp">
+    android:orientation="vertical">
 
     <TextView
-        style="@style/SpLabel"
+        style="@style/SpDialogTitleCustom"
         android:text="@string/sankalpType" />
 
     <View
-        style="@style/SpHorizontalDivider"
-        android:layout_marginBottom="10dp" />
+        style="@style/SpHorizontalDividerMaterial"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="?attr/dialogPreferredPadding"
+        android:layout_marginRight="?attr/dialogPreferredPadding" />
 
     <RadioGroup
         android:id="@+id/rg_sankalpType"
-        android:checkedButton="@+id/rb_st_all"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:checkedButton="@+id/rb_st_all"
+        android:orientation="horizontal"
+        android:paddingLeft="?attr/dialogPreferredPadding">
 
         <RadioButton
-            style="@style/SpText"
             android:id="@+id/rb_st_all"
+            style="@style/SpText"
             android:text="@string/all" />
 
         <RadioButton
-            style="@style/SpText"
             android:id="@+id/rb_st_tyag"
+            style="@style/SpText"
             android:text="@string/tyag" />
 
         <RadioButton
-            style="@style/SpText"
             android:id="@+id/rb_st_niyam"
+            style="@style/SpText"
             android:text="@string/niyam" />
     </RadioGroup>
 
     <LinearLayout
-        android:layout_width="match_parent"
         android:id="@+id/filterDialog_periodView"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:visibility="gone"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:visibility="gone">
+
         <TextView
-            style="@style/SpLabel"
-            android:paddingTop="@dimen/activity_vertical_margin"
+            style="@style/SpDialogTitleCustom"
             android:text="@string/sankalpPeriod" />
 
         <View
-            style="@style/SpHorizontalDivider"
-            android:layout_marginBottom="10dp" />
+            style="@style/SpHorizontalDividerMaterial"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="?attr/dialogPreferredPadding"
+            android:layout_marginRight="?attr/dialogPreferredPadding" />
 
         <RadioGroup
             android:id="@+id/rg_sankalpPeriod"
             android:layout_width="wrap_content"
-            android:checkedButton="@+id/rb_sp_current"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:checkedButton="@+id/rb_sp_current"
+            android:orientation="vertical"
+            android:paddingLeft="?attr/dialogPreferredPadding">
 
             <RadioButton
-                style="@style/SpText"
                 android:id="@+id/rb_sp_current"
+                style="@style/SpText"
                 android:checked="true"
                 android:text="@string/current" />
 
@@ -70,13 +75,13 @@
                 android:text="@string/Lifetime" />-->
 
             <RadioButton
-                style="@style/SpText"
                 android:id="@+id/rb_sp_upcoming"
+                style="@style/SpText"
                 android:text="@string/upcoming" />
 
             <RadioButton
-                style="@style/SpText"
                 android:id="@+id/rb_sp_all"
+                style="@style/SpText"
                 android:text="@string/all" />
         </RadioGroup>
 

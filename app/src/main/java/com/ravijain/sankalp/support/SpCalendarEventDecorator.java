@@ -28,6 +28,6 @@ public class SpCalendarEventDecorator implements DayViewDecorator {
 
     @Override
     public void decorate(DayViewFacade view) {
-        view.addSpan(new DotSpan(15, color));
+        view.addSpan(new DotSpan(12, color));
     }
 }

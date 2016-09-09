@@ -17,7 +17,6 @@ import android.widget.TextView;
 
 import com.ravijain.sankalp.R;
 import com.ravijain.sankalp.data.SpContentProvider;
-import com.ravijain.sankalp.data.SpDataConstants;
 import com.ravijain.sankalp.support.SpDateUtils;
 import com.ravijain.sankalp.data.SpSankalp;
 
@@ -176,7 +175,7 @@ public class SpSankalpDetailsActivity extends AppCompatActivity {
                 String sankalpType;
                 String exTarCurrentLabel;
 
-                if (_sankalp.getSankalpType() == SpDataConstants.SANKALP_TYPE_TYAG) {
+                if (_sankalp.getSankalpType() == SpConstants.SANKALP_TYPE_TYAG) {
                     sankalpType = getString(R.string.tyag);
                     exTarCurrentLabel = getString(R.string.exception_left_label);
                     _exceptionOrTargetTitleTV.setText(getString(R.string.tyagExceptions));
@@ -190,7 +189,7 @@ public class SpSankalpDetailsActivity extends AppCompatActivity {
                 int isLifetime = _sankalp.isLifetime();
 
                 String period;
-                if (isLifetime == SpDataConstants.SANKALP_IS_LIFTIME_TRUE) {
+                if (isLifetime == SpConstants.SANKALP_IS_LIFTIME_TRUE) {
                     period = getString(R.string.Lifetime);
                 } else {
                     Date fromDate = _sankalp.getFromDate();

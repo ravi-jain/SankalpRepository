@@ -32,7 +32,7 @@ public class SpPeriodDialog extends DialogFragment implements View.OnClickListen
     private int _periodKey = SpConstants.INTENT_VALUE_SANKALP_LIST_FILTER_DAY;
 
     private NumberPicker _monthPicker, _yearPicker;
-    private SpAddSankalpActivityFragment _parentFragment;
+    private SpAddSankalpFragment _parentFragment;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -137,8 +137,9 @@ public class SpPeriodDialog extends DialogFragment implements View.OnClickListen
             if (_periodKey == SpConstants.INTENT_VALUE_SANKALP_LIST_FILTER_DAY || _periodKey == SpConstants.INTENT_VALUE_SANKALP_LIST_FILTER_RANGE) {
                 if (_calendarView != null) {
                     Date[] dates = _calendarView.getRangeDates();
-                    _fromDate = SpDateUtils.beginOfDate(dates[0]);
-                    _toDate = SpDateUtils.endOfDate(dates[1]);
+                        _fromDate = SpDateUtils.beginOfDate(dates[0]);
+                        _toDate = SpDateUtils.endOfDate(dates[1]);
+
                 }
             }
             else if (_periodKey == SpConstants.INTENT_VALUE_SANKALP_LIST_FILTER_MONTH) {
@@ -165,7 +166,7 @@ public class SpPeriodDialog extends DialogFragment implements View.OnClickListen
 
             }
 
-            _parentFragment.setDate(_fromDate, _toDate);
+            _parentFragment.setPeriod(_fromDate, _toDate);
             dismiss();
         }
         else {
@@ -174,7 +175,7 @@ public class SpPeriodDialog extends DialogFragment implements View.OnClickListen
 
     }
 
-    public void setParentFragment(SpAddSankalpActivityFragment parentFragment) {
+    public void setParentFragment(SpAddSankalpFragment parentFragment) {
         this._parentFragment = parentFragment;
     }
 

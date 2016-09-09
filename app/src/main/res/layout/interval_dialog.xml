@@ -3,14 +3,17 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="16dp">
+    >
 
     <TextView
-        style="@style/SpLabel"
-        android:text="@string/selectInterval" />
+        style="@style/SpDialogTitleCustom"
+        android:text="@string/selectInterval"
+        />
 
     <View
-        style="@style/SpHorizontalDivider"
+        style="@style/SpHorizontalDividerMaterial"
+        android:layout_marginLeft="?attr/dialogPreferredPadding"
+        android:layout_marginRight="?attr/dialogPreferredPadding"
         android:layout_marginBottom="10dp" />
 
     <RadioGroup
@@ -18,6 +21,7 @@
         android:checkedButton="@+id/rb_day"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:paddingLeft="?attr/dialogPreferredPadding"
         android:orientation="vertical">
 
         <RadioButton

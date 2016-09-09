@@ -1,14 +1,10 @@
 package com.ravijain.sankalp.fragments;
 
-import android.app.Dialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.SearchView;
 import android.text.TextUtils;
 import android.util.SparseBooleanArray;
@@ -22,15 +18,13 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.ravijain.sankalp.R;
+import com.ravijain.sankalp.activities.SpAddSankalpActivity;
 import com.ravijain.sankalp.activities.SpConstants;
 import com.ravijain.sankalp.activities.SpSankalpDetailsActivity;
-import com.ravijain.sankalp.activities.SpSankalpList;
 import com.ravijain.sankalp.data.SpContentProvider;
-import com.ravijain.sankalp.data.SpDataConstants;
 import com.ravijain.sankalp.data.SpSankalp;
 
 import java.util.ArrayList;
@@ -60,10 +54,10 @@ public class SpSankalpListFragment extends Fragment implements SearchView.OnQuer
         setHasOptionsMenu(true);
 
         Bundle b = getArguments();
-        int sankalpType = SpDataConstants.SANKALP_TYPE_BOTH;
+        int sankalpType = SpConstants.SANKALP_TYPE_BOTH;
         Calendar day = null;
         if (b != null) {
-            sankalpType = b.getInt(SpConstants.INTENT_KEY_SANKALP_TYPE, SpDataConstants.SANKALP_TYPE_BOTH);
+            sankalpType = b.getInt(SpConstants.INTENT_KEY_SANKALP_TYPE, SpConstants.SANKALP_TYPE_BOTH);
             _listFilter = b.getInt(SpConstants.INTENT_KEY_SANKALP_LIST_FILTER, SpConstants.INTENT_VALUE_SANKALP_LIST_FILTER_ALL);
             long time = getArguments().getLong(SpConstants.INTENT_KEY_SANKALP_LIST_FILTER_DATE_VALUE, -1);
             if (time > -1)
@@ -74,10 +68,10 @@ public class SpSankalpListFragment extends Fragment implements SearchView.OnQuer
         }
 
         String title = getString(R.string.title_activity_sp_sankalp_list);
-        if (sankalpType == SpDataConstants.SANKALP_TYPE_NIYAM) {
+        if (sankalpType == SpConstants.SANKALP_TYPE_NIYAM) {
             title = getString(R.string.niyam);
         }
-        else if (sankalpType == SpDataConstants.SANKALP_TYPE_TYAG) {
+        else if (sankalpType == SpConstants.SANKALP_TYPE_TYAG) {
             title = getString(R.string.tyag);
         }
         getActivity().setTitle(title);
@@ -93,8 +87,8 @@ public class SpSankalpListFragment extends Fragment implements SearchView.OnQuer
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                 SpSankalp sankalp = (SpSankalp)adapterView.getItemAtPosition(position);
-                Intent intent = new Intent(getActivity(), SpSankalpDetailsActivity.class);
-//                intent.putExtra(SpConstants.INTENT_KEY_SANKALP_TYPE, sankalp.getSankalpType());
+                Intent intent = new Intent(getActivity(), SpAddSankalpActivity.class);
+                intent.putExtra(SpConstants.INTENT_KEY_SANKALP_TYPE, sankalp.getSankalpType());
                 intent.putExtra(SpConstants.INTENT_KEY_SANKALP_ID, sankalp.getId());
                 startActivity(intent);
             }
@@ -157,13 +151,13 @@ public class SpSankalpListFragment extends Fragment implements SearchView.OnQuer
             listFilter = -1;
         }
         if (sankalpTypeid == R.id.rb_st_tyag) {
-            sankalpType = SpDataConstants.SANKALP_TYPE_TYAG;
+            sankalpType = SpConstants.SANKALP_TYPE_TYAG;
         }
         else if (sankalpTypeid == R.id.rb_st_niyam) {
-            sankalpType = SpDataConstants.SANKALP_TYPE_NIYAM;
+            sankalpType = SpConstants.SANKALP_TYPE_NIYAM;
         }
         else {
-            sankalpType = SpDataConstants.SANKALP_TYPE_BOTH;
+            sankalpType = SpConstants.SANKALP_TYPE_BOTH;
         }
 
         _filterList(sankalpType, listFilter);
@@ -183,10 +177,10 @@ public class SpSankalpListFragment extends Fragment implements SearchView.OnQuer
     private String _getListSummary(int sankalpType, int listFilter)
     {
         String sankalpTypeLabel;
-        if (sankalpType == SpDataConstants.SANKALP_TYPE_BOTH) {
+        if (sankalpType == SpConstants.SANKALP_TYPE_BOTH) {
             sankalpTypeLabel = "sankalps";
         }
-        else if (sankalpType == SpDataConstants.SANKALP_TYPE_TYAG) {
+        else if (sankalpType == SpConstants.SANKALP_TYPE_TYAG) {
             sankalpTypeLabel = "tyags";
         }
         else {

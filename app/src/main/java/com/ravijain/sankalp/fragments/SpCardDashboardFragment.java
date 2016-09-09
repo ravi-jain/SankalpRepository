@@ -16,7 +16,6 @@ import com.ravijain.sankalp.activities.SpAddSankalpActivity;
 import com.ravijain.sankalp.activities.SpConstants;
 import com.ravijain.sankalp.activities.SpSankalpList;
 import com.ravijain.sankalp.data.SpContentProvider;
-import com.ravijain.sankalp.data.SpDataConstants;
 import com.ravijain.sankalp.support.SpCaldroidCalendarViewHandler;
 import com.ravijain.sankalp.support.SpDateUtils;
 import com.ravijain.sankalp.data.SpSankalp;
@@ -165,11 +164,11 @@ public class SpCardDashboardFragment extends Fragment implements View.OnClickLis
 
         if (view.getId() == R.id.cardDb_addTyagButton) {
             Intent intent = new Intent(getActivity(), SpAddSankalpActivity.class);
-            intent.putExtra(SpConstants.INTENT_KEY_SANKALP_TYPE, SpDataConstants.SANKALP_TYPE_TYAG);
+            intent.putExtra(SpConstants.INTENT_KEY_SANKALP_TYPE, SpConstants.SANKALP_TYPE_TYAG);
             startActivity(intent);
         } else if (view.getId() == R.id.cardDb_addNiyamButton) {
             Intent intent = new Intent(getActivity(), SpAddSankalpActivity.class);
-            intent.putExtra(SpConstants.INTENT_KEY_SANKALP_TYPE, SpDataConstants.SANKALP_TYPE_NIYAM);
+            intent.putExtra(SpConstants.INTENT_KEY_SANKALP_TYPE, SpConstants.SANKALP_TYPE_NIYAM);
             startActivity(intent);
         } else {
             int intentlistFilter = SpConstants.INTENT_VALUE_SANKALP_LIST_FILTER_CURRENT;
@@ -201,7 +200,7 @@ public class SpCardDashboardFragment extends Fragment implements View.OnClickLis
             }
 
             Intent intent = new Intent(getActivity(), SpSankalpList.class);
-            intent.putExtra(SpConstants.INTENT_KEY_SANKALP_TYPE, SpDataConstants.SANKALP_TYPE_BOTH);
+            intent.putExtra(SpConstants.INTENT_KEY_SANKALP_TYPE, SpConstants.SANKALP_TYPE_BOTH);
             intent.putExtra(SpConstants.INTENT_KEY_SANKALP_LIST_FILTER, intentlistFilter);
             startActivity(intent);
         }
@@ -215,13 +214,13 @@ public class SpCardDashboardFragment extends Fragment implements View.OnClickLis
         @Override
         protected Boolean doInBackground(Void... voids) {
             SpContentProvider p = SpContentProvider.getInstance(getContext());
-            ArrayList<SpSankalp> sankalps = p.getSankalps(SpDataConstants.SANKALP_TYPE_BOTH, SpConstants.INTENT_VALUE_SANKALP_LIST_FILTER_ALL);
+            ArrayList<SpSankalp> sankalps = p.getSankalps(SpConstants.SANKALP_TYPE_BOTH, SpConstants.INTENT_VALUE_SANKALP_LIST_FILTER_ALL);
             for (SpSankalp s : sankalps) {
 
-                if (s.getSankalpType() == SpDataConstants.SANKALP_TYPE_TYAG) {
+                if (s.getSankalpType() == SpConstants.SANKALP_TYPE_TYAG) {
                     ta++;
                     Date d = s.getToDate();
-                    if (s.isLifetime() == SpDataConstants.SANKALP_IS_LIFTIME_TRUE) {
+                    if (s.isLifetime() == SpConstants.SANKALP_IS_LIFTIME_TRUE) {
                         tl++;
                         tc++;
                         continue;
@@ -252,7 +251,7 @@ public class SpCardDashboardFragment extends Fragment implements View.OnClickLis
                 } else {
                     na++;
                     Date d = s.getToDate();
-                    if (s.isLifetime() == SpDataConstants.SANKALP_IS_LIFTIME_TRUE) {
+                    if (s.isLifetime() == SpConstants.SANKALP_IS_LIFTIME_TRUE) {
                         nl++;
                         nc++;
                         continue;

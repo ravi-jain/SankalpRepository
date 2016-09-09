@@ -1,6 +1,7 @@
 package com.ravijain.sankalp.activities;
 
 import android.os.Bundle;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -10,7 +11,6 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 
 import com.ravijain.sankalp.R;
-import com.ravijain.sankalp.data.SpDataConstants;
 import com.ravijain.sankalp.fragments.SpSankalpListFragment;
 import com.ravijain.sankalp.support.SpDateUtils;
 
@@ -30,7 +30,7 @@ public class SpSankalpList extends AppCompatActivity {
 
         setContentView(R.layout.activity_sp_sankalp_list);
 
-        _sankalpType = getIntent().getIntExtra(SpConstants.INTENT_KEY_SANKALP_TYPE, SpDataConstants.SANKALP_TYPE_BOTH);
+        _sankalpType = getIntent().getIntExtra(SpConstants.INTENT_KEY_SANKALP_TYPE, SpConstants.SANKALP_TYPE_BOTH);
         _intentListFilter = getIntent().getIntExtra(SpConstants.INTENT_KEY_SANKALP_LIST_FILTER, SpConstants.INTENT_VALUE_SANKALP_LIST_FILTER_CURRENT);
         long time = getIntent().getLongExtra(SpConstants.INTENT_KEY_SANKALP_LIST_FILTER_DATE_VALUE, -1);
         if (time > -1) {
@@ -54,7 +54,12 @@ public class SpSankalpList extends AppCompatActivity {
             _viewPager.setCurrentItem(_intentListFilter, true);
         }
 
-        ((ViewPager.LayoutParams) (findViewById(R.id.pager_header)).getLayoutParams()).isDecor = true;
+        // Give the TabLayout the ViewPager
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.sliding_tabs);
+        tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
+        tabLayout.setupWithViewPager(_viewPager);
+
+       // ((ViewPager.LayoutParams) (findViewById(R.id.pager_header)).getLayoutParams()).isDecor = true;
 
     }
 
@@ -69,7 +74,7 @@ public class SpSankalpList extends AppCompatActivity {
     {
         Bundle args = new Bundle();
         args.putLong(SpConstants.INTENT_KEY_SANKALP_LIST_FILTER_DATE_VALUE, time);
-        args.putInt(SpConstants.INTENT_KEY_SANKALP_TYPE, SpDataConstants.SANKALP_TYPE_BOTH);
+        args.putInt(SpConstants.INTENT_KEY_SANKALP_TYPE, SpConstants.SANKALP_TYPE_BOTH);
         //args.putInt(SpConstants.INTENT_KEY_SANKALP_LIST_FILTER_SANKALP_TYPE, sankalpType);
         args.putInt(SpConstants.INTENT_KEY_SANKALP_LIST_FILTER, intentListFilter);
         return args;
@@ -122,6 +127,8 @@ public class SpSankalpList extends AppCompatActivity {
 
             Calendar c = _getTime(position);
             if (_intentListFilter == SpConstants.INTENT_VALUE_SANKALP_LIST_FILTER_DAY) {
+                if (SpDateUtils.isToday(c)) return getString(R.string.thisDay);
+                if (SpDateUtils.isTomorrow(c.getTime())) return getString(R.string.tomorrow);
                 return SpDateUtils.getFriendlyDateShortString(c.getTime());
             }
             else if (_intentListFilter == SpConstants.INTENT_VALUE_SANKALP_LIST_FILTER_MONTH) {

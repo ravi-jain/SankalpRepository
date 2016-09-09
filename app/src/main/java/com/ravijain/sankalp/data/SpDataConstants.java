@@ -11,9 +11,6 @@ public interface SpDataConstants {
     public static final String CATEGORY_NAME_TRAVEL = "Travel";
     public static final String CATEGORY_NAME_DHARMA = "Dharma";
     public static final String CATEGORY_OTHERS = "Others";
-    public static final int SANKALP_TYPE_TYAG = 0;
-    public static final int SANKALP_TYPE_NIYAM = 1;
-    public static final int SANKALP_TYPE_BOTH = 2;
 
     // Item Names
     public static final String ITEM_NAME_POTATO = "Potato";
@@ -34,17 +31,6 @@ public interface SpDataConstants {
     public static final String ITEM_NAME_TEERTH = "Teerth";
     public static final String ITEM_NAME_PRATIKRAMAN = "Pratikraman";
     public static final String ITEM_NAME_UPVAAS = "Upvaas";
-
-    public static final int SANKALP_IS_LIFTIME_FALSE = 0;
-    public static final int SANKALP_IS_LIFTIME_TRUE = 1;
-
-
-
-
-
-
-
-
 
 
 }

@@ -20,7 +20,6 @@ import com.ravijain.sankalp.activities.SpConstants;
 import com.ravijain.sankalp.activities.SpSankalpDetailsActivity;
 import com.ravijain.sankalp.activities.SpSankalpList;
 import com.ravijain.sankalp.data.SpContentProvider;
-import com.ravijain.sankalp.data.SpDataConstants;
 import com.ravijain.sankalp.support.SpDateUtils;
 import com.ravijain.sankalp.data.SpSankalp;
 
@@ -101,7 +100,7 @@ public class SpDashboardFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getActivity(), SpSankalpList.class);
-                intent.putExtra(SpConstants.INTENT_KEY_SANKALP_TYPE, SpDataConstants.SANKALP_TYPE_BOTH);
+                intent.putExtra(SpConstants.INTENT_KEY_SANKALP_TYPE, SpConstants.SANKALP_TYPE_BOTH);
                 intent.putExtra(SpConstants.INTENT_KEY_SANKALP_LIST_FILTER, SpConstants.INTENT_VALUE_SANKALP_LIST_FILTER_CURRENT);
                 startActivity(intent);
             }
@@ -253,10 +252,10 @@ public class SpDashboardFragment extends Fragment {
         @Override
         protected Boolean doInBackground(Void... params) {
             SpContentProvider provider = SpContentProvider.getInstance(getContext());
-            ArrayList<SpSankalp> tyags = provider.getSankalps(SpDataConstants.SANKALP_TYPE_TYAG, SpConstants.INTENT_VALUE_SANKALP_LIST_FILTER_ALL);
+            ArrayList<SpSankalp> tyags = provider.getSankalps(SpConstants.SANKALP_TYPE_TYAG, SpConstants.INTENT_VALUE_SANKALP_LIST_FILTER_ALL);
             for (SpSankalp tyag : tyags) {
                 _tt++;
-                if (tyag.isLifetime() == SpDataConstants.SANKALP_IS_LIFTIME_TRUE) {
+                if (tyag.isLifetime() == SpConstants.SANKALP_IS_LIFTIME_TRUE) {
                     _tl++;
                 }
                 if (SpDateUtils.isUpcomingDate(tyag.getFromDate())) {
@@ -267,10 +266,10 @@ public class SpDashboardFragment extends Fragment {
                 }
             }
 
-            ArrayList<SpSankalp> niyams = provider.getSankalps(SpDataConstants.SANKALP_TYPE_NIYAM, SpConstants.INTENT_VALUE_SANKALP_LIST_FILTER_ALL);
+            ArrayList<SpSankalp> niyams = provider.getSankalps(SpConstants.SANKALP_TYPE_NIYAM, SpConstants.INTENT_VALUE_SANKALP_LIST_FILTER_ALL);
             for (SpSankalp niyam : niyams) {
                 _nt++;
-                if (niyam.isLifetime() == SpDataConstants.SANKALP_IS_LIFTIME_TRUE) {
+                if (niyam.isLifetime() == SpConstants.SANKALP_IS_LIFTIME_TRUE) {
                     _nl++;
                 }
                 if (SpDateUtils.isUpcomingDate(niyam.getFromDate())) {

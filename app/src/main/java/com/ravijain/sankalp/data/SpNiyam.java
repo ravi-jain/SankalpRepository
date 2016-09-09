@@ -1,11 +1,13 @@
 package com.ravijain.sankalp.data;
 
+import com.ravijain.sankalp.activities.SpConstants;
+
 /**
  * Created by ravijain on 7/4/2016.
  */
 public class SpNiyam extends SpSankalp {
     public SpNiyam(int categoryId, int itemId) {
-        super(categoryId, itemId, SpDataConstants.SANKALP_TYPE_NIYAM);
+        super(categoryId, itemId, SpConstants.SANKALP_TYPE_NIYAM);
     }
 
     public SpNiyam() {
