@@ -6,7 +6,7 @@
         android:dialogTitle="@string/selectLanguage"
         android:entries="@array/pref_languages"
         android:entryValues="@array/pref_languages_values"
-        android:defaultValue="en" />
+        android:defaultValue="en_US" />
     <SwitchPreferenceCompat
         android:key="pref_reminders"
         android:title="@string/showReminders"

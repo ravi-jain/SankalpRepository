@@ -7,12 +7,20 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
+import android.content.res.Resources;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.support.v7.preference.PreferenceManager;
+import android.util.DisplayMetrics;
 
+import com.ravijain.sankalp.R;
+import com.ravijain.sankalp.data.SpCategory;
+import com.ravijain.sankalp.data.SpDataConstants;
 import com.ravijain.sankalp.fragments.SpSettingsFragment;
 
 import java.util.Calendar;
+import java.util.Locale;
 
 /**
  * Created by ravijain on 9/3/2016.
@@ -75,6 +83,69 @@ public class SpUtils {
         intent.putExtra(Intent.EXTRA_EMAIL, "findravi@gmail.com");
         //intent.putExtra(Intent.EXTRA_SUBJECT, subject);
         return intent;
+    }
+
+    /**
+     * This method converts dp unit to equivalent pixels, depending on device density.
+     *
+     * @param dp A value in dp (density independent pixels) unit. Which we need to convert into pixels
+     * @param context Context to get resources and device specific display metrics
+     * @return A float value to represent px equivalent to dp depending on device density
+     */
+    public static float convertDpToPixel(float dp, Context context){
+        Resources resources = context.getResources();
+        DisplayMetrics metrics = resources.getDisplayMetrics();
+        float px = dp * ((float)metrics.densityDpi / DisplayMetrics.DENSITY_DEFAULT);
+        return px;
+    }
+
+    /**
+     * This method converts device specific pixels to density independent pixels.
+     *
+     * @param px A value in px (pixels) unit. Which we need to convert into db
+     * @param context Context to get resources and device specific display metrics
+     * @return A float value to represent dp equivalent to px value
+     */
+    public static float convertPixelsToDp(float px, Context context){
+        Resources resources = context.getResources();
+        DisplayMetrics metrics = resources.getDisplayMetrics();
+        float dp = px / ((float)metrics.densityDpi / DisplayMetrics.DENSITY_DEFAULT);
+        return dp;
+    }
+
+    public static void updateLanguage(Context context, String lang) {
+        if (!"".equals(lang)) {
+            Locale locale = new Locale(lang);
+            Locale.setDefault(locale);
+            Configuration config = new Configuration();
+            config.locale = locale;
+            context.getResources().updateConfiguration(config, null);
+        }
+    }
+
+    public static Drawable getIconDrawable(SpCategory category, Context context)
+    {
+        if (category.getCategoryName().equals(SpDataConstants.CATEGORY_NAME_FOOD)) {
+            return context.getResources().getDrawable(R.drawable.ic_restaurant_menu_black_24dp);
+        }
+        else if (category.getCategoryName().equals(SpDataConstants.CATEGORY_NAME_ENTERTAINMENT)) {
+            return context.getResources().getDrawable(R.drawable.ic_local_movies_black_24dp);
+        }
+        else if (category.getCategoryName().equals(SpDataConstants.CATEGORY_NAME_TRAVEL)) {
+            return context.getResources().getDrawable(R.drawable.ic_local_airport_black_24dp);
+        }
+        else if (category.getCategoryName().equals(SpDataConstants.CATEGORY_NAME_DHARMA)) {
+            return context.getResources().getDrawable(R.drawable.ic_dashboard_black_24dp);
+        }
+        else {
+            String letter = String.valueOf(category.getCategoryName().toCharArray()[0]).toUpperCase();
+            SpColorGenerator generator = SpColorGenerator.MATERIAL;
+            SpTextDrawable.Builder builder = SpTextDrawable.builder();
+//            builder.width(24).height(24);
+            SpTextDrawable drawable = builder
+                    .buildRoundRect(letter, generator.getRandomColor(), 2);
+            return drawable;
+        }
     }
 
 }

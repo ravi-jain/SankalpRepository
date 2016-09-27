@@ -10,7 +10,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 public class SpDBHelper extends SQLiteOpenHelper {
 
     // If you change the database schema, you must increment the database version.
-    private static final int DATABASE_VERSION = 16;
+    private static final int DATABASE_VERSION = 17;
 
     static final String DATABASE_NAME = "sankalp.db";
 
@@ -53,6 +53,7 @@ public class SpDBHelper extends SQLiteOpenHelper {
             SpTableContract.SpSankalpTable.COLUMN_DESCRIPTION + " TEXT, " +
             SpTableContract.SpSankalpTable.COLUMN_CATEGORY_ID + " INTEGER NOT NULL, " +
             SpTableContract.SpSankalpTable.COLUMN_ISLIFETIME + " INTEGER NOT NULL, " +
+            SpTableContract.SpSankalpTable.COLUMN_ISNOTIFICATION_ON + " INTEGER NOT NULL, " +
             SpTableContract.SpSankalpTable.COLUMN_EXCEPTION_TARGET_ID + " INTEGER, " +
             SpTableContract.SpSankalpTable.COLUMN_EXCEPTION_TARGET_COUNT + " INTEGER, " +
             /*SpTableContract.SpSankalpTable.COLUMN_EXCEPTION_TARGET_CURRENT_COUNT + " INTEGER, " +*/

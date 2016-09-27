@@ -8,6 +8,13 @@
         app:showAsAction="always"/>
         <!--android:icon="@android:drawable/ic_input_add"-->
 
+    <item
+        android:id="@+id/action_share"
+        android:title="@string/Share"
+        android:visible="false"
+        app:actionProviderClass="android.support.v7.widget.ShareActionProvider"
+        app:showAsAction="ifRoom" />
+
     <!--<item
         android:id="@+id/action_discardSankalp"
         android:title="@string/discardSankalp"

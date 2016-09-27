@@ -10,16 +10,50 @@
 
     </style>
 
-    <style name="SankalpTheme" parent="Theme.AppCompat.Light">
-        <item name="colorPrimary">@color/sankalp_primary</item>
-        <item name="colorPrimaryDark">@color/sankalp_primary_dark</item>
-        <!--<item name="colorPrimaryLight">@color/sankalp_primary_light</item>-->
-        <item name="colorAccent">@color/sankalp_accent</item>
+    <style name="SankalpSplashTheme" parent="Theme.AppCompat.NoActionBar">
+        <item name="android:windowBackground">@drawable/sankalp_splash</item>
+    </style>
+
+    <style name="SankalpTheme" parent="SankalpDeepPurpleTheme">
         <item name="android:textColorPrimary">@color/sankalp_primary_text</item>
         <item name="android:textColorSecondary">@color/sankalp_secondary_text</item>
         <item name="android:divider">@color/sankalp_divider</item>
+        <item name="windowActionModeOverlay">true</item>
+        <item name="android:actionModeBackground">?attr/colorPrimary </item>
+        <item name="preferenceTheme">@style/PreferenceThemeOverlay</item>
+    </style>
+
+    <style name="SankalpLightPurple" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">@color/sankalp_primary</item>
+        <item name="colorPrimaryDark">@color/sankalp_primary_dark</item>
+        <item name="colorAccent">@color/sankalp_accent</item>
 
     </style>
+
+    <style name="SankalpThemeActionBar" parent="Theme.AppCompat.Light">
+        <item name="colorPrimary">@color/sankalp_primary_deep_purple</item>
+        <item name="colorPrimaryDark">@color/sankalp_primary_dark_deep_purple</item>
+        <item name="colorAccent">@color/sankalp_accent_deep_purple</item>
+        <item name="android:textColorPrimary">@color/sankalp_primary_text</item>
+        <item name="android:textColorSecondary">@color/sankalp_secondary_text</item>
+        <item name="android:divider">@color/sankalp_divider</item>
+        <item name="windowActionModeOverlay">true</item>
+        <item name="android:actionModeBackground">@color/sankalp_primary </item>
+        <item name="preferenceTheme">@style/PreferenceThemeOverlay</item>
+    </style>
+
+    <style name="SankalpOrangeTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">@color/sankalp_primary_orange</item>
+        <item name="colorPrimaryDark">@color/sankalp_primary_dark_orange</item>
+        <item name="colorAccent">@color/sankalp_accent_orange</item>
+    </style>
+
+    <style name="SankalpDeepPurpleTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">@color/sankalp_primary_deep_purple</item>
+        <item name="colorPrimaryDark">@color/sankalp_primary_dark_deep_purple</item>
+        <item name="colorAccent">@color/sankalp_accent_deep_purple</item>
+    </style>
+
 
     <!--<style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
@@ -85,6 +119,11 @@
         <item name="android:textAppearance">?android:attr/textAppearanceMedium</item>
     </style>
 
+    <style name="CardHeadline">
+        <item name="android:textSize">24sp</item>
+        <item name="android:textColor">?android:attr/textColorPrimary</item>
+    </style>
+
     <style name="menu_labels_style">
         <item name="android:background">@drawable/fab_label_background</item>
         <item name="android:textColor">@color/white</item>
@@ -98,6 +137,40 @@
         <item name="android:paddingRight">?attr/dialogPreferredPadding</item>
         <item name="android:textAppearance">@style/TextAppearance.AppCompat.Title</item>
     </style>
+
+    <style name="AppTheme.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+    <!--<style name="Dialog_FullScreen" parent="Theme.AppCompat.Dialog">
+        <item name="android:windowBackground">@android:color/background_dark</item>
+        <item name="android:windowFrame">@null</item>
+    </style>-->
+
+    <style name="Dialog_FullScreen" parent="@android:style/Theme.Dialog">
+        <item name="android:windowFrame">@null</item>
+        <item name="android:windowBackground">@color/pink</item>
+        <item name="android:windowIsFloating">false</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowTitleStyle">@null</item>
+        <item name="android:colorBackgroundCacheHint">@null</item>
+        <item name="android:windowAnimationStyle">@android:style/Animation.Dialog</item>
+        <item name="android:windowSoftInputMode">stateUnspecified|adjustPan</item>
+        <item name="android:gravity">center</item>
+    </style>
+
+    <!--<style name="SpExpandableListView" parent="@android:style/Widget.ExpandableListView">
+        <item name="android:groupIndicator">@android:drawable/expander_group_material</item>
+        <item name="indicatorLeft">?attr/expandableListPreferredItemIndicatorLeft</item>
+        <item name="indicatorRight">?attr/expandableListPreferredItemIndicatorRight</item>
+        <item name="android:childDivider">?attr/listDivider</item>
+    </style>-->
+
 
     <!--<style name="CaldroidDefaultDark1" parent="CaldroidDefault">
         <item name="styleCaldroidGridView">@style/CalendarCell</item>

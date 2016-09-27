@@ -11,22 +11,16 @@
         android:layout_gravity="center_vertical"
         android:layout_marginLeft="16dp"
         android:src="@drawable/ic_person_black_24dp"/>
-    <LinearLayout
+
+    <TextView
+        android:id="@+id/add_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
+        android:layout_gravity="center_vertical"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
-        android:layout_gravity="center_vertical">
-        <TextView
-            android:id="@+id/add_label"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:text="Test name"
-            style="@style/Base.TextAppearance.AppCompat.Subhead"/>
-    </LinearLayout>
-
+        android:text="Test name"
+        style="@style/Base.TextAppearance.AppCompat.Subhead"/>
 
 </LinearLayout>
 

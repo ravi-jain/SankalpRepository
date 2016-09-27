@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="?attr/dialogPreferredPadding">
+
+    <TextView
+        style="@style/SpText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/sankalpCategory" />
+
+    <View
+        style="@style/SpHorizontalDivider"
+        android:layout_marginBottom="8dp" />
+
+    <android.support.v7.widget.AppCompatSpinner
+        android:id="@+id/categories_spinner"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"></android.support.v7.widget.AppCompatSpinner>
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/input_layout_iName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="10dp">
+
+        <EditText
+            android:id="@+id/itemName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/itemName"
+            android:maxLines="1"
+            android:singleLine="true" />
+    </android.support.design.widget.TextInputLayout>
+
+
+</LinearLayout>

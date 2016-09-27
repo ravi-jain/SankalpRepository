@@ -11,7 +11,6 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.ravijain.sankalp.R;
-import com.ravijain.sankalp.activities.SpConstants;
 import com.ravijain.sankalp.activities.SpSankalpList;
 import com.ravijain.sankalp.data.SpContentProvider;
 import com.ravijain.sankalp.data.SpSankalp;

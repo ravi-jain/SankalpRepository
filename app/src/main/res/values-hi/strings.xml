@@ -46,4 +46,5 @@
     <string name="cancel">कॅन्सल</string>
     <string name="sankalpType">संकल्प प्रकार</string>
     <string name="searchLabel">खोज</string>
+    <string name="title_activity_sp_material_dashboard">संकल्प</string>
 </resources>

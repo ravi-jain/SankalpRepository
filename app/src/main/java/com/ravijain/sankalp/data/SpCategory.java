@@ -1,6 +1,6 @@
 package com.ravijain.sankalp.data;
 
-import com.ravijain.sankalp.activities.SpConstants;
+import com.ravijain.sankalp.support.SpConstants;
 
 import java.util.Hashtable;
 
@@ -9,14 +9,14 @@ import java.util.Hashtable;
  */
 public class SpCategory implements SpDataConstants{
 
-    private int _id;
+    private int _id = -1;
     private String _categoryName;
     private String _categoryDisplayName;
     private int _sankalpType;
 
     public static String[] tyagCategoryNames = {CATEGORY_NAME_FOOD, CATEGORY_NAME_ENTERTAINMENT, CATEGORY_NAME_TRAVEL};
     public static String[] niyamCategoryNames = {CATEGORY_NAME_DHARMA};
-    public static String[] sankalpCategoryNames = {CATEGORY_OTHERS};
+    public static String[] sankalpCategoryNames = {};
 
     private static Hashtable<String, SpCategory> defaultCategories = new Hashtable<String, SpCategory>();
 
@@ -37,6 +37,12 @@ public class SpCategory implements SpDataConstants{
         _id = id;
         _categoryName = name;
         _categoryDisplayName = displayName;
+        _sankalpType = type;
+    }
+
+    public SpCategory(String name, int type) {
+        _categoryName = name;
+        _categoryDisplayName = name;
         _sankalpType = type;
     }
 

@@ -22,12 +22,13 @@ public class SpSettingsFragment extends PreferenceFragmentCompat implements Shar
     public static final String KEY_PREF_LANGUAGE = "pref_language";
     public static final String KEY_PREF_REMINDERS = "pref_reminders";
     public static final String KEY_PREF_ALARM_REGISTERED = "pref_alarm_registered";
+    public static final String KEY_USER_REGISTERED = "pref_user_registered";
 
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
         addPreferencesFromResource(R.xml.sankalp_preferences);
 
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
         sharedPreferences.registerOnSharedPreferenceChangeListener(this);
         _updateSummary(sharedPreferences, KEY_PREF_LANGUAGE);
         _updateSummary(sharedPreferences, KEY_PREF_REMINDERS);
@@ -36,8 +37,7 @@ public class SpSettingsFragment extends PreferenceFragmentCompat implements Shar
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences,
                                           String key) {
         if (key.equals(KEY_PREF_LANGUAGE)) {
-            setLangRecreate(sharedPreferences.getString(key, "en_US"));
-
+            SpUtils.updateLanguage(getContext(), sharedPreferences.getString(key, "en_US"));
         }
         else if (key.equals(KEY_PREF_REMINDERS)) {
             if (sharedPreferences.getBoolean(SpSettingsFragment.KEY_PREF_REMINDERS, true)) {
@@ -48,15 +48,6 @@ public class SpSettingsFragment extends PreferenceFragmentCompat implements Shar
             }
         }
         _updateSummary(sharedPreferences, key);
-    }
-
-    public void setLangRecreate(String langval) {
-        Configuration config = getActivity().getResources().getConfiguration();
-        Locale locale = new Locale(langval);
-        Locale.setDefault(locale);
-        config.locale = locale;
-        getActivity().getResources().updateConfiguration(config, getActivity().getResources().getDisplayMetrics());
-        getActivity().recreate();
     }
 
     private void _updateSummary(SharedPreferences sharedPreferences,

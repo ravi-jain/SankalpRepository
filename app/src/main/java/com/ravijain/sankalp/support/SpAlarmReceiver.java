@@ -9,7 +9,6 @@ import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 
 import com.ravijain.sankalp.R;
-import com.ravijain.sankalp.activities.SpConstants;
 import com.ravijain.sankalp.activities.SpSankalpList;
 import com.ravijain.sankalp.data.SpContentProvider;
 import com.ravijain.sankalp.data.SpSankalp;
@@ -31,13 +30,17 @@ public class SpAlarmReceiver extends BroadcastReceiver {
             SpContentProvider p = SpContentProvider.getInstance(context);
             ArrayList<SpSankalp> sankalps = p.getSankalps(SpConstants.SANKALP_TYPE_BOTH,
                     SpConstants.INTENT_VALUE_SANKALP_LIST_FILTER_DAY, SpDateUtils.nextDate(Calendar.getInstance()));
+            int size = 0;
+            for(SpSankalp s : sankalps) {
+                if (s.isNotificationOn() == SpConstants.SANKALP_IS_LIFTIME_TRUE) size++;
+            }
 
             if (sankalps.size() == 0) return;
             NotificationCompat.Builder mBuilder =
                     new NotificationCompat.Builder(context)
                             .setSmallIcon(R.mipmap.ic_launcher)
                             .setContentTitle("My notification")
-                            .setContentText("You have " + sankalps.size() + " sankalps ending tomorrow");
+                            .setContentText("You have " + size + " sankalps ending tomorrow");
             // Creates an explicit intent for an Activity in your app
             Intent intent = new Intent(context, SpSankalpList.class);
             intent.putExtra(SpConstants.INTENT_KEY_SANKALP_TYPE, SpConstants.SANKALP_TYPE_BOTH);

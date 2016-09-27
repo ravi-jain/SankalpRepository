@@ -1,6 +1,7 @@
 package com.ravijain.sankalp.fragments;
 
 
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -18,9 +19,10 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
+import android.widget.Button;
 import android.widget.ImageView;
 
+import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.Chart;
 import com.github.mikephil.charting.charts.PieChart;
@@ -36,7 +38,7 @@ import com.github.mikephil.charting.utils.ColorTemplate;
 import com.github.mikephil.charting.utils.ViewPortHandler;
 import com.ravijain.sankalp.R;
 import com.ravijain.sankalp.activities.SpAddSankalpActivity;
-import com.ravijain.sankalp.activities.SpConstants;
+import com.ravijain.sankalp.support.SpConstants;
 import com.ravijain.sankalp.activities.SpSankalpList;
 import com.ravijain.sankalp.data.SpContentProvider;
 import com.ravijain.sankalp.data.SpSankalpCountData;
@@ -53,35 +55,41 @@ public class SpChartCalendarDashboard extends Fragment implements View.OnClickLi
 
     private PieChart mChart;
     private ImageView _menuView;
-    private ImageButton _viewDetailsButton;
-    private ImageButton _viewMonthDetailsButton;
+    private Button _viewDetailsButton;
+    private Button _viewMonthDetailsButton;
     private String[] _labels;
     private int _intentListFilter;
     private SpSankalpCountData _currentData;
+    private SpCalendarViewHandler _calendarView;
 
     public SpChartCalendarDashboard() {
         // Required empty public constructor
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == SpConstants.ACTIVITY_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+            // referesh
+            _calendarView.loadCalendarEvents();
+            _loadChartData();
+
+        }
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_sp_chart_calendar_dashboard, container, false);
 
-        _viewMonthDetailsButton = (ImageButton) rootView.findViewById(R.id.viewMonthDetails_button);
+        _viewMonthDetailsButton = (Button) rootView.findViewById(R.id.viewMonthDetails_button);
         _setUpCalendarCard(rootView);
 
-        _viewDetailsButton = (ImageButton) rootView.findViewById(R.id.viewDetails_button);
+        _viewDetailsButton = (Button) rootView.findViewById(R.id.viewDetails_button);
         mChart = (PieChart) rootView.findViewById(R.id.db_pieChart);
         _setUpChartCard();
-
-
-
-
-//        _menuView = (ImageView) rootView.findViewById(R.id.db_card_chart_menu);
-//        _setUpMenu();
 
         com.getbase.floatingactionbutton.FloatingActionButton fabTyag = (com.getbase.floatingactionbutton.FloatingActionButton) rootView.findViewById(R.id.chartCalendarDb_addTyagButton);
         com.getbase.floatingactionbutton.FloatingActionButton niyamTyag = (com.getbase.floatingactionbutton.FloatingActionButton) rootView.findViewById(R.id.chartCalendarDb_addNiyamButton);
@@ -93,15 +101,15 @@ public class SpChartCalendarDashboard extends Fragment implements View.OnClickLi
 
     @Override
     public void onClick(View view) {
+        Intent intent = new Intent(getActivity(), SpAddSankalpActivity.class);
         if (view.getId() == R.id.chartCalendarDb_addTyagButton) {
-            Intent intent = new Intent(getActivity(), SpAddSankalpActivity.class);
             intent.putExtra(SpConstants.INTENT_KEY_SANKALP_TYPE, SpConstants.SANKALP_TYPE_TYAG);
-            startActivity(intent);
         } else if (view.getId() == R.id.chartCalendarDb_addNiyamButton) {
-            Intent intent = new Intent(getActivity(), SpAddSankalpActivity.class);
             intent.putExtra(SpConstants.INTENT_KEY_SANKALP_TYPE, SpConstants.SANKALP_TYPE_NIYAM);
-            startActivity(intent);
         }
+        FloatingActionsMenu floatingActionsMenu = (FloatingActionsMenu) getView().findViewById(R.id.right_labels);
+        floatingActionsMenu.collapseImmediately();
+        startActivityForResult(intent, SpConstants.ACTIVITY_REQUEST_CODE);
     }
 
     private void _setUpViewButton() {
@@ -118,8 +126,8 @@ public class SpChartCalendarDashboard extends Fragment implements View.OnClickLi
 
     private void _setUpCalendarCard(View rootView) {
 
-        SpCalendarViewHandler cv = new SpCalendarViewHandler(getContext(), rootView);
-        cv.constructCalendar(R.id.db_calendarView, SpCalendarViewHandler.SELECTION_MODE_NONE);
+        _calendarView = new SpCalendarViewHandler(getContext(), rootView);
+        _calendarView.constructCalendar(R.id.db_calendarView, SpCalendarViewHandler.SELECTION_MODE_NONE);
 
         _viewMonthDetailsButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -178,16 +186,13 @@ public class SpChartCalendarDashboard extends Fragment implements View.OnClickLi
                     if (pe.getLabel().equals(_labels[0])) {
                         // tyag;
                         intentListFilter = SpConstants.INTENT_VALUE_SANKALP_LIST_FILTER_CURRENT;
-                    }
-                    else if (pe.getLabel().equals(_labels[1])) {
+                    } else if (pe.getLabel().equals(_labels[1])) {
                         // tyag;
                         intentListFilter = SpConstants.INTENT_VALUE_SANKALP_LIST_FILTER_LIFETIME;
-                    }
-                    else if (pe.getLabel().equals(_labels[2])) {
+                    } else if (pe.getLabel().equals(_labels[2])) {
                         // tyag;
                         intentListFilter = SpConstants.INTENT_VALUE_SANKALP_LIST_FILTER_UPCOMING;
-                    }
-                    else if (pe.getLabel().equals(_labels[3])) {
+                    } else if (pe.getLabel().equals(_labels[3])) {
                         // tyag;
                         intentListFilter = SpConstants.INTENT_VALUE_SANKALP_LIST_FILTER_ALL;
                     }
@@ -228,9 +233,12 @@ public class SpChartCalendarDashboard extends Fragment implements View.OnClickLi
         mChart.setNoDataTextDescription("Use the '+' button at the bottom of the screen to add.");
         mChart.getPaint(Chart.PAINT_INFO).setTextSize(40f);
 
+        _loadChartData();
+    }
+
+    private void _loadChartData() {
         DashboardLoaderTask t = new DashboardLoaderTask();
         t.execute(DashboardLoaderTask.COMMAND_CHART_DATA);
-
     }
 
     private void setData() {
@@ -324,35 +332,6 @@ public class SpChartCalendarDashboard extends Fragment implements View.OnClickLi
 //        s.setSpan(new StyleSpan(Typeface.ITALIC), s.length() - 14, s.length(), 0);
 //        s.setSpan(new ForegroundColorSpan(ColorTemplate.getHoloBlue()), s.length() - 14, s.length(), 0);
         return s;
-    }
-
-
-    private class DashboardLoaderTask extends AsyncTask<Integer, Integer, Boolean> {
-
-        static final int COMMAND_CHART_DATA = 0;
-
-        @Override
-        protected Boolean doInBackground(Integer... integers) {
-            int command = integers[0];
-            //int intent = integers[1];
-            SpContentProvider p = SpContentProvider.getInstance(getContext());
-            _currentData = p.getSankalpCountData();
-            return true;
-        }
-
-        @Override
-        protected void onPostExecute(Boolean success) {
-            if (success) {
-
-                if (_currentData.getAllSankalps() > 0) {
-                    setData();
-                } else {
-                    mChart.setData(null);
-                    mChart.invalidate();
-                }
-
-            }
-        }
     }
 
     // Deprecated
@@ -565,6 +544,34 @@ public class SpChartCalendarDashboard extends Fragment implements View.OnClickLi
             }
         });
         popup.show();
+    }
+
+    private class DashboardLoaderTask extends AsyncTask<Integer, Integer, Boolean> {
+
+        static final int COMMAND_CHART_DATA = 0;
+
+        @Override
+        protected Boolean doInBackground(Integer... integers) {
+            int command = integers[0];
+            //int intent = integers[1];
+            SpContentProvider p = SpContentProvider.getInstance(getContext());
+            _currentData = p.getSankalpCountData();
+            return true;
+        }
+
+        @Override
+        protected void onPostExecute(Boolean success) {
+            if (success) {
+
+                if (_currentData.getAllSankalps() > 0) {
+                    setData();
+                } else {
+                    mChart.setData(null);
+                    mChart.invalidate();
+                }
+
+            }
+        }
     }
 
 }

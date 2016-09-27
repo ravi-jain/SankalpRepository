@@ -5,12 +5,13 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.NavUtils;
+import android.support.v7.preference.PreferenceManager;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -21,16 +22,15 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
+import android.widget.RadioGroup;
 
 import com.ravijain.sankalp.R;
-import com.ravijain.sankalp.activities.SpConstants;
-import com.ravijain.sankalp.activities.SpMainActivity;
-import com.ravijain.sankalp.activities.SpUserSetupActivity;
+import com.ravijain.sankalp.support.SpConstants;
+import com.ravijain.sankalp.activities.SpMaterialDashboardActivity;
 import com.ravijain.sankalp.data.SpContentProvider;
 import com.ravijain.sankalp.data.SpUser;
+import com.ravijain.sankalp.support.SpUtils;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -40,6 +40,7 @@ public class SpUserProfileFragment extends Fragment {
     // UI references.
     private EditText _mEmailView, _mNameView, _mMobileView, _mCityView;
     private TextInputLayout _inputLayoutName, _inputLayoutEmail, _inputLayoutMobile, _inputLayoutCity;
+    private RadioGroup _languageRadio;
 
     private View _mProgressView;
     private View _mUserSetUpView;
@@ -69,6 +70,7 @@ public class SpUserProfileFragment extends Fragment {
         _mMobileView = (EditText) v.findViewById(R.id.userMobile);
         _mEmailView = (EditText) v.findViewById(R.id.userEmail);
         _mCityView = (EditText) v.findViewById(R.id.userCity);
+        _languageRadio = (RadioGroup) v.findViewById(R.id.language_rg);
 
         _inputLayoutName = (TextInputLayout) v.findViewById(R.id.input_layout_name);
         _inputLayoutEmail = (TextInputLayout) v.findViewById(R.id.input_layout_email);
@@ -239,7 +241,7 @@ public class SpUserProfileFragment extends Fragment {
     private boolean _validateEmail() {
         String email = _mEmailView.getText().toString().trim();
 
-        if (email.isEmpty() || !isValidEmail(email)) {
+        if (!isValidEmail(email)) {
             _inputLayoutEmail.setError(getString(R.string.err_msg_email));
             requestFocus(_mEmailView);
             return false;
@@ -263,7 +265,8 @@ public class SpUserProfileFragment extends Fragment {
     }
 
     private static boolean isValidEmail(String email) {
-        return !TextUtils.isEmpty(email) && android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
+        if (TextUtils.isEmpty(email)) return true; // Optional
+        return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
     }
 
     private void requestFocus(View view) {
@@ -274,10 +277,15 @@ public class SpUserProfileFragment extends Fragment {
 
 
     private void _handleSuccessfulRegistration() {
-        //Toast.makeText(getActivity(), "Registration Complete", Toast.LENGTH_SHORT).show();
-        //NavUtils.navigateUpFromSameTask(this);
-//        NavUtils.navigateUpFromSameTask(getActivity());
-        Intent intent = new Intent(getContext(), SpMainActivity.class);
+        String lang = _languageRadio.getCheckedRadioButtonId() == R.id.english_radio ? "en_US" : "hi";
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putBoolean(SpSettingsFragment.KEY_USER_REGISTERED, true);
+        editor.putString(SpSettingsFragment.KEY_PREF_LANGUAGE, lang);
+        editor.commit();
+
+        SpUtils.updateLanguage(getContext(), lang);
+        Intent intent = new Intent(getContext(), SpMaterialDashboardActivity.class);
         startActivity(intent);
         getActivity().finish();
     }

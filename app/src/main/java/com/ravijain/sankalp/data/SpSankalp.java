@@ -2,7 +2,7 @@ package com.ravijain.sankalp.data;
 
 import android.content.Context;
 
-import com.ravijain.sankalp.activities.SpConstants;
+import com.ravijain.sankalp.support.SpConstants;
 import com.ravijain.sankalp.support.SpDateUtils;
 
 import java.util.Date;
@@ -21,6 +21,7 @@ public class SpSankalp {
     private Date _creationDate;
     private SpExceptionOrTarget _exceptionOrTarget;
     private int _isLifetime = SpConstants.SANKALP_IS_LIFTIME_FALSE;
+    private int _isNotificationOn = SpConstants.SANKALP_IS_LIFTIME_FALSE;
     private int _sankalpType;
 
     private SpCategory _category = null;
@@ -49,10 +50,10 @@ public class SpSankalp {
     }
 
     public boolean isMatch(String query) {
-        if (_item != null && _item.getCategoryItemName().equalsIgnoreCase(query)) {
+        if (_item != null && _item.getCategoryItemName().toLowerCase().contains(query.toLowerCase())) {
             return true;
         }
-        if (_category != null && _category.getCategoryName().equalsIgnoreCase(query)) {
+        if (_category != null && _category.getCategoryName().toLowerCase().contains(query.toLowerCase())) {
             return true;
         }
         return false;
@@ -61,10 +62,19 @@ public class SpSankalp {
     @Override
     public boolean equals(Object obj) {
         if (obj == null || ! (obj instanceof SpSankalp)) return false;
+        if (obj == this) return true;
+        SpSankalp s = (SpSankalp)obj;
+        if (s.getId() == getId()) return true;
+        return false;
+    }
+
+    public boolean isSame(Object obj) {
+        if (obj == null || ! (obj instanceof SpSankalp)) return false;
         SpSankalp s = (SpSankalp)obj;
         if (getSankalpType() != s.getSankalpType()) return false;
         if (getCategoryID() != s.getCategoryID()) return false;
         if (getItemId() != s.getItemId()) return false;
+        if (isNotificationOn() != s.isNotificationOn()) return false;
         if (!getFromDate().equals(s.getFromDate())) return false;
         if (getToDate() == null && s.getToDate() != null) return false;
         else if (getToDate() != null && !getToDate().equals(s.getToDate())) return false;
@@ -142,6 +152,15 @@ public class SpSankalp {
     public void setLifetime(int lifetime) {
         _isLifetime = lifetime;
     }
+
+    public int isNotificationOn() {
+        return _isNotificationOn;
+    }
+
+    public void setNotification(int on) {
+        _isNotificationOn = on;
+    }
+
 
     public Date getCreationDate() {
         return _creationDate;

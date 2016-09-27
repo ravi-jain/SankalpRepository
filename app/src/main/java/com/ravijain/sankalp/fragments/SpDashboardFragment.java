@@ -16,7 +16,7 @@ import android.widget.TextView;
 
 import com.ravijain.sankalp.R;
 import com.ravijain.sankalp.activities.SpAddSankalpActivity;
-import com.ravijain.sankalp.activities.SpConstants;
+import com.ravijain.sankalp.support.SpConstants;
 import com.ravijain.sankalp.activities.SpSankalpDetailsActivity;
 import com.ravijain.sankalp.activities.SpSankalpList;
 import com.ravijain.sankalp.data.SpContentProvider;

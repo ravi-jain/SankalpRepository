@@ -8,16 +8,11 @@ import android.view.ViewGroup;
 import android.widget.NumberPicker;
 import android.widget.TextView;
 
-import com.prolificinteractive.materialcalendarview.CalendarDay;
-import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 import com.ravijain.sankalp.R;
-import com.ravijain.sankalp.activities.SpConstants;
+import com.ravijain.sankalp.support.SpConstants;
 import com.ravijain.sankalp.support.SpCalendarViewHandler;
 import com.ravijain.sankalp.support.SpDateUtils;
-import com.roomorama.caldroid.CaldroidFragment;
-import com.roomorama.caldroid.CaldroidListener;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 

@@ -6,7 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.text.TextUtils;
 
-import com.ravijain.sankalp.activities.SpConstants;
+import com.ravijain.sankalp.support.SpConstants;
 import com.ravijain.sankalp.support.SpDateUtils;
 
 import java.util.ArrayList;
@@ -266,12 +266,7 @@ public class SpContentProvider {
             Iterator<SpCategory> iterator = defaultCategories.values().iterator();
             while (iterator.hasNext()) {
                 SpCategory category = iterator.next();
-                ContentValues values = new ContentValues();
-                values.put(SpTableContract.SpCategoryTable._ID, category.getId());
-                values.put(SpTableContract.SpCategoryTable.COLUMN_CATEGORY_NAME, category.getCategoryName());
-                values.put(SpTableContract.SpCategoryTable.COLUMN_CATEGORY_DISPLAYNAME, category.getCategoryDisplayName());
-                values.put(SpTableContract.SpCategoryTable.COLUMN_CATEGORY_TYPE, category.getSankalpType());
-                db.insert(SpTableContract.SpCategoryTable.TABLE_NAME, null, values);
+                addCategory(category, db);
             }
             db.setTransactionSuccessful();
         } finally {
@@ -280,26 +275,63 @@ public class SpContentProvider {
 
     }
 
+    public void addCategory(SpCategory category, SQLiteDatabase db)
+    {
+        boolean closeDblocally = false;
+        if (db == null) {
+            db = _dbHelper.getWritableDatabase();
+            closeDblocally = true;
+        }
+        ContentValues values = new ContentValues();
+        if (category.getId() > -1) {
+            values.put(SpTableContract.SpCategoryTable._ID, category.getId());
+        }
+        values.put(SpTableContract.SpCategoryTable.COLUMN_CATEGORY_NAME, category.getCategoryName());
+        values.put(SpTableContract.SpCategoryTable.COLUMN_CATEGORY_DISPLAYNAME, category.getCategoryDisplayName());
+        values.put(SpTableContract.SpCategoryTable.COLUMN_CATEGORY_TYPE, category.getSankalpType());
+        db.insert(SpTableContract.SpCategoryTable.TABLE_NAME, null, values);
+
+        if (closeDblocally) {
+            db.close();
+        }
+    }
+
     public void bulkInsertCategoryItems(SQLiteDatabase db) {
-        //SQLiteDatabase db = _dbHelper.getWritableDatabase();
         db.beginTransaction();
         try {
             Hashtable<String, SpCategoryItem> defaultCategoryItems = SpCategoryItem.getDefaultCategoryItems();
             Iterator<SpCategoryItem> iterator = defaultCategoryItems.values().iterator();
             while (iterator.hasNext()) {
                 SpCategoryItem item = iterator.next();
-                ContentValues values = new ContentValues();
-                values.put(SpTableContract.SpItemTable._ID, item.getId());
-                values.put(SpTableContract.SpItemTable.COLUMN_ITEM_NAME, item.getCategoryItemName());
-                values.put(SpTableContract.SpItemTable.COLUMN_ITEM_DISPLAYNAME, item.getCategoryItemDisplayName());
-                values.put(SpTableContract.SpItemTable.COLUMN_ITEM_CATEGORY_ID, item.getCategoryId());
-                db.insert(SpTableContract.SpItemTable.TABLE_NAME, null, values);
+                addCategoryItem(item, db);
             }
             db.setTransactionSuccessful();
         } finally {
             db.endTransaction();
         }
 
+    }
+
+    public void addCategoryItem(SpCategoryItem item, SQLiteDatabase db)
+    {
+        boolean closeDblocally = false;
+        if (db == null) {
+            db = _dbHelper.getWritableDatabase();
+            closeDblocally = true;
+        }
+        ContentValues values = new ContentValues();
+        if (item.getId() > -1) {
+            values.put(SpTableContract.SpItemTable._ID, item.getId());
+        }
+
+        values.put(SpTableContract.SpItemTable.COLUMN_ITEM_NAME, item.getCategoryItemName());
+        values.put(SpTableContract.SpItemTable.COLUMN_ITEM_DISPLAYNAME, item.getCategoryItemDisplayName());
+        values.put(SpTableContract.SpItemTable.COLUMN_ITEM_CATEGORY_ID, item.getCategoryId());
+        db.insert(SpTableContract.SpItemTable.TABLE_NAME, null, values);
+
+        if (closeDblocally) {
+            db.close();
+        }
     }
 
     public void addSankalp(SpSankalp sankalp) {
@@ -309,13 +341,14 @@ public class SpContentProvider {
         values.put(SpTableContract.SpSankalpTable.COLUMN_CATEGORY_ID, sankalp.getCategoryID());
         values.put(SpTableContract.SpSankalpTable.COLUMN_ITEM_ID, sankalp.getItemId());
         values.put(SpTableContract.SpSankalpTable.COLUMN_ISLIFETIME, sankalp.isLifetime());
+        values.put(SpTableContract.SpSankalpTable.COLUMN_ISNOTIFICATION_ON, sankalp.isNotificationOn());
         values.put(SpTableContract.SpSankalpTable.COLUMN_FROM_DATE, sankalp.getFromDate().getTime());
         if (sankalp.getToDate() != null) {
             values.put(SpTableContract.SpSankalpTable.COLUMN_TO_DATE, sankalp.getToDate().getTime());
         }
 
-        int targetCount = sankalp.getExceptionOrTarget().getExceptionOrTargetCount();
-        if (targetCount >= 0) {
+        SpExceptionOrTarget exceptionOrTarget = sankalp.getExceptionOrTarget();
+        if (exceptionOrTarget != null && exceptionOrTarget.getExceptionOrTargetCount() > 0) {
             values.put(SpTableContract.SpSankalpTable.COLUMN_EXCEPTION_TARGET_ID, sankalp.getExceptionOrTarget().getId());
             values.put(SpTableContract.SpSankalpTable.COLUMN_EXCEPTION_TARGET_COUNT, sankalp.getExceptionOrTarget().getExceptionOrTargetCount());
         }
@@ -337,9 +370,9 @@ public class SpContentProvider {
         long sankalpId = db.insert(tableName, null, values);
         db.close(); // Closing database connection
 
-        if (sankalpId > -1) {
-            int currentCount = sankalp.getExceptionOrTarget().getExceptionOrTargetCountCurrent();
-            if (targetCount > 0 && currentCount >= 0) {
+        if (sankalpId > -1 && exceptionOrTarget != null) {
+            int currentCount = exceptionOrTarget.getExceptionOrTargetCountCurrent();
+            if (exceptionOrTarget.getExceptionOrTargetCount() > 0 && currentCount >= 0) {
                 // Add in the ExTar Table
                 addExTarEntry(sankalpId, currentCount, new Date());
             }
@@ -529,6 +562,9 @@ public class SpContentProvider {
         int isLifetime = cursor.getInt(cursor.getColumnIndexOrThrow(SpTableContract.SpSankalpTable.COLUMN_ISLIFETIME));
         sankalp.setLifetime(isLifetime);
 
+        int isNotificationOn = cursor.getInt(cursor.getColumnIndexOrThrow(SpTableContract.SpSankalpTable.COLUMN_ISNOTIFICATION_ON));
+        sankalp.setNotification(isNotificationOn);
+
         long fromDate = cursor.getLong(cursor.getColumnIndexOrThrow(SpTableContract.SpSankalpTable.COLUMN_FROM_DATE));
         sankalp.setFromDate(new Date(fromDate));
         int toDateColIndex = cursor.getColumnIndexOrThrow(SpTableContract.SpSankalpTable.COLUMN_TO_DATE);
@@ -563,6 +599,7 @@ public class SpContentProvider {
         values.put(SpTableContract.SpSankalpTable.COLUMN_CATEGORY_ID, sankalp.getCategoryID());
         values.put(SpTableContract.SpSankalpTable.COLUMN_ITEM_ID, sankalp.getItemId());
         values.put(SpTableContract.SpSankalpTable.COLUMN_ISLIFETIME, sankalp.isLifetime());
+        values.put(SpTableContract.SpSankalpTable.COLUMN_ISNOTIFICATION_ON, sankalp.isNotificationOn());
         values.put(SpTableContract.SpSankalpTable.COLUMN_FROM_DATE, sankalp.getFromDate().getTime());
         if (sankalp.getToDate() != null) {
             values.put(SpTableContract.SpSankalpTable.COLUMN_TO_DATE, sankalp.getToDate().getTime());

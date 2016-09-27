@@ -24,7 +24,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.ravijain.sankalp.R;
-import com.ravijain.sankalp.activities.SpConstants;
+import com.ravijain.sankalp.support.SpConstants;
 import com.ravijain.sankalp.data.SpCategory;
 import com.ravijain.sankalp.data.SpCategoryItem;
 import com.ravijain.sankalp.data.SpContentProvider;

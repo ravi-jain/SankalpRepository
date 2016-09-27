@@ -17,6 +17,7 @@ import android.widget.TextView;
 
 import com.ravijain.sankalp.R;
 import com.ravijain.sankalp.data.SpContentProvider;
+import com.ravijain.sankalp.support.SpConstants;
 import com.ravijain.sankalp.support.SpDateUtils;
 import com.ravijain.sankalp.data.SpSankalp;
 
@@ -41,6 +42,8 @@ public class SpSankalpDetailsActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        setTheme(R.style.SankalpTheme);
         setContentView(R.layout.activity_sp_sankalp_details);
 
         final int id = getIntent().getIntExtra(SpConstants.INTENT_KEY_SANKALP_ID, -1);

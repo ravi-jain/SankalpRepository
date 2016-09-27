@@ -129,7 +129,7 @@ public class SpTextDrawable extends ShapeDrawable {
         return height;
     }
 
-    public static IShapeBuilder builder() {
+    public static Builder builder() {
         return new Builder();
     }
 

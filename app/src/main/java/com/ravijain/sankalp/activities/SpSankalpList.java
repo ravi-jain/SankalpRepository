@@ -8,10 +8,13 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 
 import com.ravijain.sankalp.R;
 import com.ravijain.sankalp.fragments.SpSankalpListFragment;
+import com.ravijain.sankalp.support.SpConstants;
 import com.ravijain.sankalp.support.SpDateUtils;
 
 import java.util.Calendar;
@@ -28,7 +31,18 @@ public class SpSankalpList extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        setTheme(R.style.SankalpTheme);
         setContentView(R.layout.activity_sp_sankalp_list);
+
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setHomeButtonEnabled(true);
+        }
 
         _sankalpType = getIntent().getIntExtra(SpConstants.INTENT_KEY_SANKALP_TYPE, SpConstants.SANKALP_TYPE_BOTH);
         _intentListFilter = getIntent().getIntExtra(SpConstants.INTENT_KEY_SANKALP_LIST_FILTER, SpConstants.INTENT_VALUE_SANKALP_LIST_FILTER_CURRENT);
@@ -57,10 +71,12 @@ public class SpSankalpList extends AppCompatActivity {
         // Give the TabLayout the ViewPager
         TabLayout tabLayout = (TabLayout) findViewById(R.id.sliding_tabs);
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
+        if (_isStatic())
+            tabLayout.setTabMode(TabLayout.MODE_FIXED);
+        else {
+            tabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
+        }
         tabLayout.setupWithViewPager(_viewPager);
-
-       // ((ViewPager.LayoutParams) (findViewById(R.id.pager_header)).getLayoutParams()).isDecor = true;
-
     }
 
     private boolean _isStatic() {

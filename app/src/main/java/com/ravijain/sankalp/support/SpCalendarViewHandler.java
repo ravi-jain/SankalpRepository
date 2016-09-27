@@ -11,7 +11,6 @@ import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
 import com.prolificinteractive.materialcalendarview.OnMonthChangedListener;
 import com.ravijain.sankalp.R;
-import com.ravijain.sankalp.activities.SpConstants;
 import com.ravijain.sankalp.activities.SpSankalpList;
 import com.ravijain.sankalp.data.SpContentProvider;
 import com.ravijain.sankalp.data.SpSankalp;
@@ -47,12 +46,11 @@ public class SpCalendarViewHandler implements OnDateSelectedListener, OnMonthCha
         _selectionMode = selectionMode;
         _widget = (MaterialCalendarView) _view.findViewById(viewId);
         _widget.setOnDateChangedListener(this);
-
+        _widget.setDynamicHeightEnabled(true);
 
         if (selectionMode == SELECTION_MODE_NONE) {
             _widget.setOnMonthChangedListener(this);
-            EventsLoader l = new EventsLoader();
-            l.execute(Calendar.getInstance());
+            loadCalendarEvents();
         }
         else if (selectionMode == SELECTION_MODE_RANGE){
             _widget.setSelectionMode(MaterialCalendarView.SELECTION_MODE_RANGE);
@@ -61,6 +59,12 @@ public class SpCalendarViewHandler implements OnDateSelectedListener, OnMonthCha
             _widget.setSelectionMode(MaterialCalendarView.SELECTION_MODE_SINGLE);
             _widget.setSelectedDate(new Date());
         }
+    }
+
+    public void loadCalendarEvents()
+    {
+        EventsLoader l = new EventsLoader();
+        l.execute(Calendar.getInstance());
     }
 
     private void _launchSankalpList(Date date)

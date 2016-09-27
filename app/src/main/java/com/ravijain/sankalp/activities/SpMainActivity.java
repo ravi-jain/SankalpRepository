@@ -1,12 +1,8 @@
 package com.ravijain.sankalp.activities;
 
-import android.app.AlarmManager;
-import android.app.PendingIntent;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -36,11 +32,9 @@ import com.ravijain.sankalp.fragments.SpContactUsFragment;
 import com.ravijain.sankalp.fragments.SpDashboardFragment;
 import com.ravijain.sankalp.fragments.SpSettingsFragment;
 import com.ravijain.sankalp.fragments.SpUserProfileFragment;
-import com.ravijain.sankalp.support.SpAlarmReceiver;
 import com.ravijain.sankalp.support.SpCaldroidCalendarViewHandler;
+import com.ravijain.sankalp.support.SpConstants;
 import com.ravijain.sankalp.support.SpUtils;
-
-import java.util.Calendar;
 
 public class SpMainActivity extends AppCompatActivity implements ListView.OnItemClickListener {
 
@@ -64,6 +58,7 @@ public class SpMainActivity extends AppCompatActivity implements ListView.OnItem
             startActivity(intent);
         } else {
 
+            setTheme(R.style.SankalpTheme);
             SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 
             setContentView(R.layout.activity_main);

@@ -26,6 +26,12 @@
         <item>@string/daily</item>
     </string-array>
 
+    <string-array name="sankalpTypes">
+        <item>@string/tyag</item>
+        <item>@string/niyam</item>
+        <item>@string/any</item>
+    </string-array>
+
     <string-array name="drawerList">
         <item>@string/Dashboard</item>
         <item>@string/UpdateProfile</item>
@@ -52,4 +58,5 @@
     <string name="Dashboard1">Card Dashboard</string>
     <string name="english">English</string>
     <string name="hindi">Hindi</string>
+    <string name="any">Any</string>
 </resources>

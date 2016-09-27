@@ -32,13 +32,26 @@
     <color name="blue_semi_transparent_pressed">#80738ffe</color>
 
     <!-- Material Colors -->
-    <color name="sankalp_primary">#2196F3</color>
-    <color name="sankalp_primary_dark">#1976D2</color>
-    <color name="sankalp_primary_light">#BBDEFB</color>
-    <color name="sankalp_accent">#FF4081</color>
+    <color name="sankalp_primary">#9575CD</color>
+    <color name="sankalp_primary_dark">#673AB7</color>
+    <color name="sankalp_primary_light">#EDE7F6</color>
+    <color name="sankalp_accent">#00BCD4</color>
     <color name="sankalp_primary_text">#212121</color>
     <color name="sankalp_secondary_text">#757575</color>
     <color name="sankalp_icons">#FFFFFF</color>
     <color name="sankalp_divider">#BDBDBD</color>
+
+    <!-- Orange -->
+    <color name="sankalp_primary_orange">#FF5722</color>
+    <color name="sankalp_primary_dark_orange">#E64A19</color>
+    <color name="sankalp_primary_light_orange">#ffccbc</color>
+    <color name="sankalp_accent_orange">#536dfe</color>
+
+
+    <!-- Deep Purple -->
+    <color name="sankalp_primary_deep_purple">#673AB7</color>
+    <color name="sankalp_primary_dark_deep_purple">#512DA8</color>
+    <color name="sankalp_primary_light_deep_purple">#D1C4E9</color>
+    <color name="sankalp_accent_deep_purple">#00BCD4</color>
 
 </resources>

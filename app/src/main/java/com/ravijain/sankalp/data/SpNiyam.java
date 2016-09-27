@@ -1,6 +1,6 @@
 package com.ravijain.sankalp.data;
 
-import com.ravijain.sankalp.activities.SpConstants;
+import com.ravijain.sankalp.support.SpConstants;
 
 /**
  * Created by ravijain on 7/4/2016.

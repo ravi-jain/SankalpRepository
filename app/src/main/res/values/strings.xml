@@ -2,7 +2,7 @@
     <string name="app_name">Sankalp</string>
 
     <!-- Strings related to login -->
-    <string name="prompt_email">Email</string>
+    <string name="prompt_email">Email (Optional)</string>
     <string name="prompt_userName">Name</string>
     <string name="prompt_userMobile">Mobile No.</string>
     <string name="prompt_password">Password (optional)</string>
@@ -73,7 +73,7 @@
     <string name="Share">Share</string>
     <string name="overviewHeader">Overview</string>
     <string name="mostRecentHeader">Most Recent</string>
-    <string name="viewAllHeader">View All</string>
+    <string name="viewAllHeader">View Details</string>
     <string name="total2">Total</string>
     <string name="filterList">Filter</string>
     <string name="ok">OK</string>
@@ -89,7 +89,7 @@
     <string name="EmptyList">No Records Found</string>
     <string name="drawer_close">Close navigation drawer</string>
     <string name="drawer_open">Open navigation drawer</string>
-    <string name="prompt_city">City</string>
+    <string name="prompt_city">City (Optional)</string>
     <string name="update">UPDATE</string>
     <string name="calendarViewLabel">Showing this month\'s sankalps</string>
     <string name="Day">Day</string>
@@ -99,7 +99,7 @@
     <string name="monthViewLegend">Atleast 1 Sankalp ends on the day.</string>
     <string name="language">Language</string>
     <string name="selectLanguage">Select Language</string>
-    <string name="showReminders">Show Reminders</string>
+    <string name="showReminders">Reminders</string>
     <string name="showRemindersEnabled">Enabled</string>
     <string name="showRemindersDisabled">Disabled</string>
     <string name="edit">Edit</string>
@@ -110,7 +110,24 @@
     <string name="periodSelectPrompt">Touch to select period</string>
     <string name="exTarSelectPrompt">Touch to select</string>
     <string name="descriptionAddPrompt">Touch to add description</string>
+    <string name="AddDescription">Add Description</string>
     <string name="selectCategoryTitle">Select Category</string>
     <string name="selectItemTitle">Select Item</string>
     <string name="selectCategoryFirst">Please select category first</string>
+    <string name="title_activity_sp_material_dashboard">Sankalp</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
+    <string name="JaiJinendra">Jai Jinendra</string>
+    <string name="addItem">Add New Item</string>
+    <string name="addCategory">Add New Category</string>
+    <string name="expandAll">Expand All</string>
+    <string name="collapseAll">Collapse All</string>
+    <string name="notificationPrompy">Set Reminder</string>
+    <string name="preferredLanguage">Preferred language</string>
+    <string name="categoryName">Category Name</string>
+    <string name="itemName">Item Name</string>
+    <string name="quoteHeader">Quote of the day</string>
 </resources>

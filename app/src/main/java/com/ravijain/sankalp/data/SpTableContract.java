@@ -61,6 +61,7 @@ public class SpTableContract {
         public static final String COLUMN_ISLIFETIME = "isLifetime";
         public static final String COLUMN_EXCEPTION_TARGET_ID = "exTargetId";
         public static final String COLUMN_EXCEPTION_TARGET_COUNT = "exTargetCount";
+        public static final String COLUMN_ISNOTIFICATION_ON = "isNotifOn";
         /*public static final String COLUMN_EXCEPTION_TARGET_CURRENT_COUNT = "exTargetCurrentCount";*/
     }
 

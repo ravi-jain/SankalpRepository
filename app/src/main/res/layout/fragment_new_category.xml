@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="?attr/dialogPreferredPadding">
+
+    <!--<LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/sankalpType"
+            style="@style/SpText"
+            />
+        <View style="@style/SpHorizontalDivider"
+            android:layout_marginBottom="8dp"/>
+
+        <RadioGroup
+            android:id="@+id/rg_sankalpType"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:checkedButton="@+id/rb_st_tyag">
+            <RadioButton
+                android:id="@+id/rb_st_tyag"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/tyag"/>
+            <RadioButton
+                android:id="@+id/rb_st_niyam"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/niyam"/>
+            <RadioButton
+                android:id="@+id/rb_st_any"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/any"/>
+        </RadioGroup>
+    </LinearLayout>-->
+
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/input_layout_cName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="10dp">
+
+    <EditText
+        android:id="@+id/categoryName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/categoryName"
+        android:maxLines="1"
+        android:singleLine="true" />
+    </android.support.design.widget.TextInputLayout>
+
+
+
+
+</LinearLayout>

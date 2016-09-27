@@ -1,10 +1,12 @@
-package com.ravijain.sankalp.activities;
+package com.ravijain.sankalp.support;
 
 /**
  * Created by ravijain on 7/5/2016.
  */
 public interface SpConstants {
 
+
+    public static final int ACTIVITY_REQUEST_CODE = 100;
     public static final String INTENT_KEY_SANKALP_TYPE = "SANKALP_TYPE";
     public static final String INTENT_KEY_SANKALP_LIST_FILTER = "SANKALP_LIST_FILTER";
     public static final String INTENT_KEY_SANKALP_LIST_FILTER_DATE_VALUE = "SANKALP_LIST_FILTER_DATE_VALUE";
@@ -35,5 +37,11 @@ public interface SpConstants {
     public static final int SANKALP_IS_LIFTIME_FALSE = 0;
     public static final int SANKALP_IS_LIFTIME_TRUE = 1;
 
-
+    public static final String FRAGMENT_TAG_DESCRIPTION = "description";
+    public static final String FRAGMENT_TAG_EXTAR = "exTar";
+    public static final String FRAGMENT_TAG_CURRENT_COUNT = "currentCount";
+    public static final String FRAGMENT_TAG_ITEM = "item";
+    public static final String FRAGMENT_TAG_CATEGORY = "category";
+    public static final String FRAGMENT_TAG_FILTER = "filter";
+    public static final String FRAGMENT_TAG_INTERVAL = "interval";
 }

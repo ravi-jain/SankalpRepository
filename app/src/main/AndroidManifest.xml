@@ -2,67 +2,65 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.ravijain.sankalp">
 
-    <!-- To auto-complete the email text field in the login form with the user's emails -->
-    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
-    <uses-permission android:name="android.permission.READ_PROFILE" />
-    <uses-permission android:name="android.permission.READ_CONTACTS" />
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:supportsRtl="true"
-        android:theme="@style/SankalpTheme">
-
-        <receiver android:name=".support.SpAlarmReceiver"
+        android:theme="@style/SankalpTheme"
+        android:supportsRtl="true">
+        <receiver
+            android:name=".support.SpAlarmReceiver"
             android:enabled="false">
             <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED"></action>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
-        <activity android:name=".activities.SpMainActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+        <!--<activity android:name=".activities.SpMainActivity">
+        </activity>-->
+
         <activity
             android:name=".activities.SpAddSankalpActivity"
             android:label="@string/title_activity_sp_add_sankalp"
-            android:parentActivityName=".activities.SpMainActivity">
+            android:parentActivityName=".activities.SpMaterialDashboardActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.ravijain.sankalp.activities.SpMainActivity" />
+                android:value="com.ravijain.sankalp.activities.SpMaterialDashboardActivity" />
         </activity>
         <activity
             android:name=".activities.SpSankalpList"
             android:label="@string/title_activity_sp_sankalp_list"
-            android:parentActivityName=".activities.SpMainActivity">
-            <!--<intent-filter>
-                <action android:name="android.intent.action.SEARCH" />
-            </intent-filter>
-            <meta-data android:name="android.app.searchable"
-                android:resource="@xml/searchable"/>-->
+            android:parentActivityName=".activities.SpMaterialDashboardActivity">
+
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.ravijain.sankalp.activities.SpMainActivity" />
+                android:value="com.ravijain.sankalp.activities.SpMaterialDashboardActivity" />
         </activity>
         <activity
             android:name=".activities.SpUserSetupActivity"
             android:label="@string/title_activity_user_setup"
-            android:noHistory="true">
-
-        </activity>
-        <activity
+            android:noHistory="true" />
+        <!--<activity
             android:name=".activities.SpSankalpDetailsActivity"
             android:label="@string/Details">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.ravijain.sankalp.activities.SpSankalpList" />
+        </activity>-->
+        <activity
+            android:name=".activities.SpMaterialDashboardActivity"
+            android:label="@string/title_activity_sp_material_dashboard">
 
+        </activity>
+        <activity android:name=".activities.SpSplashActivity"
+            android:theme="@style/SankalpSplashTheme">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
     </application>
 

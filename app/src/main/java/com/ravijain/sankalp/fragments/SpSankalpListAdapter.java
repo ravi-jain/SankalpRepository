@@ -5,11 +5,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.Filter;
 import android.widget.TextView;
 
 import com.ravijain.sankalp.R;
-import com.ravijain.sankalp.activities.SpConstants;
+import com.ravijain.sankalp.support.SpConstants;
 import com.ravijain.sankalp.data.SpCategory;
 import com.ravijain.sankalp.data.SpCategoryItem;
 import com.ravijain.sankalp.data.SpContentProvider;
@@ -19,7 +18,6 @@ import com.ravijain.sankalp.data.SpSankalp;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 /**
  * Created by ravijain on 7/31/2016.
@@ -159,38 +157,6 @@ public class SpSankalpListAdapter extends ArrayAdapter<SpSankalp>{
         }
     }
 
-    public Filter getFilter1() {
-        return new Filter() {
-            @Override
-            protected FilterResults performFiltering(CharSequence charSequence) {
-                FilterResults results = new FilterResults();        // Holds the results of a filtering operation in values
-                List<SpSankalp> filteredList = new ArrayList<SpSankalp>();
-
-                if (charSequence == null || charSequence.length() == 0) {
-                    results.count = _sankalps.size();
-                    results.values = _sankalps;
-                }
-                else {
-                    String searchQuery = charSequence.toString();
-                    for (int i = 0; i < _sankalps.size(); i++) {
-                        SpSankalp s = _sankalps.get(i);
-                        if (s.isMatch(searchQuery)) {
-                            filteredList.add(s);
-                        }
-                    }
-                    results.count = filteredList.size();
-                    results.values = filteredList;
-                }
-                return results;
-            }
-
-            @Override
-            protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
-
-            }
-        };
-    }
-
     public void clearAdapter() {
         _sankalps = null;
         clear();
@@ -199,5 +165,13 @@ public class SpSankalpListAdapter extends ArrayAdapter<SpSankalp>{
     public void addItems(ArrayList<SpSankalp> sankalps) {
         _sankalps = sankalps;
         addAll(sankalps);
+    }
+
+    public void removeItems(ArrayList<SpSankalp> sankalpsToBeDeleted)
+    {
+        for (SpSankalp s: sankalpsToBeDeleted) {
+            remove(s);
+            _sankalps.remove(s);
+        }
     }
 }

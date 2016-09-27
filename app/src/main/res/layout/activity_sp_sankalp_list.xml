@@ -1,3 +1,4 @@
+<!--
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -8,9 +9,7 @@
         android:id="@+id/sliding_tabs"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:tabMode="scrollable"
         app:tabGravity="fill"
-        app:tabMaxWidth="0dp"
         android:background="?attr/colorPrimary"
         android:minHeight="?attr/actionBarSize"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"/>
@@ -21,7 +20,7 @@
         android:layout_height="0px"
         android:layout_weight="1">
 
-        <!--<android.support.v4.view.PagerTabStrip
+        &lt;!&ndash;<android.support.v4.view.PagerTabStrip
             android:id="@+id/pager_header"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -30,17 +29,69 @@
             android:paddingLeft="4dp"
             android:paddingRight="4dp"
             android:textSize="15sp"
-            android:paddingTop="4dp" />-->
+            android:paddingTop="4dp" />&ndash;&gt;
 
-        <!--<android.support.v4.view.PagerTabStrip
+        &lt;!&ndash;<android.support.v4.view.PagerTabStrip
             android:id="@+id/pager_header"
+            android:clickable="true"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="top"
             style="@style/Base.Widget.Design.TabLayout"
             android:background="?attr/colorPrimary"
             android:minHeight="?attr/actionBarSize"
-            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"/>-->
+            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"/>&ndash;&gt;
 
     </android.support.v4.view.ViewPager>
-</LinearLayout>
+</LinearLayout>-->
+<android.support.design.widget.CoordinatorLayout
+    android:id="@+id/main_layout"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activities.SpSankalpList">
+
+
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/appBarLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:elevation="6dp">
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:layout_alignParentTop="true"
+            android:background="?attr/colorPrimary"
+            android:minHeight="?attr/actionBarSize"
+            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+            app:elevation="0dp"
+            app:layout_scrollFlags="scroll|enterAlways"
+            />
+
+        <android.support.design.widget.TabLayout
+            android:id="@+id/sliding_tabs"
+            android:layout_below="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?attr/colorPrimary"
+            app:elevation="0dp"
+            app:tabTextColor="#d3d3d3"
+            app:tabSelectedTextColor="#ffffff"
+            app:tabIndicatorColor="?attr/colorAccent"
+            android:minHeight="?attr/actionBarSize"
+            />
+
+    </android.support.design.widget.AppBarLayout>
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/vpPager"
+        android:layout_below="@+id/tab_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        />
+
+</android.support.design.widget.CoordinatorLayout>

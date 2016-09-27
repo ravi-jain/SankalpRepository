@@ -9,28 +9,35 @@
         android:layout_marginTop="8dp"
         android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/add_sankalpSummary_tv"
-            style="@style/TextAppearance.AppCompat.Title"
+        <LinearLayout
+            android:id="@+id/summary_ll"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:gravity="center"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
-             />
+            android:orientation="vertical">
+            <TextView
+                android:id="@+id/add_sankalpSummary_tv"
+                style="@style/SpText"
+                android:text="@string/sankalpSummary"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:gravity="center"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                />
 
-        <View
-            style="@style/SpHorizontalDivider"
-            android:layout_width="64dp"
-            android:layout_gravity="center"
-            android:layout_marginBottom="8dp" />
+            <View
+                style="@style/SpHorizontalDivider"
+                android:layout_width="64dp"
+                android:layout_gravity="center"
+                android:layout_marginBottom="8dp" />
+        </LinearLayout>
 
-        <include
+        <!--<include
             android:id="@+id/category_view"
             layout="@layout/icon_two_lines_list_item_layout" />
 
-        <View style="@style/SpHorizontalDividerMaterial" />
+        <View style="@style/SpHorizontalDividerMaterial" />-->
 
         <include
             android:id="@+id/item_view"
@@ -53,6 +60,12 @@
         <include
             android:id="@+id/currentCount_view"
             layout="@layout/icon_two_lines_list_item_layout" />
+
+        <View style="@style/SpHorizontalDividerMaterial" />
+
+        <include
+            android:id="@+id/notification_view"
+            layout="@layout/icon_two_lines_switch_list_item_layout" />
 
         <View style="@style/SpHorizontalDividerMaterial" />
 

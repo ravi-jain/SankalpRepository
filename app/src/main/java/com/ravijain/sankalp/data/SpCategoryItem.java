@@ -8,7 +8,7 @@ import java.util.Iterator;
  */
 public class SpCategoryItem implements SpDataConstants {
 
-    private int _id;
+    private int _id = -1;
     private String _itemName;
     private String _itemDisplayName;
     private int _categoryId;
@@ -51,6 +51,12 @@ public class SpCategoryItem implements SpDataConstants {
         _id = id;
         _itemName = name;
         _itemDisplayName = displayName;
+        _categoryId = categoryId;
+    }
+
+    public SpCategoryItem(String name,int categoryId) {
+        _itemName = name;
+        _itemDisplayName = name;
         _categoryId = categoryId;
     }
 
