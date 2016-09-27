@@ -16,7 +16,6 @@ import com.ravijain.sankalp.activities.SpAddSankalpActivity;
 import com.ravijain.sankalp.support.SpConstants;
 import com.ravijain.sankalp.activities.SpSankalpList;
 import com.ravijain.sankalp.data.SpContentProvider;
-import com.ravijain.sankalp.support.SpCaldroidCalendarViewHandler;
 import com.ravijain.sankalp.support.SpDateUtils;
 import com.ravijain.sankalp.data.SpSankalp;
 
@@ -103,8 +102,8 @@ public class SpCardDashboardFragment extends Fragment implements View.OnClickLis
 
     private void _setUpCalendarView() {
 
-        SpCaldroidCalendarViewHandler cal = new SpCaldroidCalendarViewHandler(getActivity(), SpCaldroidCalendarViewHandler.CONTEXT_LIMITED, getFragmentManager(), R.id.db_calendarView);
-        cal.constructCalendarView();
+//        SpCaldroidCalendarViewHandler cal = new SpCaldroidCalendarViewHandler(getActivity(), SpCaldroidCalendarViewHandler.CONTEXT_LIMITED, getFragmentManager(), R.id.db_calendarView);
+//        cal.constructCalendarView();
 
         // Attach to the activity
         //getFragmentManager().beginTransaction().replace(R.id.db_calendarView, _calViewFragment).commit();

@@ -86,20 +86,17 @@ public class SpSankalpList extends AppCompatActivity {
                 _intentListFilter == SpConstants.INTENT_VALUE_SANKALP_LIST_FILTER_ALL;
     }
 
-    private Bundle _createBundle(int sankalpType, int intentListFilter, long time)
-    {
+    private Bundle _createBundle(int intentListFilter, long time) {
         Bundle args = new Bundle();
         args.putLong(SpConstants.INTENT_KEY_SANKALP_LIST_FILTER_DATE_VALUE, time);
         args.putInt(SpConstants.INTENT_KEY_SANKALP_TYPE, SpConstants.SANKALP_TYPE_BOTH);
-        //args.putInt(SpConstants.INTENT_KEY_SANKALP_LIST_FILTER_SANKALP_TYPE, sankalpType);
         args.putInt(SpConstants.INTENT_KEY_SANKALP_LIST_FILTER, intentListFilter);
         return args;
     }
 
-    private Fragment _getListFragment(int sankalpType, int intentListFilter, long time)
-    {
+    private Fragment _getListFragment(int sankalpType, int intentListFilter, long time) {
         Fragment fragment = new SpSankalpListFragment();
-        fragment.setArguments(_createBundle(sankalpType, intentListFilter, time));
+        fragment.setArguments(_createBundle(intentListFilter, time));
         return fragment;
     }
 
@@ -122,11 +119,9 @@ public class SpSankalpList extends AppCompatActivity {
                 c.setTime(_launchDate.getTime());
                 if (_intentListFilter == SpConstants.INTENT_VALUE_SANKALP_LIST_FILTER_DAY) {
                     c.add(Calendar.DAY_OF_YEAR, position);
-                }
-                else if (_intentListFilter == SpConstants.INTENT_VALUE_SANKALP_LIST_FILTER_MONTH) {
+                } else if (_intentListFilter == SpConstants.INTENT_VALUE_SANKALP_LIST_FILTER_MONTH) {
                     c.add(Calendar.MONTH, position);
-                }
-                else if (_intentListFilter == SpConstants.INTENT_VALUE_SANKALP_LIST_FILTER_YEAR) {
+                } else if (_intentListFilter == SpConstants.INTENT_VALUE_SANKALP_LIST_FILTER_YEAR) {
                     c.add(Calendar.YEAR, position);
                 }
                 return c;
@@ -146,11 +141,9 @@ public class SpSankalpList extends AppCompatActivity {
                 if (SpDateUtils.isToday(c)) return getString(R.string.thisDay);
                 if (SpDateUtils.isTomorrow(c.getTime())) return getString(R.string.tomorrow);
                 return SpDateUtils.getFriendlyDateShortString(c.getTime());
-            }
-            else if (_intentListFilter == SpConstants.INTENT_VALUE_SANKALP_LIST_FILTER_MONTH) {
+            } else if (_intentListFilter == SpConstants.INTENT_VALUE_SANKALP_LIST_FILTER_MONTH) {
                 return SpDateUtils.getMonthString(c);
-            }
-            else if (_intentListFilter == SpConstants.INTENT_VALUE_SANKALP_LIST_FILTER_YEAR) {
+            } else if (_intentListFilter == SpConstants.INTENT_VALUE_SANKALP_LIST_FILTER_YEAR) {
                 return SpDateUtils.getYearString(c);
             }
             return String.valueOf(position);
@@ -184,95 +177,4 @@ public class SpSankalpList extends AppCompatActivity {
         }
     }
 
-//    private class SpStaticPagerAdapter extends FragmentPagerAdapter {
-//
-//        String cs = getString(R.string.current);
-//        String ls = getString(R.string.lifetime_db);
-//        String us = getString(R.string.upcoming);
-//        String as = getString(R.string.all);
-//
-//        public SpStaticPagerAdapter(FragmentManager fm) {
-//            super(fm);
-//        }
-//
-//        @Override
-//        public Fragment getItem(int position) {
-//            int intentListFilter;
-//            String title = _getTitle(position);
-//            if (title.equals(cs)) {
-//                intentListFilter = SpConstants.INTENT_VALUE_SANKALP_LIST_FILTER_CURRENT;
-//            }
-//            else if (title.equals(ls)) {
-//                intentListFilter = SpConstants.INTENT_VALUE_SANKALP_LIST_FILTER_LIFETIME;
-//            }
-//            else if (title.equals(us)) {
-//                intentListFilter = SpConstants.INTENT_VALUE_SANKALP_LIST_FILTER_UPCOMING;
-//            }
-//            else {
-//                intentListFilter = SpConstants.INTENT_VALUE_SANKALP_LIST_FILTER_ALL;
-//            }
-//
-//            return _getListFragment(_sankalpType, intentListFilter, -1);
-//        }
-//
-//        @Override
-//        public int getCount() {
-//            return 4;
-//        }
-//
-//        private String _getTitle(int position) {
-//
-//            if (_intentListFilter == SpConstants.INTENT_VALUE_SANKALP_LIST_FILTER_CURRENT) {
-//                switch (position) {
-//                    case 0:
-//                        return cs;
-//                    case 1:
-//                        return ls;
-//                    case 2:
-//                        return us;
-//                    case 3:
-//                        return as;
-//                }
-//            } else if (_intentListFilter == SpConstants.INTENT_VALUE_SANKALP_LIST_FILTER_LIFETIME) {
-//                switch (position) {
-//                    case 0:
-//                        return ls;
-//                    case 1:
-//                        return cs;
-//                    case 2:
-//                        return us;
-//                    case 3:
-//                        return as;
-//                }
-//            } else if (_intentListFilter == SpConstants.INTENT_VALUE_SANKALP_LIST_FILTER_UPCOMING) {
-//                switch (position) {
-//                    case 0:
-//                        return us;
-//                    case 1:
-//                        return cs;
-//                    case 2:
-//                        return ls;
-//                    case 3:
-//                        return as;
-//                }
-//            } else {
-//                switch (position) {
-//                    case 0:
-//                        return as;
-//                    case 1:
-//                        return cs;
-//                    case 2:
-//                        return ls;
-//                    case 3:
-//                        return us;
-//                }
-//            }
-//            return "";
-//        }
-//
-//        @Override
-//        public CharSequence getPageTitle(int position) {
-//            return _getTitle(position);
-//        }
-//    }
 }

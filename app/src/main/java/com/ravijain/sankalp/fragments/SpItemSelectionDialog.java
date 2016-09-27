@@ -26,11 +26,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.ravijain.sankalp.R;
-import com.ravijain.sankalp.support.SpConstants;
 import com.ravijain.sankalp.data.SpCategory;
 import com.ravijain.sankalp.data.SpCategoryItem;
 import com.ravijain.sankalp.data.SpContentProvider;
 import com.ravijain.sankalp.support.SpColorGenerator;
+import com.ravijain.sankalp.support.SpConstants;
 import com.ravijain.sankalp.support.SpTextDrawable;
 import com.ravijain.sankalp.support.SpUtils;
 
@@ -92,8 +92,7 @@ public class SpItemSelectionDialog extends DialogFragment implements SearchView.
         return _rootView;
     }
 
-    private void _loadData()
-    {
+    private void _loadData() {
         ItemLoaderTask t = new ItemLoaderTask(ItemLoaderTask.OPERATION_FETCH_ITEMS, _sankalpType);
         t.execute();
     }
@@ -113,20 +112,17 @@ public class SpItemSelectionDialog extends DialogFragment implements SearchView.
             // handle close button click here
             dismiss();
             return true;
-        }
-        else if (id == R.id.item_toggleAll) {
+        } else if (id == R.id.item_toggleAll) {
             if (item.getTitle().equals(getString(R.string.collapseAll))) {
                 _collapseAll();
                 item.setTitle(getString(R.string.expandAll));
                 item.setIcon(R.drawable.ic_fullscreen_black_24dp);
-            }
-            else {
+            } else {
                 _expandAll();
                 item.setTitle(getString(R.string.collapseAll));
                 item.setIcon(R.drawable.ic_fullscreen_exit_black_24dp);
             }
-        }
-        else if (id == R.id.item_add_item) {
+        } else if (id == R.id.item_add_item) {
             SpItemCreationDialog d = new SpItemCreationDialog();
             d.setTargetFragment(this, 300);
             Bundle args = new Bundle();
@@ -136,8 +132,7 @@ public class SpItemSelectionDialog extends DialogFragment implements SearchView.
             args.putInt(SpConstants.INTENT_KEY_SANKALP_TYPE, _sankalpType);
             d.setArguments(args);
             d.show(getFragmentManager(), SpConstants.FRAGMENT_TAG_ITEM);
-        }
-        else if (id == R.id.item_add_category) {
+        } else if (id == R.id.item_add_category) {
             SpSimpleAlertDialog d = new SpSimpleAlertDialog();
             d.setTargetFragment(this, 300);
             Bundle args = new Bundle();
@@ -156,10 +151,7 @@ public class SpItemSelectionDialog extends DialogFragment implements SearchView.
     }
 
 
-    private void _loadListView(HashMap<SpCategory, List<SpCategoryItem>> adapterItems)
-    {
-//        ArrayList adapterItems = new ArrayList();
-//        adapterItems.addAll(originalItems);
+    private void _loadListView(HashMap<SpCategory, List<SpCategoryItem>> adapterItems) {
         _originalListDataChild = adapterItems;
 
         HashMap<SpCategory, List<SpCategoryItem>> clonedData = new HashMap<SpCategory, List<SpCategoryItem>>();
@@ -178,54 +170,24 @@ public class SpItemSelectionDialog extends DialogFragment implements SearchView.
                 return true;
             }
         });
-//        RecyclerView recyclerView = (RecyclerView) _rootView.findViewById(R.id.recycler_view);
-        //recyclerView.addItemDecoration(new MarginDecoration(this));
-//        recyclerView.setAdapter(itemsAdapter);
-//        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
-        //GridLayoutManager lLayout = new GridLayoutManager(getContext(), 3);
-//        mLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
-//                                      @Override
-//                                      public int getSpanSize(int position) {
-//                                          if (originalItems.get(position) instanceof SpCategory) return 3;
-//                                          return 1;
-//                                      }
-//                                  });
-//       recyclerView.setHasFixedSize(true);
-
-//        RecyclerView.ItemDecoration itemDecoration = new
-//                SpDividerItemDecoration(getContext(), SpDividerItemDecoration.VERTICAL_LIST);
-//        recyclerView.addItemDecoration(itemDecoration);
-//        recyclerView.setLayoutManager(new LayoutManager(getContext()));
-//        recyclerView.setLayoutManager(mLayoutManager);
-//        recyclerView.setItemAnimator(new DefaultItemAnimator());
-//        recyclerView.setAdapter(_adapter);
-//        rcv.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
-        //recyclerView.setOnItemClickListener(this);
-
     }
 
     private void _expandAll() {
         int count = _adapter.getGroupCount();
-        for (int i = 0; i < count; i++){
+        for (int i = 0; i < count; i++) {
             _listView.expandGroup(i);
         }
     }
 
     private void _collapseAll() {
         int count = _adapter.getGroupCount();
-        for (int i = 0; i < count; i++){
+        for (int i = 0; i < count; i++) {
             _listView.collapseGroup(i);
         }
     }
 
     public void onItemClick(Object item) {
-//        Object item = adapterView.getItemAtPosition(i);
-        if (item instanceof SpCategory) {
-            //_parentFragment.setCategory((SpCategory)item);
-        }
-        else if (item instanceof SpCategoryItem){
-            _parentFragment.setCategoryItem((SpCategoryItem)item);
-        }
+        _parentFragment.setCategoryItem((SpCategoryItem) item);
         dismiss();
     }
 
@@ -246,24 +208,15 @@ public class SpItemSelectionDialog extends DialogFragment implements SearchView.
     @Override
     public void onSimpleAlertDialogPositiveClick(AlertDialog dialog, String tag) {
         if (tag.equals(SpConstants.FRAGMENT_TAG_CATEGORY)) {
-//            RadioGroup sankalpTypeRg = (RadioGroup) dialog.findViewById(R.id.rg_sankalpType);
-//            int sankalpType = SpConstants.SANKALP_TYPE_BOTH;
-//            if (sankalpTypeRg.getCheckedRadioButtonId() == R.id.rb_st_tyag) {
-//                sankalpType = SpConstants.SANKALP_TYPE_TYAG;
-//            }
-//            else if (sankalpTypeRg.getCheckedRadioButtonId() == R.id.rb_st_niyam) {
-//                sankalpType = SpConstants.SANKALP_TYPE_NIYAM;
-//            }
 
             String name = ((TextView) dialog.findViewById(R.id.categoryName)).getText().toString();
             SpCategory c = new SpCategory(name, _sankalpType);
             ItemLoaderTask t = new ItemLoaderTask(ItemLoaderTask.OPERATION_ADD_CATEGORY, c);
             t.execute();
-        }
-        else if (tag.equals(SpConstants.FRAGMENT_TAG_ITEM)) {
+        } else if (tag.equals(SpConstants.FRAGMENT_TAG_ITEM)) {
             AppCompatSpinner spinner = (AppCompatSpinner) dialog.findViewById(R.id.categories_spinner);
             SpCategory cat = (SpCategory) spinner.getSelectedItem();
-            String name = ((EditText)dialog.findViewById(R.id.itemName)).getText().toString();
+            String name = ((EditText) dialog.findViewById(R.id.itemName)).getText().toString();
 
             SpCategoryItem item = new SpCategoryItem(name, cat.getId());
             ItemLoaderTask t = new ItemLoaderTask(ItemLoaderTask.OPERATION_ADD_ITEM, item);
@@ -277,30 +230,26 @@ public class SpItemSelectionDialog extends DialogFragment implements SearchView.
 
     private class ItemLoaderTask extends AsyncTask<Void, Void, Boolean> {
 
-        private HashMap<SpCategory, List<SpCategoryItem>> items = new HashMap<SpCategory, List<SpCategoryItem>>();
-
         static final int OPERATION_FETCH_ITEMS = 1;
         static final int OPERATION_ADD_CATEGORY = 2;
         static final int OPERATION_ADD_ITEM = 3;
-
         int operationID;
         Object param;
+        private HashMap<SpCategory, List<SpCategoryItem>> items = new HashMap<SpCategory, List<SpCategoryItem>>();
 
-        ItemLoaderTask(int operationID, Object param)
-        {
+        ItemLoaderTask(int operationID, Object param) {
             this.operationID = operationID;
             this.param = param;
         }
+
         @Override
         protected Boolean doInBackground(Void... params) {
             SpContentProvider provider = SpContentProvider.getInstance(getContext());
             if (operationID == OPERATION_ADD_CATEGORY && param instanceof SpCategory) {
-                provider.addCategory((SpCategory)param, null);
-            }
-            else if (operationID == OPERATION_ADD_ITEM && param instanceof SpCategoryItem) {
-                provider.addCategoryItem((SpCategoryItem)param, null);
-            }
-            else if (operationID == OPERATION_FETCH_ITEMS && param instanceof Integer) {
+                provider.addCategory((SpCategory) param, null);
+            } else if (operationID == OPERATION_ADD_ITEM && param instanceof SpCategoryItem) {
+                provider.addCategoryItem((SpCategoryItem) param, null);
+            } else if (operationID == OPERATION_FETCH_ITEMS && param instanceof Integer) {
                 ArrayList<SpCategory> cats = provider.getAllCategoriesBySankalpType((Integer) param);
                 for (SpCategory c : cats) {
                     items.put(c, provider.getAllCategoryItemsByCategoryId(c.getId()));
@@ -314,8 +263,7 @@ public class SpItemSelectionDialog extends DialogFragment implements SearchView.
             if (success) {
                 if (operationID == OPERATION_ADD_CATEGORY || operationID == OPERATION_ADD_ITEM) {
                     _loadData();
-                }
-                else if (operationID == OPERATION_FETCH_ITEMS) {
+                } else if (operationID == OPERATION_FETCH_ITEMS) {
                     if (items != null) {
                         _loadListView(items);
                     }
@@ -335,13 +283,12 @@ public class SpItemSelectionDialog extends DialogFragment implements SearchView.
         private HashMap<SpCategory, List<SpCategoryItem>> _listDataChild;
 
         public ExpandableListAdapter(
-                                     HashMap<SpCategory, List<SpCategoryItem>> listChildData) {
+                HashMap<SpCategory, List<SpCategoryItem>> listChildData) {
 
             _setData(listChildData);
         }
 
-        private void _setData(HashMap<SpCategory, List<SpCategoryItem>> listChildData)
-        {
+        private void _setData(HashMap<SpCategory, List<SpCategoryItem>> listChildData) {
             ArrayList<SpCategory> categories = new ArrayList(listChildData.keySet());
             Collections.sort(categories, new Comparator<SpCategory>() {
                 @Override
@@ -423,7 +370,8 @@ public class SpItemSelectionDialog extends DialogFragment implements SearchView.
 
             SpCategory itemHeader = (SpCategory) getGroup(groupPosition);
 
-            LayoutInflater inflater = LayoutInflater.from(getContext());;
+            LayoutInflater inflater = LayoutInflater.from(getContext());
+            ;
 
             View view = null;
             if (convertView == null) {
@@ -434,12 +382,6 @@ public class SpItemSelectionDialog extends DialogFragment implements SearchView.
 
             ImageView icon = (ImageView) view.findViewById(R.id.header_icon);
             icon.setImageDrawable(SpUtils.getIconDrawable(itemHeader, getContext()));
-
-//            if (itemHeader.isIconVisible()) {
-//                icon.setImageResource(itemHeader.getIcon());
-//            } else {
-//                icon.setVisibility(View.GONE);
-//            }
 
             TextView textTitle = (TextView) view.findViewById(R.id.headerTv);
             textTitle.setText(" " + itemHeader.getCategoryName());
@@ -480,8 +422,7 @@ public class SpItemSelectionDialog extends DialogFragment implements SearchView.
             HashMap<SpCategory, List<SpCategoryItem>> filterMap = new HashMap<SpCategory, List<SpCategoryItem>>();
             if (TextUtils.isEmpty(query)) {
                 filterMap.putAll(_originalListDataChild);
-            }
-            else {
+            } else {
 
                 Iterator<SpCategory> i = _listDataChild.keySet().iterator();
                 while (i.hasNext()) {
@@ -491,8 +432,7 @@ public class SpItemSelectionDialog extends DialogFragment implements SearchView.
 
                     if (category.getCategoryName().toLowerCase().contains(query.toLowerCase())) {
                         filterItemsList.addAll(l);
-                    }
-                    else {
+                    } else {
                         for (SpCategoryItem item : l) {
                             if (item.getCategoryItemName().toLowerCase().contains(query.toLowerCase())) {
                                 filterItemsList.add(item);
@@ -505,29 +445,11 @@ public class SpItemSelectionDialog extends DialogFragment implements SearchView.
                     }
                 }
             }
-//            else {
-//                SpCategory lastCategory = null;
-//                for (Object item : originalItems) {
-//                    if (item instanceof SpCategory) {
-//                        lastCategory = (SpCategory) item;
-//                    }
-//                    else {
-//                        SpCategoryItem categoryItem = (SpCategoryItem) item;
-//                        if (categoryItem.getCategoryItemName().contains(query)) {
-//                            if (lastCategory != null) {
-//                                filterList.add(lastCategory);
-//                            }
-//                            filterList.add(categoryItem);
-//                        }
-//                    }
-//                }
-//            }
             reloadData(filterMap);
             _expandAll();
         }
 
-        public void reloadData(HashMap<SpCategory, List<SpCategoryItem>> filterMap)
-        {
+        public void reloadData(HashMap<SpCategory, List<SpCategoryItem>> filterMap) {
             _listDataChild.clear();
             _listDataHeader.clear();
             _setData(filterMap);
@@ -539,178 +461,4 @@ public class SpItemSelectionDialog extends DialogFragment implements SearchView.
             TextView label;
         }
     }
-
-    /*private class SimpleDialogAdapter extends ArrayAdapter {
-        // View lookup cache
-        private class ViewHolder {
-            ImageView icon;
-            TextView label;
-        }
-
-        public SimpleDialogAdapter(Context context, ArrayList originalItems) {
-            super(context, R.layout.icon_one_line_list_item_layout, originalItems);
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            // Get the data item for this position
-            Object item = getItem(position);
-            // Check if an existing view is being reused, otherwise inflate the view
-            ViewHolder viewHolder; // view lookup cache stored in tag
-            if (convertView == null) {
-                // If there's no view to re-use, inflate a brand new view for row
-                viewHolder = new ViewHolder();
-                LayoutInflater inflater = LayoutInflater.from(getContext());
-                convertView = inflater.inflate(R.layout.icon_one_line_list_item_layout, parent, false);
-                viewHolder.icon = (ImageView) convertView.findViewById(R.id.add_icon);
-                viewHolder.label = (TextView) convertView.findViewById(R.id.add_label);
-                // Cache the viewHolder object inside the fresh view
-                convertView.setTag(viewHolder);
-            } else {
-                // View is being recycled, retrieve the viewHolder object from tag
-                viewHolder = (ViewHolder) convertView.getTag();
-            }
-            // Populate the data into the template view using the data object
-            String label = item instanceof SpCategory ? ((SpCategory)item).getCategoryDisplayName() : ((SpCategoryItem)item).getCategoryItemDisplayName();
-            viewHolder.label.setText(label);
-
-            String letter = String.valueOf(label.toCharArray()[0]).toUpperCase();
-            SpColorGenerator generator = SpColorGenerator.MATERIAL;
-            SpTextDrawable drawable = SpTextDrawable.builder()
-                    .buildRound(letter, generator.getRandomColor());
-            viewHolder.icon.setImageDrawable(drawable);
-            // Return the completed view to render on screen
-            return convertView;
-        }
-    }*/
-
-   /* private class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-
-        private static final int TYPE_HEADER = 0;
-        private static final int TYPE_ITEM = 1;
-
-        private List itemsList;
-
-        public ItemsAdapter(List list) {
-
-            itemsList = list;
-        }
-
-        @Override
-        public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            if (viewType == TYPE_ITEM) {
-                View itemView = LayoutInflater.from(parent.getContext())
-                        .inflate(R.layout.icon_one_line_list_item_layout, parent, false);
-                return new ItemViewHolder(itemView);
-            } else if (viewType == TYPE_HEADER) {
-                View headerView = LayoutInflater.from(parent.getContext())
-                        .inflate(R.layout.rcv_header_layout, parent, false);
-                return new HeaderViewHolder(headerView);
-            }
-
-            return null;
-        }
-
-        @Override
-        public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
-
-            Object itemO = itemsList.get(position);
-            if (viewHolder instanceof ItemViewHolder) {
-
-                ItemViewHolder itemViewHolder = (ItemViewHolder) viewHolder;
-                SpCategoryItem item = (SpCategoryItem) itemO;
-                String label = item.getCategoryItemDisplayName();
-                itemViewHolder.label.setText(label);
-
-                String letter = String.valueOf(label.toCharArray()[0]).toUpperCase();
-                SpColorGenerator generator = SpColorGenerator.MATERIAL;
-                SpTextDrawable drawable = SpTextDrawable.builder()
-                        .buildRound(letter, generator.getRandomColor());
-                itemViewHolder.icon.setImageDrawable(drawable);
-
-            } else if (viewHolder instanceof HeaderViewHolder) {
-                //cast holder to VHHeader and set data for header.
-                HeaderViewHolder itemViewHolder = (HeaderViewHolder) viewHolder;
-                SpCategory item = (SpCategory) itemO;
-                String label = item.getCategoryDisplayName();
-                itemViewHolder.label.setText(label);
-            }
-        }
-
-        @Override
-        public int getItemCount() {
-            return itemsList.size();
-        }
-
-        @Override
-        public int getItemViewType(int position) {
-            if (isPositionHeader(position))
-                return TYPE_HEADER;
-
-            return TYPE_ITEM;
-        }
-
-        private boolean isPositionHeader(int position) {
-            if (itemsList.get(position) instanceof SpCategory) return true;
-            return false;
-        }
-
-        public void filter(String query) {
-
-            ArrayList filterList = new ArrayList();
-            if (TextUtils.isEmpty(query)) {
-                filterList.addAll(originalItems);
-            }
-            else {
-                SpCategory lastCategory = null;
-                for (Object item : originalItems) {
-                    if (item instanceof SpCategory) {
-                        lastCategory = (SpCategory) item;
-                    }
-                    else {
-                        SpCategoryItem categoryItem = (SpCategoryItem) item;
-                        if (categoryItem.getCategoryItemName().contains(query)) {
-                            if (lastCategory != null) {
-                                filterList.add(lastCategory);
-                            }
-                            filterList.add(categoryItem);
-                        }
-                    }
-                }
-            }
-            itemsList.clear();
-            itemsList.addAll(filterList);
-            notifyDataSetChanged();
-        }
-
-        class ItemViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
-            TextView label;
-            ImageView icon;
-            LinearLayout container;
-
-            public ItemViewHolder(View view) {
-                super(view);
-                container = (LinearLayout) view.findViewById(R.id.rcv_item_container);
-                icon = (ImageView) view.findViewById(R.id.add_icon);
-                label = (TextView) view.findViewById(R.id.add_label);
-                view.setOnClickListener(this);
-            }
-
-            @Override
-            public void onClick(View view) {
-                int position = getAdapterPosition();
-                onItemClick(itemsList.get(position));
-            }
-        }
-
-        class HeaderViewHolder extends RecyclerView.ViewHolder {
-            TextView label;
-            public HeaderViewHolder(View view) {
-                super(view);
-                label = (TextView) view.findViewById(R.id.headerTv);
-            }
-        }
-
-
-    }*/
 }

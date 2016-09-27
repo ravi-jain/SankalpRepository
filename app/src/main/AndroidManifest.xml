@@ -18,9 +18,6 @@
             </intent-filter>
         </receiver>
 
-        <!--<activity android:name=".activities.SpMainActivity">
-        </activity>-->
-
         <activity
             android:name=".activities.SpAddSankalpActivity"
             android:label="@string/title_activity_sp_add_sankalp"
@@ -42,13 +39,6 @@
             android:name=".activities.SpUserSetupActivity"
             android:label="@string/title_activity_user_setup"
             android:noHistory="true" />
-        <!--<activity
-            android:name=".activities.SpSankalpDetailsActivity"
-            android:label="@string/Details">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.ravijain.sankalp.activities.SpSankalpList" />
-        </activity>-->
         <activity
             android:name=".activities.SpMaterialDashboardActivity"
             android:label="@string/title_activity_sp_material_dashboard">

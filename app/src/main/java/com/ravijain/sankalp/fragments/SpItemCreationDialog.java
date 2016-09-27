@@ -7,9 +7,9 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 
 import com.ravijain.sankalp.R;
-import com.ravijain.sankalp.support.SpConstants;
 import com.ravijain.sankalp.data.SpCategory;
 import com.ravijain.sankalp.data.SpContentProvider;
+import com.ravijain.sankalp.support.SpConstants;
 
 import java.util.ArrayList;
 
