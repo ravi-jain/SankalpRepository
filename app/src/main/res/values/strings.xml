@@ -130,4 +130,182 @@
     <string name="categoryName">Category Name</string>
     <string name="itemName">Item Name</string>
     <string name="quoteHeader">Quote of the day</string>
+    <string name="multiDeletePrompt">The selected sankalps will be deleted forever. Proceed?</string>
+    <string name="singleDeletePrompt">The sankalp will be deleted forever. Proceed?</string>
+    <string name="sort">Sort By</string>
+    <string name="endDate">End Date</string>
+    <string name="startDate">Start Date</string>
+    <string name="creationDate">Creation Date</string>
+
+    <!-- Categories -->
+    <string name="Entertainment">Entertainment</string>
+    <string name="Travel">Travel</string>
+    <string name="Cosmetic">Cosmetic Products</string>
+    <string name="Dharma">Dharma</string>
+
+    <!-- SubCategories -->
+    <string name="GeneralGreen">General Green</string>
+    <string name="GreenVegetables">Green Vegetables</string>
+    <string name="GreenLeaves">Green Leaves</string>
+    <string name="GreenFruits">Green Fruits</string>
+    <string name="GreenAbhakshya">Green Abhakshya</string>
+    <string name="Ras">Ras</string>
+    <string name="Spices">Spices</string>
+    <string name="Anaaj">Anaaj</string>
+    <string name="Abhaksya">Abhakshya</string>
+
+    <!-- Item Names -->
+
+    <!-- Anaaj -->
+    <string name="WHEAT">Wheat</string>
+    <string name="RICE">Rice</string>
+    <string name="JAU">Jau</string>
+    <string name="MATAR">Matar</string>
+    <string name="JVAR">Jawar</string>
+    <string name="RAJMA">Rajma</string>
+    <string name="CORN">Corn</string>
+    <string name="BAJRA">Bajra</string>
+    <string name="TIL">Til</string>
+    <string name="ARHAR_DAAL">Arhar Daal</string>
+    <string name="CHAWLA_DAAL">Chawla Daal</string>
+    <string name="MOTH_DAAL">Moth Daal</string>
+    <string name="MASUR_DAAL">Masur Daal</string>
+    <string name="URAD_DAAL">Urad Daal</string>
+    <string name="MOONG_DAAL">Moong Daal</string>
+    <string name="CHANA_DAAL">Chana Daal</string>
+    <string name="SOYABEAN">Soyabean</string>
+
+    <!-- Spices -->
+    <string name="HEENG">Heeng</string>
+    <string name="DAANA_METHI">Daana Methi</string>
+    <string name="KESAR">Kesar</string>
+    <string name="KHAR">Khar</string>
+    <string name="JEERA">Jeera</string>
+    <string name="DHANIA">Dhania</string>
+    <string name="LAL_MIRCH">Lal Mirch</string>
+    <string name="AMCHOOR">Amchoor</string>
+    <string name="SARSO">Sarso</string>
+    <string name="HALDI">Haldi</string>
+    <string name="AJWAYAN">Ajwayan</string>
+    <string name="LAUNG">Laung</string>
+    <string name="SAUNF">Saunf</string>
+    <string name="ILAICHI">Ilaichi</string>
+    <string name="KALI_MIRCH">Kali Mirch</string>
+    <string name="TEJPATTA">Tejpatta</string>
+    <string name="DRY_IMLI">Dry Imli</string>
+    <string name="KACHRI">Kachri</string>
+    <string name="SAUNTH">Saunth</string>
+    <string name="GOOND">Goond</string>
+    <string name="DALCHINI">Dalchini</string>
+
+    <!-- General Green -->
+    <string name="KETHA">Ketha</string>
+    <string name="SUGARCANE">Sugarcane</string>
+    <string name="DONGRA">Dongra</string>
+    <string name="KACCHA_BADAM">Kaccha Badam</string>
+    <string name="JAMOON">Jamoon</string>
+    <string name="KHIRNI">Khirni</string>
+    <string name="AWLAAN">Awlaan</string>
+    <string name="KHURMANI">Khurmani</string>
+    <string name="KAMALGATTA">Kamlagatta</string>
+    <string name="SINGHADA">Singhada</string>
+    <string name="BEL">Bek</string>
+    <string name="LEMON">Lemon</string>
+    <string name="IMLI">Imli</string>
+
+    <!-- Green Vegetables -->
+    <string name="TURAI">Turai</string>
+    <string name="PARWAL">Parwal</string>
+    <string name="GREEN_CHILLI">Green Chilli</string>
+    <string name="LAUKI">Lauki</string>
+    <string name="KADDU">Kaddu</string>
+    <string name="LASODE">Lasode</string>
+    <string name="KARONDA">Karonda</string>
+    <string name="TINDSI">Tindsi</string>
+    <string name="TINDORI">Tindori</string>
+    <string name="TOMATO">Tomato</string>
+    <string name="BHINDI">Bhindi</string>
+    <string name="SEAM">Seam</string>
+    <string name="KARELA">Karela</string>
+
+    <!-- Green Leaves -->
+    <string name="PUDINA">Pudina</string>
+    <string name="DHANIYA">Dhaniya</string>
+    <string name="MOOLI_PATTA">Mooli Patta</string>
+    <string name="PALAK">Palak</string>
+    <string name="TULSI">Tulsi</string>
+    <string name="PAAN_PATTA">Paan Patta</string>
+    <string name="METHI_PATTA">Methi Patta</string>
+
+    <!-- Green Fruits -->
+    <string name="MANGO">Mango</string>
+    <string name="BANANA">Banana</string>
+    <string name="ORANGE">Orange</string>
+    <string name="MAUSAMBI">Mausambi</string>
+    <string name="APPLE">Apple</string>
+    <string name="POMEGRANATE">Pomegranate</string>
+    <string name="CHEEKU">Cheeku</string>
+    <string name="AMRUD">Amrud</string>
+    <string name="KHARBOOJA">Kharbooja</string>
+    <string name="COCONUT">Coconut</string>
+    <string name="WATERMELON">Watermelon</string>
+    <string name="GRAPES">Grapes</string>
+    <string name="SITAPHAL">Sitaphal</string>
+    <string name="NASPATI">Naspati</string>
+    <string name="ANARAS">Anaras</string>
+    <string name="PAPAYA">Papaya</string>
+    <string name="PLUM">Plum</string>
+    <string name="CHERRY">Cherry</string>
+    <string name="LITCHIE">Litchie</string>
+
+    <!-- Green Abhakshya -->
+    <string name="ANJEER">Anjeer</string>
+    <string name="POTATO">Potato</string>
+    <string name="ONION">Onion</string>
+    <string name="GARLIC">Garlic</string>
+    <string name="GINGER">Ginger</string>
+    <string name="SHAKARGAND">Shakargand</string>
+    <string name="CARROT">Carrot</string>
+    <string name="MOOLI">Mooli</string>
+    <string name="ARBI">Arbi</string>
+    <string name="BRINJAL">Brinjal</string>
+    <string name="CABBAGE">Cabbage</string>
+    <string name="HONEY">Honey</string>
+
+    <!-- Entertainment -->
+    <string name="Gambling">Gambling</string>
+    <string name="Hunting">Hunting</string>
+    <string name="Adultery">Adultery</string>
+    <string name="Lottery">Lottery</string>
+    <string name="Paan">Paan</string>
+    <string name="Gutkha">Gutkha</string>
+    <string name="Cigarettes">Cigarettes</string>
+    <string name="Drugs">Drugs</string>
+    <string name="Tv">TV</string>
+    <string name="Movies">Movies</string>
+    <string name="Dining">Dining</string>
+
+    <!-- Cosmetic -->
+    <string name="Powder">Powder</string>
+    <string name="Cream">Cream</string>
+    <string name="Perfume">Perfume</string>
+    <string name="Soap">Soap</string>
+    <string name="Facewash">Facewash</string>
+    <string name="Toothpaste">Toothpaste</string>
+    <string name="Woollen">Woolen</string>
+    <string name="Silk">Silk</string>
+    <string name="Lipstick">Lipstick</string>
+    <string name="NailPolish">nailPolish</string>
+    <string name="Shampoo">Shampoo</string>
+    <string name="Fur">Fur</string>
+    <string name="Leather">Leather</string>
+
+    <!-- Dharma -->
+    <string name="Mala">Mala</string>
+    <string name="DevDarshan">Darshan</string>
+    <string name="Kalash">Kalash</string>
+    <string name="Swadhyaya">Swadhyaya</string>
+    <string name="Teerth">Teerth</string>
+    <string name="Pratikraman">Pratikraman</string>
+    <string name="Upvaas">Upvaas</string>
 </resources>

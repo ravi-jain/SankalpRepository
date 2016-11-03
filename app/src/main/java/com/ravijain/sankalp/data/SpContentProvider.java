@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.text.TextUtils;
 
+import com.ravijain.sankalp.R;
 import com.ravijain.sankalp.support.SpConstants;
 import com.ravijain.sankalp.support.SpDateUtils;
 
@@ -29,6 +30,7 @@ public class SpContentProvider {
 
     private SpContentProvider(Context context) {
         _context = context;
+
         _dbHelper = new SpDBHelper(context);
     }
 
@@ -120,7 +122,7 @@ public class SpContentProvider {
                 while (cursor.isAfterLast() == false) {
                     SpCategory category = new SpCategory(cursor.getInt(cursor.getColumnIndexOrThrow(SpTableContract.SpCategoryTable._ID)),
                             cursor.getString(cursor.getColumnIndexOrThrow(SpTableContract.SpCategoryTable.COLUMN_CATEGORY_NAME)),
-                            cursor.getString(cursor.getColumnIndexOrThrow(SpTableContract.SpCategoryTable.COLUMN_CATEGORY_DISPLAYNAME)),
+                            cursor.getString(cursor.getColumnIndexOrThrow(SpTableContract.SpCategoryTable.COLUMN_SUB_CATEGORY)),
                             cursor.getInt(cursor.getColumnIndexOrThrow(SpTableContract.SpCategoryTable.COLUMN_CATEGORY_TYPE)));
                     _categories.put(category.getId(), category);
                     cursor.moveToNext();
@@ -145,7 +147,6 @@ public class SpContentProvider {
                 while (cursor.isAfterLast() == false) {
                     SpCategoryItem item = new SpCategoryItem(cursor.getInt(cursor.getColumnIndexOrThrow(SpTableContract.SpItemTable._ID)),
                             cursor.getString(cursor.getColumnIndexOrThrow(SpTableContract.SpItemTable.COLUMN_ITEM_NAME)),
-                            cursor.getString(cursor.getColumnIndexOrThrow(SpTableContract.SpItemTable.COLUMN_ITEM_DISPLAYNAME)),
                             cursor.getInt(cursor.getColumnIndexOrThrow(SpTableContract.SpItemTable.COLUMN_ITEM_CATEGORY_ID)));
                     _categoryItems.put(item.getId(), item);
                     cursor.moveToNext();
@@ -173,7 +174,7 @@ public class SpContentProvider {
             while (cursor.isAfterLast() == false) {
                 SpCategory category = new SpCategory(cursor.getInt(cursor.getColumnIndexOrThrow(SpTableContract.SpCategoryTable._ID)),
                         cursor.getString(cursor.getColumnIndexOrThrow(SpTableContract.SpCategoryTable.COLUMN_CATEGORY_NAME)),
-                        cursor.getString(cursor.getColumnIndexOrThrow(SpTableContract.SpCategoryTable.COLUMN_CATEGORY_DISPLAYNAME)),
+                        cursor.getString(cursor.getColumnIndexOrThrow(SpTableContract.SpCategoryTable.COLUMN_SUB_CATEGORY)),
                         cursor.getInt(cursor.getColumnIndexOrThrow(SpTableContract.SpCategoryTable.COLUMN_CATEGORY_TYPE)));
                 categories.put(category.getCategoryName(), category);
                 cursor.moveToNext();
@@ -199,7 +200,7 @@ public class SpContentProvider {
             while (cursor.isAfterLast() == false) {
                 SpCategory category = new SpCategory(cursor.getInt(cursor.getColumnIndexOrThrow(SpTableContract.SpCategoryTable._ID)),
                         cursor.getString(cursor.getColumnIndexOrThrow(SpTableContract.SpCategoryTable.COLUMN_CATEGORY_NAME)),
-                        cursor.getString(cursor.getColumnIndexOrThrow(SpTableContract.SpCategoryTable.COLUMN_CATEGORY_DISPLAYNAME)),
+                        cursor.getString(cursor.getColumnIndexOrThrow(SpTableContract.SpCategoryTable.COLUMN_SUB_CATEGORY)),
                         cursor.getInt(cursor.getColumnIndexOrThrow(SpTableContract.SpCategoryTable.COLUMN_CATEGORY_TYPE)));
                 categories.add(category);
                 cursor.moveToNext();
@@ -247,7 +248,6 @@ public class SpContentProvider {
             while (cursor.isAfterLast() == false) {
                 SpCategoryItem item = new SpCategoryItem(cursor.getInt(cursor.getColumnIndexOrThrow(SpTableContract.SpItemTable._ID)),
                         cursor.getString(cursor.getColumnIndexOrThrow(SpTableContract.SpItemTable.COLUMN_ITEM_NAME)),
-                        cursor.getString(cursor.getColumnIndexOrThrow(SpTableContract.SpItemTable.COLUMN_ITEM_DISPLAYNAME)),
                         cursor.getInt(cursor.getColumnIndexOrThrow(SpTableContract.SpItemTable.COLUMN_ITEM_CATEGORY_ID)));
                 items.add(item);
                 cursor.moveToNext();
@@ -262,10 +262,9 @@ public class SpContentProvider {
         //SQLiteDatabase db = _dbHelper.getWritableDatabase();
         db.beginTransaction();
         try {
-            Hashtable<String, SpCategory> defaultCategories = SpCategory.getDefaultCategories();
-            Iterator<SpCategory> iterator = defaultCategories.values().iterator();
-            while (iterator.hasNext()) {
-                SpCategory category = iterator.next();
+            ArrayList<SpCategory> defaultCategories = SpCategory.getDefaultCategories();
+
+            for(SpCategory category : defaultCategories) {
                 addCategory(category, db);
             }
             db.setTransactionSuccessful();
@@ -275,7 +274,7 @@ public class SpContentProvider {
 
     }
 
-    public void addCategory(SpCategory category, SQLiteDatabase db)
+    public long addCategory(SpCategory category, SQLiteDatabase db)
     {
         boolean closeDblocally = false;
         if (db == null) {
@@ -287,22 +286,22 @@ public class SpContentProvider {
             values.put(SpTableContract.SpCategoryTable._ID, category.getId());
         }
         values.put(SpTableContract.SpCategoryTable.COLUMN_CATEGORY_NAME, category.getCategoryName());
-        values.put(SpTableContract.SpCategoryTable.COLUMN_CATEGORY_DISPLAYNAME, category.getCategoryDisplayName());
+        values.put(SpTableContract.SpCategoryTable.COLUMN_SUB_CATEGORY, category.getSubCategoryName());
         values.put(SpTableContract.SpCategoryTable.COLUMN_CATEGORY_TYPE, category.getSankalpType());
-        db.insert(SpTableContract.SpCategoryTable.TABLE_NAME, null, values);
+        long id = db.insert(SpTableContract.SpCategoryTable.TABLE_NAME, null, values);
 
         if (closeDblocally) {
             db.close();
         }
+
+        return id;
     }
 
     public void bulkInsertCategoryItems(SQLiteDatabase db) {
         db.beginTransaction();
         try {
-            Hashtable<String, SpCategoryItem> defaultCategoryItems = SpCategoryItem.getDefaultCategoryItems();
-            Iterator<SpCategoryItem> iterator = defaultCategoryItems.values().iterator();
-            while (iterator.hasNext()) {
-                SpCategoryItem item = iterator.next();
+            ArrayList<SpCategoryItem> defaultCategoryItems = SpCategoryItem.getDefaultCategoryItems();
+            for (SpCategoryItem item : defaultCategoryItems) {
                 addCategoryItem(item, db);
             }
             db.setTransactionSuccessful();
@@ -325,7 +324,6 @@ public class SpContentProvider {
         }
 
         values.put(SpTableContract.SpItemTable.COLUMN_ITEM_NAME, item.getCategoryItemName());
-        values.put(SpTableContract.SpItemTable.COLUMN_ITEM_DISPLAYNAME, item.getCategoryItemDisplayName());
         values.put(SpTableContract.SpItemTable.COLUMN_ITEM_CATEGORY_ID, item.getCategoryId());
         db.insert(SpTableContract.SpItemTable.TABLE_NAME, null, values);
 
@@ -564,6 +562,9 @@ public class SpContentProvider {
 
         int isNotificationOn = cursor.getInt(cursor.getColumnIndexOrThrow(SpTableContract.SpSankalpTable.COLUMN_ISNOTIFICATION_ON));
         sankalp.setNotification(isNotificationOn);
+
+        long creationDate = cursor.getLong(cursor.getColumnIndexOrThrow(SpTableContract.SpSankalpTable.COLUMN_CREATION_DATE));
+        sankalp.setCreationDate(new Date(creationDate));
 
         long fromDate = cursor.getLong(cursor.getColumnIndexOrThrow(SpTableContract.SpSankalpTable.COLUMN_FROM_DATE));
         sankalp.setFromDate(new Date(fromDate));

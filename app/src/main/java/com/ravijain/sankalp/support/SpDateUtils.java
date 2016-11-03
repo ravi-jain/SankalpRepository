@@ -220,7 +220,13 @@ public class SpDateUtils {
             }
         }
 
-        return getNumericalDayString(fromDate) + " - " + getNumericalDayString(toDate);
+        if (shortRepresentation) {
+            return subtract(toDate, fromDate, Calendar.DATE) + " days";
+        }
+        else {
+            return getDayString(c1) + " - " + getDayString(c2);
+        }
+
 
     }
 

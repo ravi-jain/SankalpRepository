@@ -44,4 +44,10 @@ public interface SpConstants {
     public static final String FRAGMENT_TAG_CATEGORY = "category";
     public static final String FRAGMENT_TAG_FILTER = "filter";
     public static final String FRAGMENT_TAG_INTERVAL = "interval";
+    public static final String FRAGMENT_TAG_SORT = "sort";
+
+    public static final String INTENT_SORTID = "INTENT_SORTID";
+    public static final int SORT_ORDER_ASCENDING = 1;
+    public static final int SORT_ORDER_DESCENDING = -1;
+    String FRAGMENT_TAG_USER_PROFILE = "user_profile";
 }

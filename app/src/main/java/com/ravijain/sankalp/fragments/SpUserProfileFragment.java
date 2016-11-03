@@ -82,18 +82,11 @@ public class SpUserProfileFragment extends Fragment {
         _mEmailView.addTextChangedListener(new FormInputTextWatcher(_mEmailView));
         _mCityView.addTextChangedListener(new FormInputTextWatcher(_mCityView));
 
-        /*Button mEmailSignInButton = (Button) v.findViewById(R.id.userRegister_button);
-        mEmailSignInButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                _registerUser();
-            }
-        });*/
-
         _mUserSetUpView = v.findViewById(R.id.userSetup_form);
         _mProgressView = v.findViewById(R.id.userSetup_progress);
 
         if (_isUserAlreadyCreated) {
+            v.findViewById(R.id.optionalUserFields).setVisibility(View.VISIBLE);
             _loadedUser = SpContentProvider.getInstance(getContext()).getUser();
             String name = _loadedUser.getName();
             String mobile = _loadedUser.getMobile();
@@ -114,11 +107,11 @@ public class SpUserProfileFragment extends Fragment {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.menu_user_profile, menu);
-        if (_isUserAlreadyCreated) {
-            menu.findItem(R.id.action_registerUser).setVisible(false);
-        } else {
-            menu.findItem(R.id.action_updateProfile).setVisible(false);
-        }
+//        if (_isUserAlreadyCreated) {
+//            menu.findItem(R.id.action_registerUser).setVisible(false);
+//        } else {
+//            menu.findItem(R.id.action_updateProfile).setVisible(false);
+//        }
     }
 
     @Override
@@ -126,9 +119,6 @@ public class SpUserProfileFragment extends Fragment {
         int id = item.getItemId();
         if (id == R.id.action_updateProfile) {
             _updateUser();
-            return true;
-        } else if (id == R.id.action_registerUser) {
-            _registerUser();
             return true;
         }
 
@@ -144,7 +134,7 @@ public class SpUserProfileFragment extends Fragment {
         }
     }
 
-    private void _registerUser() {
+    public void registerUser() {
         {
             if (mRegisterTask != null) {
                 return;
@@ -164,10 +154,6 @@ public class SpUserProfileFragment extends Fragment {
 
     private SpUser _getCurrentUser() {
         if (!_validateName()) {
-            return null;
-        }
-
-        if (!_validateEmail()) {
             return null;
         }
 

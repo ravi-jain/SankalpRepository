@@ -161,7 +161,7 @@ public class SpItemSelectionDialog extends DialogFragment implements SearchView.
         _listView = (ExpandableListView) _rootView.findViewById(R.id.lvExp);
         _listView.setAdapter(_adapter);
 
-        _listView.expandGroup(0);
+        //_listView.expandGroup(0);
 
         _listView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
             @Override
@@ -293,7 +293,7 @@ public class SpItemSelectionDialog extends DialogFragment implements SearchView.
             Collections.sort(categories, new Comparator<SpCategory>() {
                 @Override
                 public int compare(SpCategory category, SpCategory t1) {
-                    return category.getCategoryName().toLowerCase().compareTo(t1.getCategoryName().toLowerCase());
+                    return category.getCategoryDisplayName(getContext()).toLowerCase().compareTo(t1.getCategoryDisplayName(getContext()).toLowerCase());
                 }
             });
             this._listDataHeader = categories;
@@ -331,7 +331,7 @@ public class SpItemSelectionDialog extends DialogFragment implements SearchView.
             }
 
             // Populate the data into the template view using the data object
-            String label = item.getCategoryItemDisplayName();
+            String label = item.getCategoryItemDisplayName(getContext());
             viewHolder.label.setText(label);
 
             String letter = String.valueOf(label.toCharArray()[0]).toUpperCase();
@@ -384,7 +384,7 @@ public class SpItemSelectionDialog extends DialogFragment implements SearchView.
             icon.setImageDrawable(SpUtils.getIconDrawable(itemHeader, getContext()));
 
             TextView textTitle = (TextView) view.findViewById(R.id.headerTv);
-            textTitle.setText(" " + itemHeader.getCategoryName());
+            textTitle.setText(" " + itemHeader.getCategoryDisplayName(getContext()));
 
 
             ImageView iconExpand = (ImageView) view.findViewById(R.id.icon_expand);

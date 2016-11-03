@@ -1,6 +1,7 @@
 package com.ravijain.sankalp.fragments;
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -13,6 +14,7 @@ import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.ShareActionProvider;
 import android.support.v7.widget.SwitchCompat;
 import android.text.TextUtils;
+import android.util.SparseBooleanArray;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -85,6 +87,7 @@ public class SpAddSankalpFragment extends Fragment implements View.OnClickListen
         inflater.inflate(R.menu.menu_sp_add_sankalp, menu);
         if (_isEditMode) {
             menu.findItem(R.id.action_addSankalp).setTitle(getString(R.string.update));
+            menu.findItem(R.id.action_deleteSankalp).setVisible(true);
             MenuItem item = menu.findItem(R.id.action_share).setVisible(true);
 
             ShareActionProvider shareActionProvider = (ShareActionProvider) MenuItemCompat.getActionProvider(item);
@@ -113,6 +116,39 @@ public class SpAddSankalpFragment extends Fragment implements View.OnClickListen
             }
 
             return true;
+        } else if (id == R.id.action_deleteSankalp) {
+
+            new AlertDialog.Builder(getContext())
+                    //set message, title, and icon
+                    .setTitle(getString(R.string.deleteSankalp))
+                    .setMessage(getString(R.string.singleDeletePrompt))
+                    .setIcon(R.drawable.ic_delete_black_24dp)
+
+                    .setPositiveButton(R.string.deleteSankalp, new DialogInterface.OnClickListener() {
+
+                        public void onClick(DialogInterface dialog, int whichButton) {
+
+                            dialog.dismiss();
+                            ArrayList<SpSankalp> sankalpsToBeDeleted = new ArrayList<SpSankalp>();
+                            sankalpsToBeDeleted.add(_editedSankalp);
+                            SpContentProvider provider = SpContentProvider.getInstance(getContext());
+                            provider.deleteSankalps(sankalpsToBeDeleted);
+
+                            getActivity().setResult(Activity.RESULT_OK);
+                            NavUtils.navigateUpFromSameTask(getActivity());
+                        }
+
+                    })
+                    .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+
+                            dialog.dismiss();
+                            NavUtils.navigateUpFromSameTask(getActivity());
+
+                        }
+                    })
+                    .create().show();
+            return true;
         }
 
         return super.onOptionsItemSelected(item);
@@ -121,6 +157,7 @@ public class SpAddSankalpFragment extends Fragment implements View.OnClickListen
     private void _setSummaryTextView(SpSankalp editedSankalp) {
 
         View container = _rootView.findViewById(R.id.summary_ll);
+
         if (editedSankalp == null) {
             container.setVisibility(View.GONE);
         } else {
@@ -130,7 +167,7 @@ public class SpAddSankalpFragment extends Fragment implements View.OnClickListen
                 sankalpSummaryTV.setText(editedSankalp.getSankalpSummary());
             }
         }
-
+        container.setVisibility(View.GONE);
     }
 
     private boolean _hasRequiredFields(SpSankalp s) {
@@ -150,7 +187,7 @@ public class SpAddSankalpFragment extends Fragment implements View.OnClickListen
 //                getString(R.string.sankalpCategory), value);
 
         // Item
-        String value = s == null || s.getItem() == null ? getString(R.string.itemSelectPrompt) : s.getItem().getCategoryItemDisplayName();
+        String value = s == null || s.getItem() == null ? getString(R.string.itemSelectPrompt) : s.getItem().getCategoryItemDisplayName(getContext());
         _loadItemView(_rootView.findViewById(R.id.item_view), R.drawable.ic_class_black_24dp,
                 getString(R.string.sankalpItem), value);
 
@@ -182,8 +219,7 @@ public class SpAddSankalpFragment extends Fragment implements View.OnClickListen
         View v = _rootView.findViewById(R.id.currentCount_view);
         if (s != null && s.getExceptionOrTarget() != null && s.getExceptionOrTarget().getExceptionOrTargetCountCurrent() > -1) {
             value = String.valueOf(s.getExceptionOrTarget().getExceptionOrTargetCountCurrent());
-        }
-        else {
+        } else {
             value = getString(R.string.exTarSelectPrompt) + " " + exTarCurrentCountLabel.toLowerCase();
         }
         _loadItemView(v, R.drawable.ic_trending_flat_black_24dp, exTarCurrentCountLabel, value);
@@ -262,13 +298,12 @@ public class SpAddSankalpFragment extends Fragment implements View.OnClickListen
         valueView.setText(value);
     }
 
-    private void _updateView(int viewId, SpSankalp s)
-    {
+    private void _updateView(int viewId, SpSankalp s) {
         String value = "";
         boolean summaryChanged = false;
         switch (viewId) {
             case R.id.item_view:
-                value = s.getItem().getCategoryItemName();
+                value = s.getItem().getCategoryItemDisplayName(getContext());
                 summaryChanged = true;
                 break;
             case R.id.period_view:
@@ -276,13 +311,12 @@ public class SpAddSankalpFragment extends Fragment implements View.OnClickListen
                 summaryChanged = true;
                 break;
             case R.id.exTar_view:
-                value =  s.getExceptionOrTarget().getRepresentationalSummary();
+                value = s.getExceptionOrTarget().getRepresentationalSummary();
                 summaryChanged = true;
                 View v = _rootView.findViewById(R.id.currentCount_view);
                 if (s.getExceptionOrTarget().getExceptionOrTargetCount() > 0) {
                     v.setVisibility(View.VISIBLE);
-                }
-                else {
+                } else {
                     v.setVisibility(View.GONE);
                 }
                 break;
@@ -303,11 +337,6 @@ public class SpAddSankalpFragment extends Fragment implements View.OnClickListen
         valueView.setText(value);
 
         if (summaryChanged) _setSummaryTextView(s);
-    }
-
-    private void _updateData()
-    {
-
     }
 
     private boolean _hasSankalpExpired(SpSankalp s) {
@@ -390,10 +419,10 @@ public class SpAddSankalpFragment extends Fragment implements View.OnClickListen
         d.show(getFragmentManager(), "SpPeriodDialog");
     }
 
-    private void _launchNumberPickerDialog(String tag, int layoutId, String title)
-    {
+    private void _launchNumberPickerDialog(String tag, int layoutId, String title) {
         _launchSimpleAlertDialog(new SpNumberPickerDialog(), tag, layoutId, title);
     }
+
     private void _launchSimpleAlertDialog(SpSimpleAlertDialog d, String tag, int layoutId, String title) {
 
         if (d == null) {
@@ -491,8 +520,7 @@ public class SpAddSankalpFragment extends Fragment implements View.OnClickListen
                 _editedSankalp.setDescription(desc);
                 _updateView(R.id.description_view, _editedSankalp);
             }
-        }
-        else if (tag.equals(SpConstants.FRAGMENT_TAG_EXTAR)) {
+        } else if (tag.equals(SpConstants.FRAGMENT_TAG_EXTAR)) {
             NumberPicker np = (NumberPicker) dialog.findViewById(R.id.number_picker);
             NumberPicker left = (NumberPicker) dialog.findViewById(R.id.number_picker_left);
 
@@ -503,8 +531,7 @@ public class SpAddSankalpFragment extends Fragment implements View.OnClickListen
             _editedSankalp.getExceptionOrTarget().setExceptionOrTargetCount(np.getValue());
             _editedSankalp.getExceptionOrTarget().setId(left.getValue());
             _updateView(R.id.exTar_view, _editedSankalp);
-        }
-        else if (tag.equals(SpConstants.FRAGMENT_TAG_CURRENT_COUNT)) {
+        } else if (tag.equals(SpConstants.FRAGMENT_TAG_CURRENT_COUNT)) {
             NumberPicker np = (NumberPicker) dialog.findViewById(R.id.number_picker);
             _editedSankalp.getExceptionOrTarget().setExceptionOrTargetCountCurrent(np.getValue());
             _updateView(R.id.currentCount_view, _editedSankalp);

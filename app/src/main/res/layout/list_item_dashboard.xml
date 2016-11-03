@@ -3,50 +3,26 @@
 <!-- Layout for weather forecast list item for future day (not today) -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="72dp"
     android:background="@drawable/touch_selector"
     android:gravity="center_vertical"
-    android:minHeight="?android:attr/listPreferredItemHeight"
-    android:orientation="horizontal"
-    android:paddingBottom="6dp"
-    android:paddingTop="6dp">
+    android:orientation="horizontal">
 
 
-    <View
-        android:id="@+id/listBar"
-        android:layout_width="5dp"
-        android:layout_height="?android:attr/listPreferredItemHeight"
-        android:background="@color/sankalp_tyag" />
-
-    <!--
-        <View
-            android:id="@+id/listBarNiyam"
-            android:visibility="gone"
-            android:layout_width="5dp"
-            android:layout_height="?android:attr/listPreferredItemHeight"
-            android:background="@color/sankalp_niyam" />
-    -->
-
-    <!--<FrameLayout
-        android:layout_width="30dp"
-        android:layout_height="wrap_content"
-        android:layout_marginRight="10dp">
-
-        <ImageView
-            android:id="@+id/list_item_icon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:src="@android:drawable/btn_star_big_on" />
-
-    </FrameLayout>-->
+    <ImageView
+        android:id="@+id/category_icon"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_gravity="center_vertical"
+        android:layout_marginLeft="16dp"
+        android:src="@drawable/ic_person_black_24dp"/>
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginLeft="8dp"
-        android:minHeight="?android:attr/listPreferredItemHeight"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_gravity="center_vertical"
         android:orientation="vertical">
 
         <RelativeLayout
@@ -57,19 +33,22 @@
 
             <TextView
                 android:id="@+id/list_item_item_textview"
-                style="@style/SpText"
+                style="@style/Base.TextAppearance.AppCompat.Subhead"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:text="Potato" />
 
             <TextView
                 android:id="@+id/list_item_period_textview"
-                style="@style/SpText"
+                style="@style/Base.TextAppearance.AppCompat.Subhead"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
-                android:layout_marginRight="10dp"
-                android:layout_marginLeft="5dp"
+                android:layout_marginLeft="10dp"
                 android:layout_toRightOf="@+id/list_item_item_textview"
+                android:ellipsize="end"
                 android:gravity="right"
                 android:maxLines="1"
-                android:ellipsize="end"
                 android:text="Jul 2 - Jul 4 jkldjklasjdklsajldjsajdklasjdkljaskldja" />
 
         </RelativeLayout>
@@ -78,7 +57,7 @@
             android:id="@+id/exceptionOrTarget_rl_container"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingTop="5dp">
+            >
 
             <LinearLayout
                 android:id="@+id/exceptionOrTarget_li_container"
@@ -89,14 +68,17 @@
 
                 <TextView
                     android:id="@+id/exceptionOrTarget_li_title"
-                    style="@style/SpLabel"
+
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_marginRight="10dp"
-                    android:text="@string/tyagExceptions"
-                    android:textStyle="italic" />
+                    android:text="@string/tyagExceptions" />
 
                 <TextView
                     android:id="@+id/exceptionOrTargetCount_li_textView"
-                    style="@style/SpText" />
+                    style="@style/Base.TextAppearance.AppCompat.Subhead"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
             </LinearLayout>
 
             <LinearLayout
@@ -110,15 +92,17 @@
 
                 <TextView
                     android:id="@+id/exceptionOrTargetCurrentCount_li_label"
-                    style="@style/SpLabel"
+
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_marginRight="10dp"
-                    android:text="Left"
-                    android:textStyle="italic" />
+                    android:text="Left" />
 
                 <TextView
                     android:id="@+id/exceptionOrTargetCurrentCount_li_tv"
-                    style="@style/SpText"
-                    android:layout_marginRight="10dp" />
+                    style="@style/Base.TextAppearance.AppCompat.Subhead"
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content" />
 
             </LinearLayout>
         </RelativeLayout>

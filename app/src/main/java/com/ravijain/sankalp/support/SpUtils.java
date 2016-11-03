@@ -125,10 +125,10 @@ public class SpUtils {
 
     public static Drawable getIconDrawable(SpCategory category, Context context)
     {
-        if (category.getCategoryName().equals(SpDataConstants.CATEGORY_NAME_FOOD)) {
+        /*if (category.getCategoryName().equals(SpDataConstants.CATEGORY_NAME_FOOD)) {
             return context.getResources().getDrawable(R.drawable.ic_restaurant_menu_black_24dp);
         }
-        else if (category.getCategoryName().equals(SpDataConstants.CATEGORY_NAME_ENTERTAINMENT)) {
+        else*/ if (category.getCategoryName().equals(SpDataConstants.CATEGORY_NAME_ENTERTAINMENT)) {
             return context.getResources().getDrawable(R.drawable.ic_local_movies_black_24dp);
         }
         else if (category.getCategoryName().equals(SpDataConstants.CATEGORY_NAME_TRAVEL)) {
@@ -146,6 +146,15 @@ public class SpUtils {
                     .buildRoundRect(letter, generator.getRandomColor(), 2);
             return drawable;
         }
+    }
+
+    public static String getLocalizedString(Context context, String key)
+    {
+        if (context == null) return key;
+        String packageName = context.getPackageName();
+        int resId = context.getResources().getIdentifier(key, "string", packageName);
+        if (resId == 0) return key;
+        return context.getString(resId);
     }
 
 }

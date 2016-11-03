@@ -64,7 +64,7 @@
                     android:orientation="vertical">
 
                     <TextView
-                        style="@style/CardHeadline"
+                        style="@style/SpCardHeadline"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:paddingBottom="16dp"
@@ -108,7 +108,7 @@
 
                     <TextView
                         android:id="@+id/card_calendar_header"
-                        style="@style/CardHeadline"
+                        style="@style/SpCardHeadline"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:paddingBottom="12dp"

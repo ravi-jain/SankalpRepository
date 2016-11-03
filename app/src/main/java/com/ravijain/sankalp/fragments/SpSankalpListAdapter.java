@@ -17,6 +17,7 @@ import com.ravijain.sankalp.data.SpExceptionOrTarget;
 import com.ravijain.sankalp.data.SpSankalp;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Date;
 
 /**
@@ -64,8 +65,7 @@ public class SpSankalpListAdapter extends ArrayAdapter<SpSankalp>{
 
 
         // Populate fields with extracted properties
-//            tvCategory.setText(category.getCategoryName());
-        tvItem.setText(item.getCategoryItemDisplayName());
+        tvItem.setText(item.getCategoryItemDisplayName(getContext()));
         tvPeriod.setText(String.valueOf(period));
 
         SpExceptionOrTarget exceptionOrTarget = sankalp.getExceptionOrTarget();
@@ -80,24 +80,13 @@ public class SpSankalpListAdapter extends ArrayAdapter<SpSankalp>{
             if (sankalp.getSankalpType() == SpConstants.SANKALP_TYPE_TYAG) {
                 title.setText(R.string.tyagExceptions);
                 currentCountLabel.setText(R.string.exception_left_label);
-                //convertView.findViewById(R.id.listBarNiyam).setVisibility(View.GONE);
-                //convertView.findViewById(R.id.listBar).setVisibility(View.VISIBLE);
                 convertView.findViewById(R.id.listBar).setBackgroundColor(getContext().getResources().getColor(R.color.sankalp_tyag));
             }
             else if (sankalp.getSankalpType() == SpConstants.SANKALP_TYPE_NIYAM) {
-//                title.setText(R.string.niyamFrequency);
                 title.setText(R.string.niyamFrequency);
                 currentCountLabel.setText(R.string.frequency_done_label);
-//                convertView.findViewById(R.id.listBar).setVisibility(View.GONE);
-//                convertView.findViewById(R.id.listBarNiyam).setVisibility(View.VISIBLE);
                 convertView.findViewById(R.id.listBar).setBackgroundColor(getContext().getResources().getColor(R.color.sankalp_niyam));
-                //View listBar = convertView.findViewById(R.id.listBar);
-//                listBarNiyam.setVisibility(View.VISIBLE);
-//                convertView.findViewById(R.id.listBar).setVisibility(View.GONE);
-                //listBar.setBackgroundColor(getContext().getResources().getColor(R.color.sankalp_niyam));
             }
-//            TextView spinnerLabel = (TextView) convertView.findViewById(R.id.exceptionOrTarget_spinner_li_label);
-//            spinnerLabel.setText(exceptionOrTarget.getLabel());
             TextView count = (TextView) convertView.findViewById(R.id.exceptionOrTargetCount_li_textView);
             count.setText(exceptionOrTarget.getRepresentationalSummary());
 
@@ -173,5 +162,14 @@ public class SpSankalpListAdapter extends ArrayAdapter<SpSankalp>{
             remove(s);
             _sankalps.remove(s);
         }
+    }
+
+    public void sortList(final int sortId, final int sortOrder) {
+        sort(new Comparator<SpSankalp>() {
+            @Override
+            public int compare(SpSankalp spSankalp, SpSankalp t1) {
+                return spSankalp.compareTo(sortId, t1) * sortOrder;
+            }
+        });
     }
 }

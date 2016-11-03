@@ -1,59 +1,66 @@
 package com.ravijain.sankalp.data;
 
-import com.ravijain.sankalp.support.SpConstants;
+import android.content.Context;
 
+import com.ravijain.sankalp.R;
+import com.ravijain.sankalp.support.SpConstants;
+import com.ravijain.sankalp.support.SpUtils;
+
+import java.util.ArrayList;
 import java.util.Hashtable;
 
 /**
  * Created by ravijain on 7/2/2016.
  */
-public class SpCategory implements SpDataConstants{
+public class SpCategory implements SpDataConstants {
 
-    private int _id = -1;
-    private String _categoryName;
-    private String _categoryDisplayName;
-    private int _sankalpType;
-
-    public static String[] tyagCategoryNames = {CATEGORY_NAME_FOOD, CATEGORY_NAME_ENTERTAINMENT, CATEGORY_NAME_TRAVEL};
+    public static String[] tyagCategoryNames = {CATEGORY_NAME_ENTERTAINMENT, CATEGORY_NAME_TRAVEL, CATEGORY_NAME_COSMETIC};
+    public static String[] foodSubCategoryNames = {SUBCATEGORY_NAME_GENERAL_GREEN, SUBCATEGORY_NAME_GREEN_VEGETABLES, SUBCATEGORY_NAME_GREEN_LEAVES,
+            SUBCATEGORY_NAME_GREEN_FRUITS, SUBCATEGORY_NAME_GREEN_ABHAKSHYA, SUBCATEGORY_NAME_RAS, SUBCATEGORY_NAME_SPICES, SUBCATEGORY_NAME_ANAAJ,
+            SUBCATEGORY_NAME_ABHAKSHYA};
     public static String[] niyamCategoryNames = {CATEGORY_NAME_DHARMA};
     public static String[] sankalpCategoryNames = {};
-
-    private static Hashtable<String, SpCategory> defaultCategories = new Hashtable<String, SpCategory>();
+    private static ArrayList<SpCategory> defaultCategories = new ArrayList<SpCategory>();
 
     static {
         int id = 0;
-        for (String categoryName: SpCategory.tyagCategoryNames) {
-            defaultCategories.put(categoryName, new SpCategory(id++, categoryName, categoryName, SpConstants.SANKALP_TYPE_TYAG));
+        for (String categoryName : SpCategory.tyagCategoryNames) {
+            defaultCategories.add(new SpCategory(id++, categoryName, null, SpConstants.SANKALP_TYPE_TYAG));
         }
-        for (String categoryName: SpCategory.niyamCategoryNames) {
-            defaultCategories.put(categoryName, new SpCategory(id++, categoryName, categoryName, SpConstants.SANKALP_TYPE_NIYAM));
+        for (String subCategoryName : SpCategory.foodSubCategoryNames) {
+            defaultCategories.add(new SpCategory(id++, CATEGORY_NAME_FOOD, subCategoryName, SpConstants.SANKALP_TYPE_TYAG));
         }
-        for (String categoryName: SpCategory.sankalpCategoryNames) {
-            defaultCategories.put(categoryName, new SpCategory(id++, categoryName, categoryName, SpConstants.SANKALP_TYPE_BOTH));
+        for (String categoryName : SpCategory.niyamCategoryNames) {
+            defaultCategories.add(new SpCategory(id++, categoryName, null, SpConstants.SANKALP_TYPE_NIYAM));
+        }
+        for (String categoryName : SpCategory.sankalpCategoryNames) {
+            defaultCategories.add(new SpCategory(id++, categoryName, null, SpConstants.SANKALP_TYPE_BOTH));
         }
     }
 
-    public SpCategory(int id, String name, String displayName, int type) {
+    private int _id = -1;
+    private String _categoryName;
+    private String _subCategoryName;
+    private int _sankalpType;
+
+    public SpCategory(int id, String name, String subCategory, int type) {
         _id = id;
         _categoryName = name;
-        _categoryDisplayName = displayName;
+        _subCategoryName = subCategory;
         _sankalpType = type;
     }
 
     public SpCategory(String name, int type) {
         _categoryName = name;
-        _categoryDisplayName = name;
         _sankalpType = type;
     }
 
-    public String toString()
-    {
-        return _categoryName;
+    public static ArrayList<SpCategory> getDefaultCategories() {
+        return defaultCategories;
     }
 
-    public static Hashtable<String, SpCategory> getDefaultCategories()
-    {
-        return defaultCategories;
+    public String toString() {
+        return getCategoryDisplayName(null);
     }
 
     public int getId() {
@@ -73,12 +80,24 @@ public class SpCategory implements SpDataConstants{
         this._categoryName = categoryName;
     }
 
-    public String getCategoryDisplayName() {
-        return _categoryDisplayName;
+    public String getSubCategoryName() {
+        return _subCategoryName;
     }
 
-    public void setCategoryDisplayName(String categoryDisplayName) {
-        this._categoryDisplayName = categoryDisplayName;
+    public void setSubCategoryName(String subCategoryName) {
+        this._subCategoryName = subCategoryName;
+    }
+
+    public String getCategoryDisplayName(Context context) {
+        StringBuilder displayName = new StringBuilder();
+        displayName.append(SpUtils.getLocalizedString(context, getCategoryName()));
+        if (getSubCategoryName() != null && getSubCategoryName().length() > 0) {
+            displayName.append(" :: ");
+            displayName.append(SpUtils.getLocalizedString(context, getSubCategoryName()));
+
+        }
+
+        return displayName.toString();
     }
 
     public int getSankalpType() {
@@ -88,7 +107,6 @@ public class SpCategory implements SpDataConstants{
     public void setSankalpType(int sankalpType) {
         this._sankalpType = sankalpType;
     }
-
 
 
 }

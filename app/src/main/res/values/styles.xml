@@ -76,12 +76,6 @@
         <item name="android:layout_height">1dip</item>
     </style>
 
-    <!--<style name="SpHorizontalDividerLight">
-        <item name="android:layout_width">fill_parent</item>
-        <item name="android:background">@color/caldroid_middle_gray</item>
-        <item name="android:layout_height">.5dip</item>
-    </style>-->
-
     <style name="SpLabel2">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
@@ -105,10 +99,9 @@
         <item name="android:textAppearance">?android:attr/textAppearanceMedium</item>
     </style>
 
-    <style name="SpTextCardLabel">
+    <style name="SpTextCardLabel" parent="SpCardHeadline">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textAppearance">?android:attr/textAppearanceLarge</item>
     </style>
 
     <style name="SpLabel">
@@ -119,7 +112,7 @@
         <item name="android:textAppearance">?android:attr/textAppearanceMedium</item>
     </style>
 
-    <style name="CardHeadline">
+    <style name="SpCardHeadline">
         <item name="android:textSize">24sp</item>
         <item name="android:textColor">?android:attr/textColorPrimary</item>
     </style>

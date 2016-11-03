@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
     <string-array name="rangeLabelsList">
         <item>@string/thisDay</item>
         <item>@string/tomorrow</item>
@@ -51,7 +50,6 @@
         <item>en_US</item>
         <item>hi</item>
     </string-array>
-
 
     <string name="Dashboard2">Summary Dashboard</string>
     <string name="CalendarView">Calendar View</string>

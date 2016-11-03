@@ -15,89 +15,44 @@
             android:id="@+id/ll"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
             android:orientation="vertical"
-           >
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp">
 
-            <!--<android.support.v7.widget.CardView
+            <android.support.v7.widget.CardView
+                android:id="@+id/card_quote"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                card_view:cardCornerRadius="4dp"
-                card_view:cardElevation="@dimen/card_elevation"
-                card_view:cardUseCompatPadding="true"
-                card_view:contentPadding="8dp">-->
+                card_view:cardCornerRadius="2dp"
+                card_view:cardUseCompatPadding="true">
 
-                <TextView
-                    android:id="@+id/db_quote_tv"
-                    style="@style/SpText"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="8dp"
-                    android:gravity="center"
-                    android:text="@string/quote1"
-                    android:textColor="#FF7043"
-                    android:textStyle="italic" />
-            <!--</android.support.v7.widget.CardView>-->
+                    android:orientation="vertical">
 
-            <View
-                style="@style/SpHorizontalDivider"
-                android:layout_width="64dp"
-                android:layout_gravity="center"
-                android:layout_marginBottom="8dp" />
+                    <TextView
+                        android:id="@+id/card_quote_header"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingBottom="12dp"
+                        android:paddingLeft="16dp"
+                        android:paddingRight="16dp"
+                        android:paddingTop="12dp"
+                        android:text="@string/quoteHeader" />
 
-            <TextView
-                style="@style/SpLabel"
-                android:layout_marginTop="8dp"
-                android:text="@string/calendarViewLabel" />
+                    <TextView
+                        android:id="@+id/db_quote_tv"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="8dp"
+                        android:gravity="center"
+                        android:text="@string/quote1"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Title"
+                        android:textColor="?attr/colorAccent" />
+                </LinearLayout>
+            </android.support.v7.widget.CardView>
 
-            <View style="@style/SpHorizontalDivider" />
-
-            <FrameLayout
-                android:id="@+id/db_calendarView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:layout_marginBottom="8dp"></FrameLayout>
-
-
-            <LinearLayout
-                android:id="@+id/card_dashboard_legend"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="right"
-                android:layout_marginBottom="8dp"
-                android:layout_marginTop="8dp"
-                android:gravity="center"
-                android:orientation="horizontal">
-
-                <View
-                    android:layout_width="10dp"
-                    android:layout_height="10dp"
-                    android:background="@color/sankalp_tyag" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="5dp"
-                    android:layout_marginRight="5dp"
-                    android:gravity="center_vertical"
-                    android:text="@string/tyag"
-                    android:textAppearance="?android:attr/textAppearanceSmall" />
-
-                <View
-                    android:layout_width="10dp"
-                    android:layout_height="10dp"
-                    android:background="@color/sankalp_niyam" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="5dp"
-                    android:gravity="center_vertical"
-                    android:text="@string/niyam"
-                    android:textAppearance="?android:attr/textAppearanceSmall" />
-
-            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
