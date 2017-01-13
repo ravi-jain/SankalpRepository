@@ -1,0 +1,42 @@
+<com.github.clans.fab.FloatingActionMenu android:id="@+id/right_labels"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_alignParentBottom="true"
+    android:layout_alignParentRight="true"
+    android:paddingRight="10dp"
+    android:paddingBottom="10dp"
+    android:paddingLeft="10dp"
+    card_view:menu_colorNormal="@color/sankalp"
+    card_view:menu_colorPressed="@color/white_pressed"
+    card_view:menu_colorRipple="#99FFFFFF"
+    card_view:menu_animationDelayPerItem="50"
+    card_view:menu_shadowColor="#444"
+    card_view:menu_labels_position="left"
+    card_view:menu_labels_showShadow="true"
+    card_view:menu_backgroundColor="#ccffffff"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto">
+
+    <com.github.clans.fab.FloatingActionButton
+        android:id="@+id/chartCalendarDb_addTyagButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_add_black_24dp"
+        card_view:fab_size="mini"
+        card_view:fab_colorNormal="@color/sankalp_tyag"
+        card_view:fab_colorRipple="#99FFFFFF"
+        card_view:fab_colorPressed="@color/white_pressed"
+        card_view:fab_label="@string/tyag" />
+
+    <com.github.clans.fab.FloatingActionButton
+        android:id="@+id/chartCalendarDb_addNiyamButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_add_black_24dp"
+        card_view:fab_size="mini"
+        card_view:fab_colorRipple="#99FFFFFF"
+        card_view:fab_colorNormal="@color/sankalp_niyam"
+        card_view:fab_colorPressed="@color/white_pressed"
+        card_view:fab_label="@string/niyam" />
+
+</com.github.clans.fab.FloatingActionMenu>

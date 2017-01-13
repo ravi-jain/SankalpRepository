@@ -7,9 +7,11 @@ import android.os.AsyncTask;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.text.TextUtils;
-import android.util.SparseBooleanArray;
 import android.view.ActionMode;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -18,31 +20,34 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
-import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
+import com.github.clans.fab.FloatingActionMenu;
+import com.github.clans.fab.FloatingActionButton;
 import com.ravijain.sankalp.R;
 import com.ravijain.sankalp.activities.SpAddSankalpActivity;
 import com.ravijain.sankalp.support.SpConstants;
-import com.ravijain.sankalp.activities.SpSankalpList;
 import com.ravijain.sankalp.data.SpContentProvider;
 import com.ravijain.sankalp.data.SpSankalp;
+import com.ravijain.sankalp.support.SpDividerItemDecoration;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 
 /**
  * A placeholder fragment containing a simple view.
  */
-public class SpSankalpListFragment extends Fragment implements SearchView.OnQueryTextListener, SpSimpleAlertDialog.SpSimpleAlertDialogListener {
+public class SpSankalpListFragment extends SpFabBaseFragment implements SearchView.OnQueryTextListener, SpSimpleAlertDialog.SpSimpleAlertDialogListener {
 
-    private SpSankalpListAdapter _sankalpAdapter;
+    private SpSankalpListRecyclerAdapter _sankalpAdapter;
     private ListView _sankalpListView;
     private SankalpLoaderTask _loaderTask;
     private TextView _listSummaryTv;
+
+    private ActionModeCallback actionModeCallback = new ActionModeCallback();
+    private ActionMode actionMode;
 
     private int _sankalpType;
     private int _listFilter;
@@ -59,6 +64,7 @@ public class SpSankalpListFragment extends Fragment implements SearchView.OnQuer
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_sp_sankalp_list, container, false);
         setHasOptionsMenu(true);
+        setupFAB(rootView);
 
         Bundle b = getArguments();
         if (b != null) {
@@ -79,29 +85,65 @@ public class SpSankalpListFragment extends Fragment implements SearchView.OnQuer
         }
         getActivity().setTitle(title);
 
-        _sankalpAdapter = new SpSankalpListAdapter(getContext(), new ArrayList<SpSankalp>());
-        _sankalpListView = (ListView) rootView.findViewById(R.id.sankalpListview);
-        _sankalpListView.setAdapter(_sankalpAdapter);
+        RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.sankalpListview);
 
-        SpMultiNodeChoiceListener listener = new SpMultiNodeChoiceListener();
-        _sankalpListView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
-        _sankalpListView.setMultiChoiceModeListener(listener);
-        _sankalpListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        _sankalpAdapter = new SpSankalpListRecyclerAdapter(getContext(), new ArrayList<SpSankalp>(), new SpSankalpListRecyclerAdapter.RecyclerViewClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                SpSankalp sankalp = (SpSankalp) adapterView.getItemAtPosition(position);
-                Intent intent = new Intent(getActivity(), SpAddSankalpActivity.class);
-                intent.putExtra(SpConstants.INTENT_KEY_SANKALP_TYPE, sankalp.getSankalpType());
-                intent.putExtra(SpConstants.INTENT_KEY_SANKALP_ID, sankalp.getId());
-                startActivityForResult(intent, SpConstants.ACTIVITY_REQUEST_CODE);
+            public void onItemClicked(int position) {
+                if (actionMode != null) {
+                    toggleSelection(position);
+                }
+                else {
+                    SpSankalp sankalp = _sankalpAdapter.getSankalpByPosition(position);
+                    Intent intent = new Intent(getActivity(), SpAddSankalpActivity.class);
+                    intent.putExtra(SpConstants.INTENT_KEY_SANKALP_TYPE, sankalp.getSankalpType());
+                    intent.putExtra(SpConstants.INTENT_KEY_SANKALP_ID, sankalp.getId());
+                    startActivityForResult(intent, SpConstants.ACTIVITY_REQUEST_CODE);
+                }
+
+            }
+
+            @Override
+            public boolean onItemLongClicked(int position) {
+                if (actionMode == null) {
+                    actionMode = getActivity().startActionMode(actionModeCallback);//startSupportActionMode(actionModeCallback);
+                }
+
+                toggleSelection(position);
+
+                return true;
             }
         });
-        _sankalpListView.setEmptyView(rootView.findViewById(R.id.emptyListText));
-        _listSummaryTv = ((TextView) rootView.findViewById(R.id.listViewShowSummary));
-        _listSummaryTv.setText(_getListSummary(_sankalpType, _listFilter));
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext());
+        recyclerView.setLayoutManager(mLayoutManager);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        recyclerView.setAdapter(_sankalpAdapter);
+        recyclerView.addItemDecoration(new SpDividerItemDecoration(getContext(), LinearLayoutManager.VERTICAL));
 
         _refreshView(_sankalpType, _listFilter, _day);
         return rootView;
+    }
+
+    public void setupFAB(View rootView)
+    {
+        FloatingActionButton fabTyag = (FloatingActionButton) getActivity().findViewById(R.id.chartCalendarDb_addTyagButton);
+        FloatingActionButton niyamTyag = (FloatingActionButton) getActivity().findViewById(R.id.chartCalendarDb_addNiyamButton);
+        fabTyag.setOnClickListener(this);
+        niyamTyag.setOnClickListener(this);
+    }
+
+    @Override
+    public void onClick(View view) {
+        Intent intent = new Intent(getActivity(), SpAddSankalpActivity.class);
+        if (view.getId() == R.id.chartCalendarDb_addTyagButton) {
+            intent.putExtra(SpConstants.INTENT_KEY_SANKALP_TYPE, SpConstants.SANKALP_TYPE_TYAG);
+        } else if (view.getId() == R.id.chartCalendarDb_addNiyamButton) {
+            intent.putExtra(SpConstants.INTENT_KEY_SANKALP_TYPE, SpConstants.SANKALP_TYPE_NIYAM);
+        }
+        FloatingActionMenu floatingActionsMenu = (FloatingActionMenu) getActivity().findViewById(R.id.right_labels);
+        //floatingActionsMenu.collapseImmediately();
+        floatingActionsMenu.close(true);
+        startActivityForResult(intent, SpConstants.ACTIVITY_REQUEST_CODE);
     }
 
     @Override
@@ -155,7 +197,7 @@ public class SpSankalpListFragment extends Fragment implements SearchView.OnQuer
     }
 
     private void _filterList(int sankalpType, int listFilter) {
-        _listSummaryTv.setText(_getListSummary(sankalpType, listFilter));
+        //_listSummaryTv.setText(_getListSummary(sankalpType, listFilter));
         _sankalpAdapter.filter(sankalpType, listFilter);
     }
 
@@ -214,12 +256,10 @@ public class SpSankalpListFragment extends Fragment implements SearchView.OnQuer
         _sankalpAdapter.search(query);
     }
 
-    @Override
     public boolean onQueryTextSubmit(String query) {
         return true;
     }
 
-    @Override
     public boolean onQueryTextChange(String newText) {
         if (TextUtils.isEmpty(newText)) {
             searchList("");
@@ -264,7 +304,7 @@ public class SpSankalpListFragment extends Fragment implements SearchView.OnQuer
                     listFilter = -1;
                 }
             }
-
+            listFilter = SpConstants.INTENT_VALUE_SANKALP_LIST_FILTER_ALL;
             _filterList(sankalpType, listFilter);
         }
     }
@@ -273,6 +313,102 @@ public class SpSankalpListFragment extends Fragment implements SearchView.OnQuer
     public void onSimpleAlertDialogNegativeClick(AlertDialog dialog, String tag) {
     }
 
+    /**
+     * Toggle the selection state of an item.
+     *
+     * If the item was the last one in the selection and is unselected, the selection is stopped.
+     * Note that the selection must already be started (actionMode must not be null).
+     *
+     * @param position Position of the item to toggle the selection state
+     */
+    private void toggleSelection(int position) {
+        _sankalpAdapter.toggleSelection(position);
+        int count = _sankalpAdapter.getSelectedItemCount();
+
+        if (count == 0) {
+            actionMode.finish();
+        } else {
+            String label = String.valueOf(count) + " ";
+            if (count == 1) {
+                label += getResources().getString(R.string.listSelectedItemLabel);
+            } else if (count > 1) {
+                label += getResources().getString(R.string.listSelectedItemsLabel);
+            }
+            actionMode.setTitle(label);
+            actionMode.invalidate();
+        }
+    }
+
+    private class ActionModeCallback implements ActionMode.Callback {
+        @SuppressWarnings("unused")
+        private final String TAG = ActionModeCallback.class.getSimpleName();
+
+        @Override
+        public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+            mode.getMenuInflater().inflate (R.menu.menu_list_context, menu);
+            return true;
+        }
+
+        @Override
+        public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+            return false;
+        }
+
+        @Override
+        public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+            switch (item.getItemId()) {
+                case R.id.action_db_deleteSankalp:
+                    getDeleteWarningDialog(actionMode).show();
+//                    mode.finish();
+                    return true;
+
+                default:
+                    return false;
+            }
+        }
+
+        private AlertDialog getDeleteWarningDialog(final ActionMode actionMode) {
+            AlertDialog dialog = new AlertDialog.Builder(getContext())
+                    //set message, title, and icon
+                    .setTitle(getString(R.string.deleteSankalp))
+                    .setMessage(getString(R.string.multiDeletePrompt))
+                    .setIcon(R.drawable.ic_delete_black_24dp)
+
+                    .setPositiveButton(R.string.deleteSankalp, new DialogInterface.OnClickListener() {
+
+                        public void onClick(DialogInterface dialog, int whichButton) {
+                            //your deleting code
+
+                            dialog.dismiss();
+                            ArrayList<SpSankalp> sankalpsToBeDeleted = _sankalpAdapter.getSelectedSankalps();
+                            _sankalpAdapter.removeItems(_sankalpAdapter.getSelectedItems());
+                            SpContentProvider provider = SpContentProvider.getInstance(getContext());
+                            provider.deleteSankalps(sankalpsToBeDeleted);
+                            actionMode.finish(); // Action picked, so close the CAB
+                        }
+
+                    })
+
+
+                    .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+
+                            dialog.dismiss();
+                            actionMode.finish(); // Action picked, so close the CAB
+
+                        }
+                    })
+                    .create();
+            return dialog;
+
+        }
+
+        @Override
+        public void onDestroyActionMode(ActionMode mode) {
+            _sankalpAdapter.clearSelection();
+            actionMode = null;
+        }
+    }
 
     private class SankalpLoaderTask extends AsyncTask<Void, Void, Boolean> {
         private ArrayList<SpSankalp> _sankalps = new ArrayList<SpSankalp>();
@@ -300,101 +436,10 @@ public class SpSankalpListFragment extends Fragment implements SearchView.OnQuer
 
             if (success) {
                 _sankalpAdapter.clearAdapter();
-                _sankalpAdapter.addItems(_sankalps);
+                _sankalpAdapter.loadAdapter(_sankalps);
+                _sankalpAdapter.notifyDataSetChanged();
             }
         }
 
     }
-
-    private class SpMultiNodeChoiceListener implements AbsListView.MultiChoiceModeListener {
-
-        @Override
-        public void onItemCheckedStateChanged(ActionMode actionMode, int i, long l, boolean b) {
-            int count = _sankalpListView.getCheckedItemCount();
-            String label = String.valueOf(count) + " ";
-            if (count == 1) {
-                label += getResources().getString(R.string.listSelectedItemLabel);
-            } else if (count > 1) {
-                label += getResources().getString(R.string.listSelectedItemsLabel);
-            }
-            actionMode.setTitle(label);
-        }
-
-        @Override
-        public boolean onCreateActionMode(ActionMode actionMode, Menu menu) {
-            MenuInflater inflater = actionMode.getMenuInflater();
-            inflater.inflate(R.menu.menu_list_context, menu);
-            return true;
-        }
-
-        @Override
-        public boolean onPrepareActionMode(ActionMode actionMode, Menu menu) {
-            return false;
-        }
-
-        @Override
-        public boolean onActionItemClicked(ActionMode actionMode, MenuItem menuItem) {
-
-            switch (menuItem.getItemId()) {
-                case R.id.action_db_deleteSankalp:
-                    getDeleteWarningDialog(actionMode).show();
-                    return true;
-                default:
-                    return false;
-            }
-        }
-
-        private AlertDialog getDeleteWarningDialog(final ActionMode actionMode) {
-            AlertDialog dialog = new AlertDialog.Builder(getContext())
-                    //set message, title, and icon
-                    .setTitle(getString(R.string.deleteSankalp))
-                    .setMessage(getString(R.string.multiDeletePrompt))
-                    .setIcon(R.drawable.ic_delete_black_24dp)
-
-                    .setPositiveButton(R.string.deleteSankalp, new DialogInterface.OnClickListener() {
-
-                        public void onClick(DialogInterface dialog, int whichButton) {
-                            //your deleting code
-
-                            dialog.dismiss();
-                            SparseBooleanArray selected = _sankalpListView.getCheckedItemPositions();
-                            ArrayList<SpSankalp> sankalpsToBeDeleted = new ArrayList<SpSankalp>();
-                            // Captures all selected ids with a loop
-                            for (int i = (selected.size() - 1); i >= 0; i--) {
-                                if (selected.valueAt(i)) {
-                                    SpSankalp selecteditem = _sankalpAdapter
-                                            .getItem(selected.keyAt(i));
-                                    // Remove selected items following the ids
-                                    sankalpsToBeDeleted.add(selecteditem);
-                                }
-                            }
-                            SpContentProvider provider = SpContentProvider.getInstance(getContext());
-                            provider.deleteSankalps(sankalpsToBeDeleted);
-                            _sankalpAdapter.removeItems(sankalpsToBeDeleted);
-                            actionMode.finish(); // Action picked, so close the CAB
-                        }
-
-                    })
-
-
-                    .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-
-                            dialog.dismiss();
-                            actionMode.finish(); // Action picked, so close the CAB
-
-                        }
-                    })
-                    .create();
-            return dialog;
-
-        }
-
-        @Override
-        public void onDestroyActionMode(ActionMode actionMode) {
-
-        }
-    }
-
-
 }

@@ -34,6 +34,7 @@ public class SpCalendarViewHandler implements OnDateSelectedListener, OnMonthCha
     public static final int SELECTION_MODE_NONE = 0;
     public static final int SELECTION_MODE_SINGLE = 1;
     public static final int SELECTION_MODE_RANGE = 2;
+    public static final int SELECTION_MODE_EVENT = 3;
 
     public SpCalendarViewHandler(Context applicationContext, View view)
     {
@@ -48,9 +49,10 @@ public class SpCalendarViewHandler implements OnDateSelectedListener, OnMonthCha
         _widget.setOnDateChangedListener(this);
         _widget.setDynamicHeightEnabled(true);
 
-        if (selectionMode == SELECTION_MODE_NONE) {
+        if (selectionMode == SELECTION_MODE_EVENT) {
             _widget.setOnMonthChangedListener(this);
             loadCalendarEvents();
+            _widget.setSelectedDate(new Date());
         }
         else if (selectionMode == SELECTION_MODE_RANGE){
             _widget.setSelectionMode(MaterialCalendarView.SELECTION_MODE_RANGE);
@@ -59,6 +61,11 @@ public class SpCalendarViewHandler implements OnDateSelectedListener, OnMonthCha
             _widget.setSelectionMode(MaterialCalendarView.SELECTION_MODE_SINGLE);
             _widget.setSelectedDate(new Date());
         }
+    }
+
+    public void setSelectedDate(Date d)
+    {
+        _widget.setSelectedDate(d);
     }
 
     public void loadCalendarEvents()
@@ -78,7 +85,7 @@ public class SpCalendarViewHandler implements OnDateSelectedListener, OnMonthCha
 
     @Override
     public void onDateSelected(MaterialCalendarView widget, CalendarDay date, boolean selected) {
-        if (_selectionMode == SELECTION_MODE_NONE) {
+        if (_selectionMode == SELECTION_MODE_EVENT) {
             widget.clearSelection();
             if (_events.contains(date)) {
                 _launchSankalpList(date.getDate());
@@ -93,7 +100,7 @@ public class SpCalendarViewHandler implements OnDateSelectedListener, OnMonthCha
     @Override
     public void onMonthChanged(MaterialCalendarView widget, CalendarDay date) {
 
-        if (_selectionMode == SELECTION_MODE_NONE) {
+        if (_selectionMode == SELECTION_MODE_EVENT) {
             // Add events
             EventsLoader l = new EventsLoader();
             l.execute(date.getCalendar());

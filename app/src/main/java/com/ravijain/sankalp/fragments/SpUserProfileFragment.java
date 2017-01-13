@@ -70,7 +70,7 @@ public class SpUserProfileFragment extends Fragment {
         _mMobileView = (EditText) v.findViewById(R.id.userMobile);
         _mEmailView = (EditText) v.findViewById(R.id.userEmail);
         _mCityView = (EditText) v.findViewById(R.id.userCity);
-        _languageRadio = (RadioGroup) v.findViewById(R.id.language_rg);
+        //_languageRadio = (RadioGroup) v.findViewById(R.id.language_rg);
 
         _inputLayoutName = (TextInputLayout) v.findViewById(R.id.input_layout_name);
         _inputLayoutEmail = (TextInputLayout) v.findViewById(R.id.input_layout_email);
@@ -263,14 +263,14 @@ public class SpUserProfileFragment extends Fragment {
 
 
     private void _handleSuccessfulRegistration() {
-        String lang = _languageRadio.getCheckedRadioButtonId() == R.id.english_radio ? "en_US" : "hi";
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putBoolean(SpSettingsFragment.KEY_USER_REGISTERED, true);
-        editor.putString(SpSettingsFragment.KEY_PREF_LANGUAGE, lang);
-        editor.commit();
-
-        SpUtils.updateLanguage(getContext(), lang);
+//        String lang = "en_US";//_languageRadio.getCheckedRadioButtonId() == R.id.english_radio ? "en_US" : "hi";
+//        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
+//        SharedPreferences.Editor editor = sharedPreferences.edit();
+//        editor.putBoolean(SpSettingsFragment.KEY_USER_REGISTERED, true);
+//        editor.putString(SpSettingsFragment.KEY_PREF_LANGUAGE, lang);
+//        editor.commit();
+//
+//        SpUtils.updateLanguage(getContext(), lang);
         Intent intent = new Intent(getContext(), SpMaterialDashboardActivity.class);
         startActivity(intent);
         getActivity().finish();

@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.NavUtils;
@@ -346,7 +347,9 @@ public class SpAddSankalpFragment extends Fragment implements View.OnClickListen
     @Override
     public void onClick(View view) {
         if (_isEditMode && _hasSankalpExpired(_editedSankalp)) {
-            Toast.makeText(getContext(), "Sankalp is past", Toast.LENGTH_SHORT).show();
+            Snackbar
+                    .make(getView(), getString(R.string.sankalpExpired), Snackbar.LENGTH_LONG).show();
+
             return;
         }
 

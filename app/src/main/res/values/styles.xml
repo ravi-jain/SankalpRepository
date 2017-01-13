@@ -54,6 +54,28 @@
         <item name="colorAccent">@color/sankalp_accent_deep_purple</item>
     </style>
 
+    <style name="SignUpTheme" parent="Theme.AppCompat.NoActionBar">
+        <item name="colorPrimary">@color/primary_red</item>
+        <item name="colorPrimaryDark">@color/primary_dark_red</item>
+        <item name="colorAccent">@color/accent_red</item>
+        <item name="android:textColorPrimary">@color/sankalp_primary_text</item>
+        <item name="android:textColorSecondary">@color/sankalp_secondary_text</item>
+        <item name="android:windowBackground">@color/primary_red</item>
+
+       <!-- <item name="colorControlNormal">@color/iron</item>
+        <item name="colorControlActivated">@color/red_white</item>
+        <item name="colorControlHighlight">@color/red_white</item>
+        <item name="android:textColorHint">@color/iron</item>-->
+
+        <item name="colorButtonNormal">@color/primary_darker_red</item>
+    </style>
+
+    <style name="SignUpTheme.Dialog" parent="Theme.AppCompat.Dialog">
+        <item name="colorAccent">@color/white</item>
+        <item name="android:textColorPrimary">@color/iron</item>
+        <item name="android:background">@color/primary_red</item>
+    </style>
+
 
     <!--<style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>

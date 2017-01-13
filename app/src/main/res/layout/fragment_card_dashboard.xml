@@ -563,7 +563,7 @@
             android:layout_margin="@dimen/fab_margin"
             android:src="@android:drawable/ic_input_add" />-->
 
-        <com.getbase.floatingactionbutton.FloatingActionsMenu
+        <!--<com.getbase.floatingactionbutton.FloatingActionsMenu
             android:id="@+id/right_labels"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -596,7 +596,7 @@
                 card_view:fab_colorPressed="@color/white_pressed"
                 card_view:fab_title="@string/niyam" />
 
-        </com.getbase.floatingactionbutton.FloatingActionsMenu>
+        </com.getbase.floatingactionbutton.FloatingActionsMenu>-->
 
     </RelativeLayout>
 

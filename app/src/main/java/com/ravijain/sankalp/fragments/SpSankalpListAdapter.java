@@ -151,7 +151,7 @@ public class SpSankalpListAdapter extends ArrayAdapter<SpSankalp>{
         clear();
     }
 
-    public void addItems(ArrayList<SpSankalp> sankalps) {
+    public void loadAdapter(ArrayList<SpSankalp> sankalps) {
         _sankalps = sankalps;
         addAll(sankalps);
     }

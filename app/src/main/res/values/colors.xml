@@ -54,4 +54,22 @@
     <color name="sankalp_primary_light_deep_purple">#D1C4E9</color>
     <color name="sankalp_accent_deep_purple">#00BCD4</color>
 
+    <!-- Red -->
+    <color name="primary_red">#DB4437</color>
+    <color name="primary_dark_red">#B93221</color>
+    <color name="primary_darker_red">#CC1D1D</color>
+    <color name="accent_red">#FFFFFF</color>
+    <color name="jet">#222222</color>
+    <color name="oil">#333333</color>
+    <color name="monsoon">#777777</color>
+    <color name="jumbo">#888888</color>
+    <color name="aluminum">#999999</color>
+    <color name="base">#AAAAAA</color>
+    <color name="iron">#CCCCCC</color>
+    <color name="red_white">#FFFFFF</color>
+
+    <!-- Light Green -->
+    <color name="lightGreen">#c5e1a5</color>
+    <color name="selected_overlay">#88673AB7</color>
+
 </resources>

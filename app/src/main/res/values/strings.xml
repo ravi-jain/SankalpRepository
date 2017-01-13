@@ -308,4 +308,5 @@
     <string name="Teerth">Teerth</string>
     <string name="Pratikraman">Pratikraman</string>
     <string name="Upvaas">Upvaas</string>
+    <string name="sankalpExpired">Sankalp is past</string>
 </resources>
