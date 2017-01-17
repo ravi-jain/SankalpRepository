@@ -3,6 +3,7 @@ package com.ravijain.sankalp.support;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.support.design.widget.Snackbar;
 import android.view.View;
 import android.widget.Toast;
 
@@ -63,24 +64,19 @@ public class SpCalendarViewHandler implements OnDateSelectedListener, OnMonthCha
         }
     }
 
-    public void setSelectedDate(Date d)
-    {
-        _widget.setSelectedDate(d);
-    }
-
     public void loadCalendarEvents()
     {
         EventsLoader l = new EventsLoader();
         l.execute(Calendar.getInstance());
     }
 
-    private void _launchSankalpList(Date date)
+    public static void launchSankalpList(Date date, Context context)
     {
-        Intent intent = new Intent(_applicationContext, SpSankalpList.class);
+        Intent intent = new Intent(context, SpSankalpList.class);
         intent.putExtra(SpConstants.INTENT_KEY_SANKALP_TYPE, SpConstants.SANKALP_TYPE_BOTH);
         intent.putExtra(SpConstants.INTENT_KEY_SANKALP_LIST_FILTER, SpConstants.INTENT_VALUE_SANKALP_LIST_FILTER_DAY);
         intent.putExtra(SpConstants.INTENT_KEY_SANKALP_LIST_FILTER_DATE_VALUE, date.getTime());
-        _applicationContext.startActivity(intent);
+        context.startActivity(intent);
     }
 
     @Override
@@ -88,10 +84,11 @@ public class SpCalendarViewHandler implements OnDateSelectedListener, OnMonthCha
         if (_selectionMode == SELECTION_MODE_EVENT) {
             widget.clearSelection();
             if (_events.contains(date)) {
-                _launchSankalpList(date.getDate());
+                launchSankalpList(date.getDate(), _applicationContext);
             }
             else {
-                Toast.makeText(_applicationContext, _applicationContext.getString(R.string.EmptyList), Toast.LENGTH_SHORT).show();
+                Snackbar
+                        .make(_view, _applicationContext.getString(R.string.EmptyList), Snackbar.LENGTH_LONG).show();
             }
         }
 

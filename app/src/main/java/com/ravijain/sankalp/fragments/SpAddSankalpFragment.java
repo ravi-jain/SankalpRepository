@@ -39,6 +39,7 @@ import com.ravijain.sankalp.data.SpSankalp;
 import com.ravijain.sankalp.support.SpColorGenerator;
 import com.ravijain.sankalp.support.SpDateUtils;
 import com.ravijain.sankalp.support.SpTextDrawable;
+import com.ravijain.sankalp.support.SpUtils;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -74,11 +75,7 @@ public class SpAddSankalpFragment extends Fragment implements View.OnClickListen
             _editedSankalp = new SpSankalp(_sankalpType);
         }
 
-        if (_sankalpType == SpConstants.SANKALP_TYPE_TYAG) {
-            getActivity().setTitle(R.string.tyag);
-        } else {
-            getActivity().setTitle(R.string.niyam);
-        }
+        getActivity().setTitle(SpUtils.getSankalpString(getContext(), _sankalpType));
 
         return _rootView;
     }

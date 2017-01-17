@@ -17,7 +17,7 @@
             android:paddingLeft="8dp"
             android:paddingRight="8dp">
 
-            <android.support.v7.widget.CardView
+            <!--<android.support.v7.widget.CardView
                 android:id="@+id/card_quote"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -48,7 +48,42 @@
                         android:textColor="?attr/colorAccent"
                          />
                 </LinearLayout>
-                </android.support.v7.widget.CardView>
+                </android.support.v7.widget.CardView>-->
+
+            <android.support.v7.widget.CardView
+                android:id="@+id/card_quickActions"
+                android:layout_width="match_parent"
+                android:layout_height="220dp"
+                card_view:cardCornerRadius="2dp"
+                card_view:cardUseCompatPadding="true">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/card_qa_header"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingBottom="12dp"
+                        android:paddingLeft="16dp"
+                        android:paddingRight="16dp"
+                        android:paddingTop="12dp"
+                        android:text="@string/quickActions" />
+
+                    <GridView
+                        android:id="@+id/quickActionsGrid"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:layout_margin="5dp"
+                        android:horizontalSpacing="10dp"
+                        android:numColumns="3"
+                        android:stretchMode="columnWidth"
+                        android:verticalSpacing="10dp" />
+                </LinearLayout>
+            </android.support.v7.widget.CardView>
 
             <android.support.v7.widget.CardView
                 android:id="@+id/card_pieChart"
@@ -98,7 +133,7 @@
 
     </ScrollView>
 
-    <include layout="@layout/fab_layout"/>
+    <include layout="@layout/fab_layout" />
 
 
 </RelativeLayout>

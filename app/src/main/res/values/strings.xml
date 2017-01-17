@@ -309,4 +309,9 @@
     <string name="Pratikraman">Pratikraman</string>
     <string name="Upvaas">Upvaas</string>
     <string name="sankalpExpired">Sankalp is past</string>
+    <string name="surprise">Today\'s Sankalp</string>
+    <string name="acceptSankalp">Accept</string>
+    <string name="declineSankalp">Decline</string>
+    <string name="singleDate">Date</string>
+    <string name="quickActions">Quick Actions</string>
 </resources>

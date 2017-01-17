@@ -9,6 +9,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.content.res.Resources;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.support.v7.preference.PreferenceManager;
@@ -16,11 +17,18 @@ import android.util.DisplayMetrics;
 
 import com.ravijain.sankalp.R;
 import com.ravijain.sankalp.data.SpCategory;
+import com.ravijain.sankalp.data.SpCategoryItem;
+import com.ravijain.sankalp.data.SpContentProvider;
 import com.ravijain.sankalp.data.SpDataConstants;
+import com.ravijain.sankalp.data.SpExceptionOrTarget;
+import com.ravijain.sankalp.data.SpSankalp;
 import com.ravijain.sankalp.fragments.SpSettingsFragment;
 
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Locale;
+import java.util.Random;
 
 /**
  * Created by ravijain on 9/3/2016.
@@ -148,6 +156,16 @@ public class SpUtils {
         }
     }
 
+    public static Drawable getDateDrawable(Calendar c)
+    {
+        SpTextDrawable.Builder builder = SpTextDrawable.builder();
+        builder.textColor(Color.BLACK);
+        builder.fontSize(50);
+        SpTextDrawable drawable = builder
+                .buildRound(SpDateUtils.getDayNumerical(c), Color.WHITE);
+        return drawable;
+    }
+
     public static String getLocalizedString(Context context, String key)
     {
         if (context == null) return key;
@@ -155,6 +173,47 @@ public class SpUtils {
         int resId = context.getResources().getIdentifier(key, "string", packageName);
         if (resId == 0) return key;
         return context.getString(resId);
+    }
+
+    public static SpSankalp getRandomSankalp(Context context)
+    {
+        ArrayList<SpCategoryItem> items = new ArrayList<SpCategoryItem>();
+        items.addAll(SpContentProvider.getInstance(context).getAllCategoryItems().values());
+        Random r = new Random();
+        int tries = 0;
+        while (tries < 3) {
+            int i = r.nextInt(items.size());
+            tries++;
+            if (i < items.size()) {
+                SpCategoryItem categoryItem = items.get(i);
+                int itemId = categoryItem.getId();
+                int categoryId = categoryItem.getCategoryId();
+                SpCategory category = SpContentProvider.getInstance(context).getAllCategories().get(categoryId);
+                SpSankalp s = new SpSankalp(category.getSankalpType(), categoryId, itemId);
+                s.setItem(categoryItem);
+                s.setCategory(category);
+                s.setLifetime(SpConstants.SANKALP_IS_LIFTIME_FALSE);
+                s.setNotification(SpConstants.SANKALP_IS_LIFTIME_TRUE);
+                Date d = SpDateUtils.getTomorrow();
+                s.setFromDate(SpDateUtils.beginOfDate(d));
+                s.setToDate(SpDateUtils.endOfDate(d));
+
+                if (category.getSankalpType() == SpConstants.SANKALP_TYPE_NIYAM) {
+                    SpExceptionOrTarget e = new SpExceptionOrTarget(SpExceptionOrTarget.EXCEPTION_OR_TARGET_TOTAL, context);
+                    e.setExceptionOrTargetCount(1);
+                    s.setExceptionOrTarget(e);
+                }
+
+                return s;
+            }
+        }
+        return null;
+    }
+
+    public static String getSankalpString(Context c, int sankalpType)
+    {
+        String s = sankalpType == SpConstants.SANKALP_TYPE_TYAG ? c.getString(R.string.tyag) : c.getString(R.string.niyam);
+        return s;
     }
 
 }

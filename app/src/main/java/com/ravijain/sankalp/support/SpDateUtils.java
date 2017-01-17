@@ -111,6 +111,12 @@ public class SpDateUtils {
         return cal.getTime();
     }
 
+    public static String getDayNumerical(Calendar c)
+    {
+        return String.valueOf(c.get(Calendar.DAY_OF_MONTH));
+    }
+
+
     /**
      * Given a date, a proper TimeZone, return the ending date of the month of the
      * specified date and TimeZone. If TimeZone is null, meaning use default
@@ -268,6 +274,11 @@ public class SpDateUtils {
         Calendar c = Calendar.getInstance();
         c.setTime(d);
         return isSameDay(c, nextDate(Calendar.getInstance()));
+    }
+
+    public static Date getTomorrow()
+    {
+        return nextDate(Calendar.getInstance()).getTime();
     }
 
     public static boolean isCurrentMonth(Date d) {
