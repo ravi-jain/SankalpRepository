@@ -9,6 +9,7 @@ import android.widget.Button;
 import com.ravijain.sankalp.R;
 import com.ravijain.sankalp.fragments.SpUserProfileFragment;
 import com.ravijain.sankalp.support.SpConstants;
+import com.ravijain.sankalp.support.SpUtils;
 
 public class SpUserSetupActivity extends AppCompatActivity {
 
@@ -16,7 +17,7 @@ public class SpUserSetupActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setTheme(R.style.SankalpTheme);
+        setTheme(SpUtils.getThemeStyle(getApplicationContext()));
         setContentView(R.layout.activity_user_setup);
 
         getSupportFragmentManager().beginTransaction().replace(R.id.contentId, new SpUserProfileFragment(), SpConstants.FRAGMENT_TAG_USER_PROFILE).commit();

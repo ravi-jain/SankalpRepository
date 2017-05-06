@@ -372,18 +372,19 @@ public class SpContentProvider {
             int currentCount = exceptionOrTarget.getExceptionOrTargetCountCurrent();
             if (exceptionOrTarget.getExceptionOrTargetCount() > 0 && currentCount >= 0) {
                 // Add in the ExTar Table
-                addExTarEntry(sankalpId, currentCount, new Date());
+                Date today = SpDateUtils.getToday();
+                addExTarEntry(sankalpId, currentCount, today);
             }
 
         }
     }
 
-    public void addExTarEntry(long sankalpId, int currentCount, Date date) {
+    public void addExTarEntry(long sankalpId, int currentCount, Date d) {
         String tableName = SpTableContract.SpExTarTable.TABLE_NAME;
         ContentValues values = new ContentValues();
         values.put(SpTableContract.SpExTarTable.COLUMN_SANKALP_ID, sankalpId);
         values.put(SpTableContract.SpExTarTable.COLUMN_CURRENT_COUNT, currentCount);
-        values.put(SpTableContract.SpExTarTable.COLUMN_UPDATED_ON, date.getTime());
+        values.put(SpTableContract.SpExTarTable.COLUMN_UPDATED_ON, d.getTime());
 
         SQLiteDatabase db = _dbHelper.getWritableDatabase();
         db.insert(tableName, null, values);
@@ -595,7 +596,6 @@ public class SpContentProvider {
     public void updateSankalp(SpSankalp sankalp) {
         SQLiteDatabase db = _dbHelper.getWritableDatabase();
         ContentValues values = new ContentValues();
-        values.put(SpTableContract.SpSankalpTable.COLUMN_CREATION_DATE, new Date().getTime());
         values.put(SpTableContract.SpSankalpTable.COLUMN_SANKALP_TYPE, sankalp.getSankalpType());
         values.put(SpTableContract.SpSankalpTable.COLUMN_CATEGORY_ID, sankalp.getCategoryID());
         values.put(SpTableContract.SpSankalpTable.COLUMN_ITEM_ID, sankalp.getItemId());
@@ -647,6 +647,7 @@ public class SpContentProvider {
     }
 
     public int getExTarCurrentCount(int exceptionOrTargetid, int sankalpId) {
+
         int count = 0;
         String userQuery = "SELECT " + SpTableContract.SpExTarTable.COLUMN_CURRENT_COUNT + " FROM " + SpTableContract.SpExTarTable.TABLE_NAME
                 + " WHERE " + SpTableContract.SpExTarTable.COLUMN_SANKALP_ID + " = " + sankalpId;
@@ -668,7 +669,6 @@ public class SpContentProvider {
         }
 
         userQuery += " ORDER BY " + SpTableContract.SpExTarTable.COLUMN_UPDATED_ON + " DESC LIMIT 1";
-
         SQLiteDatabase db = _dbHelper.getReadableDatabase();
         Cursor c = db.rawQuery(userQuery, null);
         if (c != null && c.getCount() > 0) {
@@ -684,5 +684,41 @@ public class SpContentProvider {
         return count;
     }
 
+    public Cursor getExTarCursor(int sankalpId){
+        String userQuery = "SELECT * FROM " + SpTableContract.SpExTarTable.TABLE_NAME
+                + " WHERE " + SpTableContract.SpExTarTable.COLUMN_SANKALP_ID + " = " + sankalpId;
+        userQuery += " ORDER BY " + SpTableContract.SpExTarTable.COLUMN_UPDATED_ON + " DESC";
+        SQLiteDatabase db = _dbHelper.getReadableDatabase();
+        Cursor c = db.rawQuery(userQuery, null);
+        return c;
+    }
 
+    public ArrayList<SpExceptionOrTarget> getExTarEntries(SpSankalp s) {
+        int sankalpId = s.getId();
+        String userQuery = "SELECT * FROM " + SpTableContract.SpExTarTable.TABLE_NAME
+                + " WHERE " + SpTableContract.SpExTarTable.COLUMN_SANKALP_ID + " = " + sankalpId;
+        userQuery += " ORDER BY " + SpTableContract.SpExTarTable.COLUMN_UPDATED_ON + " DESC";
+        SQLiteDatabase db = _dbHelper.getReadableDatabase();
+        Cursor c = db.rawQuery(userQuery, null);
+        ArrayList<SpExceptionOrTarget> entries = new ArrayList<>();
+        if (c != null && c.getCount() > 0) {
+            try {
+                c.moveToFirst();
+                while (c.isAfterLast() == false) {
+                    long updatedOn = c.getLong(c.getColumnIndexOrThrow(SpTableContract.SpExTarTable.COLUMN_UPDATED_ON));
+                    int count = c.getInt(c.getColumnIndexOrThrow(SpTableContract.SpExTarTable.COLUMN_CURRENT_COUNT));
+                    SpExceptionOrTarget e = s.getExceptionOrTarget().clone();
+                    e.setLastUpdatedOn(updatedOn);
+                    e.setExceptionOrTargetCountCurrent(count);
+                    entries.add(e);
+                    c.moveToNext();
+                }
+
+            } finally {
+                c.close();
+            }
+        }
+        db.close();
+        return entries;
+    }
 }

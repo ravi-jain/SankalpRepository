@@ -16,6 +16,7 @@ import com.ravijain.sankalp.R;
 import com.ravijain.sankalp.fragments.SpSankalpListFragment;
 import com.ravijain.sankalp.support.SpConstants;
 import com.ravijain.sankalp.support.SpDateUtils;
+import com.ravijain.sankalp.support.SpUtils;
 
 import java.util.Calendar;
 
@@ -31,7 +32,7 @@ public class SpSankalpList extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setTheme(R.style.SankalpTheme);
+        setTheme(SpUtils.getThemeStyle(getApplicationContext()));
         setContentView(R.layout.activity_sp_sankalp_list);
 
 

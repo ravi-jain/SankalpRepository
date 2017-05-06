@@ -7,6 +7,7 @@ import android.support.v7.widget.Toolbar;
 
 import com.ravijain.sankalp.R;
 import com.ravijain.sankalp.fragments.SpAddSankalpFragment;
+import com.ravijain.sankalp.support.SpUtils;
 
 public class SpAddSankalpActivity extends AppCompatActivity {
 
@@ -14,7 +15,7 @@ public class SpAddSankalpActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setTheme(R.style.SankalpTheme);
+        setTheme(SpUtils.getThemeStyle(getApplicationContext()));
         setContentView(R.layout.activity_sp_add_sankalp);
 
         getSupportFragmentManager().beginTransaction().replace(R.id.main_content, new SpAddSankalpFragment()).commit();

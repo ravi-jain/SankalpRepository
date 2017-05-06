@@ -35,8 +35,8 @@
             app:elevation="0dp"
             app:tabTextColor="#d3d3d3"
             app:tabSelectedTextColor="#ffffff"
-            app:tabIndicatorColor="?attr/colorAccent"
-            android:minHeight="?attr/actionBarSize"
+            app:tabIndicatorColor="#ffffff"
+            android:minHeight="20dp"
             />
 
     </android.support.design.widget.AppBarLayout>

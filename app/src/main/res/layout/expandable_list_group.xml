@@ -12,7 +12,7 @@
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
         android:contentDescription="@string/sankalpCategory"
-        android:src="@drawable/ic_dashboard_black_24dp" />
+        android:src="@drawable/ic_home_black_24dp" />
 
     <TextView
         android:id="@+id/headerTv"

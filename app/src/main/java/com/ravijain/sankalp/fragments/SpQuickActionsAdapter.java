@@ -1,6 +1,7 @@
 package com.ravijain.sankalp.fragments;
 
 import android.content.Context;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -54,11 +55,11 @@ public class SpQuickActionsAdapter extends BaseAdapter {
             if (position == 3) {
                 c.setTime(SpDateUtils.getTomorrow());
             }
-            iv.setImageDrawable(SpUtils.getDateDrawable(c));
+            iv.setImageDrawable(SpUtils.getDateDrawable(c, _context));
         }
         else {
 
-            iv.setColorFilter(R.color.sankalp_primary);
+            iv.setColorFilter(SpUtils.getPrimaryColor(_context));
             iv.setImageResource(_images[position]);
         }
 

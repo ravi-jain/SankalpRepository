@@ -2,6 +2,8 @@ package com.ravijain.sankalp.support;
 
 import android.provider.CalendarContract;
 
+import com.ravijain.sankalp.data.SpExceptionOrTarget;
+
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -279,6 +281,34 @@ public class SpDateUtils {
     public static Date getTomorrow()
     {
         return nextDate(Calendar.getInstance()).getTime();
+    }
+
+    public static Date getToday()
+    {
+        return Calendar.getInstance().getTime();
+    }
+
+    public static boolean isSamePeriod(long dateValue, String currentPeriod, int periodMarker)
+    {
+        return (getPeriodString(dateValue, periodMarker).equals(currentPeriod));
+    }
+
+    public static String getPeriodString(long value, int periodMarker)
+    {
+        Calendar c = Calendar.getInstance();
+        c.setTimeInMillis(value);
+        if (periodMarker == SpExceptionOrTarget.EXCEPTION_OR_TARGET_MONTHLY) {
+            return getMonthString(c);
+        }
+        else if (periodMarker == SpExceptionOrTarget.EXCEPTION_OR_TARGET_YEARLY) {
+            return getYearString(c);
+        }
+        else if (periodMarker == SpExceptionOrTarget.EXCEPTION_OR_TARGET_DAILY) {
+            return getNumericalDayString(c);
+        }
+        else {
+            return getFriendlyDateString(c.getTime());
+        }
     }
 
     public static boolean isCurrentMonth(Date d) {

@@ -16,6 +16,7 @@ import android.support.v7.widget.ShareActionProvider;
 import android.support.v7.widget.SwitchCompat;
 import android.text.TextUtils;
 import android.util.SparseBooleanArray;
+import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -25,12 +26,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.NumberPicker;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.ravijain.sankalp.R;
+import com.ravijain.sankalp.data.SpUser;
 import com.ravijain.sankalp.support.SpConstants;
 import com.ravijain.sankalp.data.SpCategoryItem;
 import com.ravijain.sankalp.data.SpContentProvider;
@@ -224,6 +227,23 @@ public class SpAddSankalpFragment extends Fragment implements View.OnClickListen
 
         if (s != null && s.getExceptionOrTarget() != null && s.getExceptionOrTarget().getExceptionOrTargetCount() > 0) {
             v.setVisibility(View.VISIBLE);
+
+            ImageButton historyButton = (ImageButton) _rootView.findViewById(R.id.switch1);
+            if (!_isEditMode) {
+                historyButton.setVisibility(View.GONE);
+            }
+            else {
+                historyButton.setColorFilter(SpUtils.getPrimaryColor(getContext()));
+                historyButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        SpSankalpHistoryDialog d = new SpSankalpHistoryDialog();
+                        d.setSankalp(_originalSankalp);
+                        _launchSimpleAlertDialog(d, SpConstants.FRAGMENT_TAG_HISTORY, R.layout.history_short_view,
+                                getString(R.string.history), null, R.string.viewAllHeader);
+                    }
+                });
+            }
         } else {
             v.setVisibility(View.GONE);
         }
@@ -253,7 +273,7 @@ public class SpAddSankalpFragment extends Fragment implements View.OnClickListen
                 notifSwitch.setChecked(false);
             }
         }
-        _loadItemView(notificationView, R.drawable.ic_alarm_black_24dp, getString(R.string.showReminders), notification);
+        _loadItemView(notificationView, R.drawable.ic_add_alert_black_24dp, getString(R.string.showReminders), notification);
 
         // Description
         String description = s != null ? s.getDescription() : getString(R.string.descriptionAddPrompt);
@@ -280,6 +300,7 @@ public class SpAddSankalpFragment extends Fragment implements View.OnClickListen
         ImageView iconView = (ImageView) view.findViewById(R.id.add_icon);
         if (imageResourceId > -1) {
             iconView.setImageResource(imageResourceId);
+            iconView.setColorFilter(SpUtils.getPrimaryColor(getContext()));
         } else {
             String letter = String.valueOf(label.toCharArray()[0]).toUpperCase();
             SpColorGenerator generator = SpColorGenerator.MATERIAL;
@@ -338,7 +359,7 @@ public class SpAddSankalpFragment extends Fragment implements View.OnClickListen
     }
 
     private boolean _hasSankalpExpired(SpSankalp s) {
-        return s.getToDate() != null && s.getToDate().before(new Date());
+        return SpUtils.isSankalpPast(s);
     }
 
     @Override
@@ -425,6 +446,11 @@ public class SpAddSankalpFragment extends Fragment implements View.OnClickListen
 
     private void _launchSimpleAlertDialog(SpSimpleAlertDialog d, String tag, int layoutId, String title) {
 
+        _launchSimpleAlertDialog(d, tag, layoutId, title, null, null);
+    }
+
+    private void _launchSimpleAlertDialog(SpSimpleAlertDialog d, String tag, int layoutId, String title, Integer okText, Integer cancelText) {
+
         if (d == null) {
             d = new SpSimpleAlertDialog();
         }
@@ -432,6 +458,12 @@ public class SpAddSankalpFragment extends Fragment implements View.OnClickListen
         Bundle args = new Bundle();
         args.putInt(SpSimpleAlertDialog.AD_LAYOUT_ID, layoutId);
         args.putString(SpSimpleAlertDialog.AD_TITLE, title);
+        if (okText != null) {
+            args.putInt(SpSimpleAlertDialog.AD_OK_RESOURCE_ID, okText);
+        }
+        if (cancelText != null) {
+            args.putInt(SpSimpleAlertDialog.AD_CANCEL_RESOURCE_ID, cancelText);
+        }
         d.setArguments(args);
         d.show(getFragmentManager(), tag);
     }
@@ -565,7 +597,7 @@ public class SpAddSankalpFragment extends Fragment implements View.OnClickListen
                 }
                 int currentCount = _editedSankalp.getExceptionOrTarget().getExceptionOrTargetCountCurrent();
                 if (_originalSankalp.getExceptionOrTarget().getExceptionOrTargetCountCurrent() != currentCount) {
-                    provider.addExTarEntry(_originalSankalp.getId(), currentCount, new Date());
+                    provider.addExTarEntry(_originalSankalp.getId(), currentCount, SpDateUtils.getToday());
                 }
             } else if (_requestType == REQUEST_TYPE_ADD) {
                 provider.addSankalp(_editedSankalp);

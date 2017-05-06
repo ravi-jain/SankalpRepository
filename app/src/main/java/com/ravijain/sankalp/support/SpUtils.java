@@ -14,6 +14,7 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.support.v7.preference.PreferenceManager;
 import android.util.DisplayMetrics;
+import android.util.TypedValue;
 
 import com.ravijain.sankalp.R;
 import com.ravijain.sankalp.data.SpCategory;
@@ -131,6 +132,65 @@ public class SpUtils {
         }
     }
 
+    public static int getThemeStyle(Context context)
+    {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+        String theme = sharedPreferences.getString(SpSettingsFragment.KEY_PREF_THEMES, context.getString(R.string.defaultTheme));
+
+        int appTheme = R.style.DeepPurpleTheme;
+
+        if (theme.equals(context.getString(R.string.defaultTheme)) || theme.equals(context.getString(R.string.deepPurpleTheme))) {
+            appTheme = R.style.DeepPurpleTheme;
+        }
+        else if (theme.equals(context.getString(R.string.purpleTheme))) {
+            appTheme = R.style.PurpleTheme;
+        }
+        else if (theme.equals(context.getString(R.string.indigoTheme))) {
+            appTheme = R.style.IndigoTheme;
+        }
+        else if (theme.equals(context.getString(R.string.tealTheme))) {
+            appTheme = R.style.TealTheme;
+        }
+        else if (theme.equals(context.getString(R.string.redTheme))) {
+            appTheme = R.style.RedTheme;
+        }
+        else if (theme.equals(context.getString(R.string.blueTheme))) {
+            appTheme = R.style.BlueTheme;
+        }
+        else if (theme.equals(context.getString(R.string.lightBlueTheme))) {
+            appTheme = R.style.LightBlueTheme;
+        }
+        else if (theme.equals(context.getString(R.string.cyanTheme))) {
+            appTheme = R.style.CyanTheme;
+        }
+        else if (theme.equals(context.getString(R.string.greenTheme))) {
+            appTheme = R.style.GreenTheme;
+        }
+        else if (theme.equals(context.getString(R.string.amberTheme))) {
+            appTheme = R.style.AmberTheme;
+        }
+        else if (theme.equals(context.getString(R.string.orangeTheme))) {
+            appTheme = R.style.OrangeTheme;
+        }
+        else if (theme.equals(context.getString(R.string.deepOrangeTheme))) {
+            appTheme = R.style.DeepOrangeTheme;
+        }
+
+        return appTheme;
+    }
+
+    public static int getColor(Context context, int attr)
+    {
+        final TypedValue value1 = new TypedValue();
+        context.getTheme ().resolveAttribute (attr, value1, true);
+        return value1.data;
+    }
+
+    public static int getPrimaryColor(Context context)
+    {
+        return getColor(context, R.attr.colorPrimary);
+    }
+
     public static Drawable getIconDrawable(SpCategory category, Context context)
     {
         /*if (category.getCategoryName().equals(SpDataConstants.CATEGORY_NAME_FOOD)) {
@@ -143,24 +203,24 @@ public class SpUtils {
             return context.getResources().getDrawable(R.drawable.ic_local_airport_black_24dp);
         }
         else if (category.getCategoryName().equals(SpDataConstants.CATEGORY_NAME_DHARMA)) {
-            return context.getResources().getDrawable(R.drawable.ic_dashboard_black_24dp);
+            return context.getResources().getDrawable(R.drawable.ic_home_black_24dp);
         }
         else {
             String letter = String.valueOf(category.getCategoryName().toCharArray()[0]).toUpperCase();
             SpColorGenerator generator = SpColorGenerator.MATERIAL;
             SpTextDrawable.Builder builder = SpTextDrawable.builder();
-//            builder.width(24).height(24);
             SpTextDrawable drawable = builder
                     .buildRoundRect(letter, generator.getRandomColor(), 2);
             return drawable;
         }
     }
 
-    public static Drawable getDateDrawable(Calendar c)
+    public static Drawable getDateDrawable(Calendar c, Context context)
     {
         SpTextDrawable.Builder builder = SpTextDrawable.builder();
         builder.textColor(Color.BLACK);
         builder.fontSize(50);
+        builder.width(60).height(60);
         SpTextDrawable drawable = builder
                 .buildRound(SpDateUtils.getDayNumerical(c), Color.WHITE);
         return drawable;
@@ -173,6 +233,11 @@ public class SpUtils {
         int resId = context.getResources().getIdentifier(key, "string", packageName);
         if (resId == 0) return key;
         return context.getString(resId);
+    }
+
+    public static boolean isSankalpPast(SpSankalp s)
+    {
+        return s.getToDate() != null && s.getToDate().before(new Date());
     }
 
     public static SpSankalp getRandomSankalp(Context context)

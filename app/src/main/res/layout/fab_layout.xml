@@ -6,7 +6,7 @@
     android:paddingRight="10dp"
     android:paddingBottom="10dp"
     android:paddingLeft="10dp"
-    card_view:menu_colorNormal="@color/sankalp"
+    card_view:menu_colorNormal="?attr/colorPrimary"
     card_view:menu_colorPressed="@color/white_pressed"
     card_view:menu_colorRipple="#99FFFFFF"
     card_view:menu_animationDelayPerItem="50"

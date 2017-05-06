@@ -73,7 +73,7 @@
     <string name="Share">Share</string>
     <string name="overviewHeader">Overview</string>
     <string name="mostRecentHeader">Most Recent</string>
-    <string name="viewAllHeader">View Details</string>
+    <string name="viewAllHeader">View All</string>
     <string name="total2">Total</string>
     <string name="filterList">Filter</string>
     <string name="ok">OK</string>
@@ -136,6 +136,8 @@
     <string name="endDate">End Date</string>
     <string name="startDate">Start Date</string>
     <string name="creationDate">Creation Date</string>
+    <string name="Themes">Themes</string>
+    <string name="selectTheme">Select Theme</string>
 
     <!-- Categories -->
     <string name="Entertainment">Entertainment</string>
@@ -314,4 +316,5 @@
     <string name="declineSankalp">Decline</string>
     <string name="singleDate">Date</string>
     <string name="quickActions">Quick Actions</string>
+    <string name="history">History</string>
 </resources>

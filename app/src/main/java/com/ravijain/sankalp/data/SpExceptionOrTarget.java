@@ -20,12 +20,29 @@ public class SpExceptionOrTarget {
     private String _label;
     private int _exceptionOrTargetCount;
     private int _exceptionOrTargetCountCurrent = EXCEPTION_OR_TARGET_UNDEFINED;
+
+    public long getLastUpdatedOn() {
+        return _lastUpdatedOn;
+    }
+
+    public void setLastUpdatedOn(long _lastUpdatedOn) {
+        this._lastUpdatedOn = _lastUpdatedOn;
+    }
+
+    private long _lastUpdatedOn;
     private Context _context;
 
     public SpExceptionOrTarget(int id, Context context) {
         _id = id;
         _context = context;
         _setLabel(id);
+    }
+
+    public SpExceptionOrTarget clone()
+    {
+        SpExceptionOrTarget e = new SpExceptionOrTarget(_id, _context);
+        e.setExceptionOrTargetCount(getExceptionOrTargetCount());
+        return e;
     }
 
     @Override
