@@ -1,6 +1,6 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+<RelativeLayout xmlns:card_view="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.ravijain.sankalp.fragments.SpCalendarFragment">
@@ -33,7 +33,7 @@
                     <com.prolificinteractive.materialcalendarview.MaterialCalendarView
                         android:id="@+id/db_calendarView"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="wrap_content"/>
 
                     <Button
                         android:id="@+id/viewMonthDetails_button"
@@ -43,7 +43,6 @@
                         android:paddingLeft="16dp"
                         android:text="@string/Details"
                         android:textColor="?attr/colorAccent" />
-
 
                 </LinearLayout>
 

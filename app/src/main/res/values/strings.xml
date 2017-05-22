@@ -76,6 +76,7 @@
     <string name="viewAllHeader">View All</string>
     <string name="total2">Total</string>
     <string name="filterList">Filter</string>
+    <string name="switchView">Switch</string>
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
     <string name="all">All</string>
@@ -133,6 +134,7 @@
     <string name="multiDeletePrompt">The selected sankalps will be deleted forever. Proceed?</string>
     <string name="singleDeletePrompt">The sankalp will be deleted forever. Proceed?</string>
     <string name="sort">Sort By</string>
+    <string name="status">Status</string>
     <string name="endDate">End Date</string>
     <string name="startDate">Start Date</string>
     <string name="creationDate">Creation Date</string>
@@ -317,4 +319,6 @@
     <string name="singleDate">Date</string>
     <string name="quickActions">Quick Actions</string>
     <string name="history">History</string>
+    <string name="newToOld">New to Old</string>
+    <string name="oldToNew">Old to New</string>
 </resources>

@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
@@ -28,10 +29,12 @@ import com.github.clans.fab.FloatingActionMenu;
 import com.github.clans.fab.FloatingActionButton;
 import com.ravijain.sankalp.R;
 import com.ravijain.sankalp.activities.SpAddSankalpActivity;
+import com.ravijain.sankalp.activities.SpSankalpList;
 import com.ravijain.sankalp.support.SpConstants;
 import com.ravijain.sankalp.data.SpContentProvider;
 import com.ravijain.sankalp.data.SpSankalp;
 import com.ravijain.sankalp.support.SpDividerItemDecoration;
+import com.ravijain.sankalp.support.SpUtils;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -53,7 +56,7 @@ public class SpSankalpListFragment extends SpFabBaseFragment implements SearchVi
     private int _listFilter;
     private Calendar _day = null;
 
-    private int _sortId = R.id.rb_endDate;
+    private int _sortId = R.string.endDate;
     private int _sortOrder = SpConstants.SORT_ORDER_ASCENDING;
 
     public SpSankalpListFragment() {
@@ -65,6 +68,7 @@ public class SpSankalpListFragment extends SpFabBaseFragment implements SearchVi
         View rootView = inflater.inflate(R.layout.fragment_sp_sankalp_list, container, false);
         setHasOptionsMenu(true);
         setupFAB(rootView);
+        _setupNavigationMenu(rootView);
 
         Bundle b = getArguments();
         if (b != null) {
@@ -92,8 +96,7 @@ public class SpSankalpListFragment extends SpFabBaseFragment implements SearchVi
             public void onItemClicked(int position) {
                 if (actionMode != null) {
                     toggleSelection(position);
-                }
-                else {
+                } else {
                     SpSankalp sankalp = _sankalpAdapter.getSankalpByPosition(position);
                     Intent intent = new Intent(getActivity(), SpAddSankalpActivity.class);
                     intent.putExtra(SpConstants.INTENT_KEY_SANKALP_TYPE, sankalp.getSankalpType());
@@ -120,12 +123,35 @@ public class SpSankalpListFragment extends SpFabBaseFragment implements SearchVi
         recyclerView.setAdapter(_sankalpAdapter);
         recyclerView.addItemDecoration(new SpDividerItemDecoration(getContext(), LinearLayoutManager.VERTICAL));
 
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener()
+        {
+            FloatingActionMenu fab = (FloatingActionMenu) getActivity().findViewById(R.id.right_labels);
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy)
+            {
+                if (dy > 0 ||dy<0 && fab.isShown())
+                {
+                    fab.hideMenu(false);
+                }
+            }
+
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState)
+            {
+                if (newState == RecyclerView.SCROLL_STATE_IDLE)
+                {
+                    fab.showMenu(false);
+                }
+
+                super.onScrollStateChanged(recyclerView, newState);
+            }
+        });
+
         _refreshView(_sankalpType, _listFilter, _day);
         return rootView;
     }
 
-    public void setupFAB(View rootView)
-    {
+    public void setupFAB(View rootView) {
         FloatingActionButton fabTyag = (FloatingActionButton) getActivity().findViewById(R.id.chartCalendarDb_addTyagButton);
         FloatingActionButton niyamTyag = (FloatingActionButton) getActivity().findViewById(R.id.chartCalendarDb_addNiyamButton);
         fabTyag.setOnClickListener(this);
@@ -163,46 +189,97 @@ public class SpSankalpListFragment extends SpFabBaseFragment implements SearchVi
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.menu_list, menu);
 
-        SearchView searchView = (SearchView) menu.findItem(R.id.list_search).getActionView();
+        MenuItem searchItem = menu.findItem(R.id.list_search);
+        SearchView searchView = (SearchView) searchItem.getActionView();
         searchView.setOnQueryTextListener(this);
-    }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        if (id == R.id.action_list_filter) {
-
-            SpFilterDialog d = new SpFilterDialog();
-            d.setTargetFragment(this, 300);
-            Bundle args = new Bundle();
-            args.putInt(SpSimpleAlertDialog.AD_LAYOUT_ID, R.layout.filter_dialog);
-            args.putString(SpSimpleAlertDialog.AD_TITLE, getString(R.string.filterList));
-            args.putInt(SpConstants.INTENT_KEY_SANKALP_LIST_FILTER, _listFilter);
-            d.setArguments(args);
-            d.show(getFragmentManager(), SpConstants.FRAGMENT_TAG_FILTER);
-            return true;
-        } else if (id == R.id.action_list_sort) {
-            SpSortDialog d = new SpSortDialog();
-            d.setTargetFragment(this, 300);
-            Bundle args = new Bundle();
-            args.putInt(SpSimpleAlertDialog.AD_LAYOUT_ID, R.layout.sort_dialog);
-            args.putInt(SpConstants.INTENT_SORTID, _sortId);
-            args.putString(SpSimpleAlertDialog.AD_TITLE, getString(R.string.sort));
-            d.setArguments(args);
-            d.show(getFragmentManager(), SpConstants.FRAGMENT_TAG_SORT);
-            return true;
+        boolean searchActivated = getActivity().getIntent().getBooleanExtra(SpConstants.INTENT_KEY_SANKALP_LIST_FILTER_SEARCH_ACTIVATED, false);
+        if (searchActivated) {
+            searchItem.expandActionView();
         }
-
-        return super.onOptionsItemSelected(item);
     }
+
+    private void _setupNavigationMenu(View rootView) {
+
+        BottomNavigationView bottomNavigationView = (BottomNavigationView)
+                getActivity().findViewById(R.id.bottom_navigation);
+        final SpSankalpListFragment that = this;
+        bottomNavigationView.setOnNavigationItemSelectedListener(
+                new BottomNavigationView.OnNavigationItemSelectedListener() {
+                    @Override
+                    public boolean onNavigationItemSelected(MenuItem item) {
+                        switch (item.getItemId()) {
+                            case R.id.action_list_filter:
+                                SpFilterDialog d = new SpFilterDialog();
+                                d.setTargetFragment(that, 300);
+                                Bundle args = new Bundle();
+                                args.putInt(SpSimpleAlertDialog.AD_LAYOUT_ID, R.layout.filter_dialog);
+                                args.putString(SpSimpleAlertDialog.AD_TITLE, getString(R.string.filterList));
+                                args.putInt(SpConstants.INTENT_KEY_SANKALP_LIST_FILTER, _listFilter);
+                                d.setArguments(args);
+                                d.show(getFragmentManager(), SpConstants.FRAGMENT_TAG_FILTER);
+                                break;
+                            case R.id.action_list_sort:
+                                SpSortDialog d1 = new SpSortDialog();
+                                d1.setTargetFragment(that, 300);
+                                Bundle args1 = new Bundle();
+                                args1.putInt(SpSimpleAlertDialog.AD_LAYOUT_ID, R.layout.sort_dialog);
+                                args1.putInt(SpConstants.INTENT_SORTID, _sortId);
+                                args1.putString(SpSimpleAlertDialog.AD_TITLE, getString(R.string.sort));
+                                d1.setArguments(args1);
+                                d1.show(getFragmentManager(), SpConstants.FRAGMENT_TAG_SORT);
+                                break;
+                            case R.id.action_list_switch:
+                                SpSwitchViewDialog d2 = new SpSwitchViewDialog();
+                                d2.setTargetFragment(that, 300);
+                                Bundle args2 = new Bundle();
+                                args2.putInt(SpSimpleAlertDialog.AD_LAYOUT_ID, R.layout.switch_view_dialog);
+                                args2.putString(SpSimpleAlertDialog.AD_TITLE, getString(R.string.switchView));
+                                args2.putInt(SpConstants.INTENT_KEY_SANKALP_LIST_FILTER, _listFilter);
+                                d2.setArguments(args2);
+                                d2.show(getFragmentManager(), SpConstants.FRAGMENT_TAG_SWITCH_VIEW);
+                                break;
+                        }
+                        return false;
+                    }
+                });
+    }
+
+//    @Override
+//    public boolean onOptionsItemSelected(MenuItem item) {
+//        int id = item.getItemId();
+//        if (id == R.id.action_list_filter) {
+//
+//            SpFilterDialog d = new SpFilterDialog();
+//            d.setTargetFragment(this, 300);
+//            Bundle args = new Bundle();
+//            args.putInt(SpSimpleAlertDialog.AD_LAYOUT_ID, R.layout.filter_dialog);
+//            args.putString(SpSimpleAlertDialog.AD_TITLE, getString(R.string.filterList));
+//            args.putInt(SpConstants.INTENT_KEY_SANKALP_LIST_FILTER, _listFilter);
+//            d.setArguments(args);
+//            d.show(getFragmentManager(), SpConstants.FRAGMENT_TAG_FILTER);
+//            return true;
+//        } else if (id == R.id.action_list_sort) {
+//            SpSortDialog d = new SpSortDialog();
+//            d.setTargetFragment(this, 300);
+//            Bundle args = new Bundle();
+//            args.putInt(SpSimpleAlertDialog.AD_LAYOUT_ID, R.layout.sort_dialog);
+//            args.putInt(SpConstants.INTENT_SORTID, _sortId);
+//            args.putString(SpSimpleAlertDialog.AD_TITLE, getString(R.string.sort));
+//            d.setArguments(args);
+//            d.show(getFragmentManager(), SpConstants.FRAGMENT_TAG_SORT);
+//            return true;
+//        }
+//
+//        return super.onOptionsItemSelected(item);
+//    }
 
     private void _filterList(int sankalpType, int listFilter) {
         //_listSummaryTv.setText(_getListSummary(sankalpType, listFilter));
         _sankalpAdapter.filter(sankalpType, listFilter);
     }
 
-    private void _sortList(int sortId)
-    {
+    public void sortList(int sortId) {
         if (sortId == _sortId) _sortOrder = _sortOrder * -1;
         else {
             _sortOrder = SpConstants.SORT_ORDER_ASCENDING;
@@ -271,12 +348,12 @@ public class SpSankalpListFragment extends SpFabBaseFragment implements SearchVi
 
     @Override
     public void onSimpleAlertDialogPositiveClick(AlertDialog dialog, String tag) {
-        if (tag.equals(SpConstants.FRAGMENT_TAG_SORT)) {
+        /*if (tag.equals(SpConstants.FRAGMENT_TAG_SORT)) {
             RadioGroup sTRG = (RadioGroup) dialog.findViewById(R.id.rg_sort);
             if (sTRG == null) return;
             int id = sTRG.getCheckedRadioButtonId();
-            _sortList(id);
-        } else if (tag.equals(SpConstants.FRAGMENT_TAG_FILTER)) {
+            sortList(id);
+        } else */if (tag.equals(SpConstants.FRAGMENT_TAG_FILTER)) {
             RadioGroup sTRG = (RadioGroup) dialog.findViewById(R.id.rg_sankalpType);
 
             int sankalpTypeRB = sTRG.getCheckedRadioButtonId();
@@ -315,7 +392,7 @@ public class SpSankalpListFragment extends SpFabBaseFragment implements SearchVi
 
     /**
      * Toggle the selection state of an item.
-     *
+     * <p/>
      * If the item was the last one in the selection and is unselected, the selection is stopped.
      * Note that the selection must already be started (actionMode must not be null).
      *
@@ -345,7 +422,7 @@ public class SpSankalpListFragment extends SpFabBaseFragment implements SearchVi
 
         @Override
         public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-            mode.getMenuInflater().inflate (R.menu.menu_list_context, menu);
+            mode.getMenuInflater().inflate(R.menu.menu_list_context, menu);
             return true;
         }
 
@@ -438,6 +515,7 @@ public class SpSankalpListFragment extends SpFabBaseFragment implements SearchVi
                 _sankalpAdapter.clearAdapter();
                 _sankalpAdapter.loadAdapter(_sankalps);
                 _sankalpAdapter.notifyDataSetChanged();
+
             }
         }
 

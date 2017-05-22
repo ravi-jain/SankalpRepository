@@ -6,5 +6,6 @@
         android:id="@+id/action_showDashboard"
         android:title="@string/calendarHeader"
         android:icon="@drawable/ic_home_black_24dp"
+        app:itemIconTint="@color/white"
         app:showAsAction="always"/>
 </menu>

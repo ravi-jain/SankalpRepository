@@ -721,4 +721,34 @@ public class SpContentProvider {
         db.close();
         return entries;
     }
+
+    public static void addDummyData(Context c)
+    {
+        ArrayList<SpSankalp> sankalps = new ArrayList<SpSankalp>();
+
+        // Tyag
+        int sankalpType = SpConstants.SANKALP_TYPE_TYAG;
+        SpContentProvider cp = SpContentProvider.getInstance(c);
+        ArrayList<SpCategory> categories = cp.getAllCategoriesBySankalpType(sankalpType);
+
+
+        //sankalps.add(createSankalp(c, sankalpType, 0, cp.getAllCategoryItemsByCategoryId(0).get(0).getId()), )
+    }
+
+    public static SpSankalp createSankalp(Context c, int sankalpType, int categoryId, int itemId, Date from, Date to, int notification, int exTarId, int count)
+    {
+        SpSankalp s = new SpSankalp(sankalpType, categoryId, itemId);
+        s.setFromDate(from);
+        if (to == null) {
+            s.setLifetime(SpConstants.SANKALP_IS_LIFTIME_TRUE);
+        }else {
+            s.setToDate(to);
+        }
+        s.setNotification(notification);
+        if (exTarId > SpExceptionOrTarget.EXCEPTION_OR_TARGET_UNDEFINED) {
+            SpExceptionOrTarget exTar = new SpExceptionOrTarget(exTarId, c);
+            exTar.setExceptionOrTargetCount(count);
+        }
+        return s;
+    }
 }

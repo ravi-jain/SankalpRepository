@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/action_list_sort"
+        app:showAsAction="always"
+        android:icon="@drawable/ic_sort_black_24dp"
+        android:title="@string/sort" />
+
+    <item
+        android:id="@+id/action_list_filter"
+        app:showAsAction="always"
+        android:icon="@drawable/ic_filter_list_black_24dp"
+        android:title="@string/filterList" />
+
+    <item
+        android:id="@+id/action_list_switch"
+        app:showAsAction="always"
+        android:icon="@drawable/ic_swap_horiz_black_24dp"
+        android:title="@string/switchView" />
+
+</menu>

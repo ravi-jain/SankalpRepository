@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.prolificinteractive.materialcalendarview.CalendarDay;
+import com.prolificinteractive.materialcalendarview.CalendarMode;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
 import com.prolificinteractive.materialcalendarview.OnMonthChangedListener;
@@ -37,6 +38,9 @@ public class SpCalendarViewHandler implements OnDateSelectedListener, OnMonthCha
     public static final int SELECTION_MODE_RANGE = 2;
     public static final int SELECTION_MODE_EVENT = 3;
 
+    public static final int DISPLAY_MODE_MONTH = 4;
+    public static final int DISPLAY_MODE_WEEK = 5;
+
     public SpCalendarViewHandler(Context applicationContext, View view)
     {
         _applicationContext = applicationContext;
@@ -44,6 +48,10 @@ public class SpCalendarViewHandler implements OnDateSelectedListener, OnMonthCha
     }
 
     public void constructCalendar(int viewId, int selectionMode)
+    {
+        constructCalendar(viewId, selectionMode, DISPLAY_MODE_MONTH);
+    }
+    public void constructCalendar(int viewId, int selectionMode, int displayMode)
     {
         _selectionMode = selectionMode;
         _widget = (MaterialCalendarView) _view.findViewById(viewId);

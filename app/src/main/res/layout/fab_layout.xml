@@ -4,7 +4,7 @@
     android:layout_alignParentBottom="true"
     android:layout_alignParentRight="true"
     android:paddingRight="10dp"
-    android:paddingBottom="10dp"
+    android:paddingBottom="80dp"
     android:paddingLeft="10dp"
     card_view:menu_colorNormal="?attr/colorPrimary"
     card_view:menu_colorPressed="@color/white_pressed"

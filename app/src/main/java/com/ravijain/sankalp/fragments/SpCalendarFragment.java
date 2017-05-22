@@ -59,7 +59,7 @@ public class SpCalendarFragment extends SpFabBaseFragment{
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.action_showDashboard) {
-            getFragmentManager().beginTransaction().replace(R.id.content_frame, new SpChartCalendarDashboard()).commit();
+            getFragmentManager().beginTransaction().replace(R.id.content_frame, new SpMainDashboard()).commit();
             return true;
         }
 

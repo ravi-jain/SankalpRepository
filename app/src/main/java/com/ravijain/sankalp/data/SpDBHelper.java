@@ -89,7 +89,6 @@ public class SpDBHelper extends SQLiteOpenHelper {
         _createItemTable(sqLiteDatabase);
         sqLiteDatabase.execSQL(SQL_CREATE_SANKALP_TABLE);
         sqLiteDatabase.execSQL(SQL_CREATE_EXTAR_TABLE);
-//        sqLiteDatabase.execSQL(SQL_CREATE_TYAG_TABLE);
     }
 
     private void _createItemTable(SQLiteDatabase sqLiteDatabase) {

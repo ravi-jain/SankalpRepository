@@ -213,13 +213,13 @@ public class SpSankalp {
     public int compareTo(int compareCriteria, SpSankalp s) {
         switch (compareCriteria) {
 
-            case R.id.rb_startDate:
+            case R.string.startDate:
                 return this.getFromDate().compareTo(s.getFromDate());
-            case R.id.rb_creationDate:
+            case R.string.creationDate:
                 return this.getCreationDate().compareTo(s.getCreationDate());
-            case R.id.rb_itemName:
+            case R.string.itemName:
                 return this.getItem().getCategoryItemName().compareTo(s.getItem().getCategoryItemName());
-            case R.id.rb_endDate:
+            case R.string.endDate:
             default:
                 if (s.getToDate() == null) return -1;
                 if (getToDate() == null) return 1;

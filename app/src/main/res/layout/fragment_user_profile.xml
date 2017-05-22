@@ -112,36 +112,6 @@
 
                 </android.support.design.widget.TextInputLayout>
 
-                <!--<TextView
-                    style="@style/SpText"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingTop="@dimen/activity_vertical_margin"
-                    android:text="@string/preferredLanguage" />
-
-                <View
-                    style="@style/SpHorizontalDivider"
-                    android:layout_marginBottom="8dp" />
-
-                <RadioGroup
-                    android:id="@+id/language_rg"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:checkedButton="@+id/english_radio"
-                    android:orientation="horizontal">
-
-                    <RadioButton
-                        android:id="@+id/english_radio"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/english" />
-
-                    <RadioButton
-                        android:id="@+id/hindi_radio"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/hindi" />
-                </RadioGroup>-->
             </LinearLayout>
 
 
