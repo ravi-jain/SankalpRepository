@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -46,7 +47,8 @@ public class SpSwitchViewDialog extends SpSimpleAlertDialog {
                                     int position, long id) {
 
                 // selected item
-                String option = ((TextView) view).getText().toString();
+                TextView tv = (TextView) view.findViewById(R.id.add_label);
+                String option = tv.getText().toString();
                 int listFilter = -1;
                 if (option.equals(getResources().getString(R.string.status))) {
                     listFilter = SpConstants.INTENT_VALUE_SANKALP_LIST_FILTER_CURRENT;
@@ -81,20 +83,30 @@ public class SpSwitchViewDialog extends SpSimpleAlertDialog {
     }
 
     private class SwitchViewListAdapter extends ArrayAdapter<String> {
+        String[] _options;
         public SwitchViewListAdapter(Context context, String[] options) {
-            super(context, android.R.layout.simple_list_item_1, options);
+            super(context, 0, options);
+            _options = options;
         }
 
         public View getView(int position, View convertView, ViewGroup parent) {
-            convertView = super.getView(position, convertView, parent);
+            if (convertView == null) {
+                convertView = LayoutInflater.from(getContext()).inflate(R.layout.icon_right_one_line_list_item_layout, parent, false);
+            }
 
+            TextView tv = (TextView) convertView.findViewById(R.id.add_label);
+            tv.setText(_options[position]);
+            ImageView icon = (ImageView) convertView.findViewById(R.id.add_icon);
             if ((position == 0 && _listFilter <= SpConstants.INTENT_VALUE_SANKALP_LIST_FILTER_ALL) ||
                     (_listFilter == SpConstants.INTENT_VALUE_SANKALP_LIST_FILTER_YEAR && position == 1) ||
                     (_listFilter == SpConstants.INTENT_VALUE_SANKALP_LIST_FILTER_MONTH && position == 2) ||
                     (_listFilter == SpConstants.INTENT_VALUE_SANKALP_LIST_FILTER_DAY && position == 3)) {
-                ((TextView) convertView).setTextColor(SpUtils.getPrimaryColor(getContext()));
+                tv.setTextColor(SpUtils.getPrimaryColor(getContext()));
+                icon.setVisibility(View.VISIBLE);
+                icon.setColorFilter(SpUtils.getPrimaryColor(getContext()));
             } else {
-                ((TextView) convertView).setTextColor(getResources().getColor(R.color.black));
+                tv.setTextColor(getResources().getColor(R.color.black));
+                icon.setVisibility(View.GONE);
             }
 
             return convertView;

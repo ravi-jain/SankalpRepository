@@ -105,6 +105,7 @@ public class SpMainDashboard extends SpFabBaseFragment implements SpSimpleAlertD
         if (_randomSankalp != null) {
             SpContentProvider.getInstance(getContext()).addSankalp(_randomSankalp);
             _loadChartData();
+            _calendarView.loadCalendarEvents();
         }
         _randomSankalp = null;
     }

@@ -3,10 +3,12 @@ package com.ravijain.sankalp.fragments;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -21,6 +23,11 @@ import com.ravijain.sankalp.support.SpUtils;
 public class SpSortDialog extends SpSimpleAlertDialog {
 
     private int _sortId;
+    private int _sortOrder;
+
+    protected boolean hasOkButton() {
+        return false;
+    }
 
     @Override
     public void configureView(View view) {
@@ -28,6 +35,7 @@ public class SpSortDialog extends SpSimpleAlertDialog {
         Bundle b = getArguments();
         if (b != null) {
             _sortId = b.getInt(SpConstants.INTENT_SORTID);
+            _sortOrder = b.getInt(SpConstants.INTENT_SORT_ORDER);
         }
 
         ListView lv = (ListView) view.findViewById(R.id.sortLVId);
@@ -42,7 +50,8 @@ public class SpSortDialog extends SpSimpleAlertDialog {
                                     int position, long id) {
 
                 // selected item
-                String option = ((TextView) view).getText().toString();
+                TextView tv = (TextView) view.findViewById(R.id.add_label);
+                String option = tv.getText().toString();
                 int sortId = -1;
                 if (option.equals(getResources().getString(R.string.endDate))) {
                     sortId = R.string.endDate;
@@ -58,7 +67,7 @@ public class SpSortDialog extends SpSimpleAlertDialog {
                     Fragment f = getTargetFragment();
                     if (f != null && f instanceof SpSankalpListFragment) {
                         dismiss();
-                        ((SpSankalpListFragment)f).sortList(sortId);
+                        ((SpSankalpListFragment) f).sortList(sortId);
                     }
                 }
 
@@ -68,17 +77,32 @@ public class SpSortDialog extends SpSimpleAlertDialog {
     }
 
     private class SortViewListAdapter extends ArrayAdapter<String> {
+
+        String[] _options;
+
         public SortViewListAdapter(Context context, String[] options) {
-            super(context, android.R.layout.simple_list_item_1, options);
+            super(context, 0, options);
+            _options = options;
         }
 
         public View getView(int position, View convertView, ViewGroup parent) {
-            convertView = super.getView(position, convertView, parent);
+            if (convertView == null) {
+                convertView = LayoutInflater.from(getContext()).inflate(R.layout.icon_right_one_line_list_item_layout, parent, false);
+            }
 
-            if (getResources().getString(_sortId).equals(((TextView) convertView).getText().toString())) {
-                ((TextView) convertView).setTextColor(SpUtils.getPrimaryColor(getContext()));
+            TextView tv = (TextView) convertView.findViewById(R.id.add_label);
+            tv.setText(_options[position]);
+            ImageView icon = (ImageView) convertView.findViewById(R.id.add_icon);
+
+            if (getResources().getString(_sortId).equals(tv.getText().toString())) {
+                tv.setTextColor(SpUtils.getPrimaryColor(getContext()));
+                int drawable = _sortOrder == SpConstants.SORT_ORDER_ASCENDING ? R.drawable.ic_arrow_upward_black_24dp : R.drawable.ic_arrow_downward_black_24dp;
+                icon.setImageDrawable(getResources().getDrawable(drawable));
+                icon.setVisibility(View.VISIBLE);
+                icon.setColorFilter(SpUtils.getPrimaryColor(getContext()));
             } else {
-                ((TextView) convertView).setTextColor(getResources().getColor(R.color.black));
+                tv.setTextColor(getResources().getColor(R.color.black));
+                icon.setVisibility(View.GONE);
             }
 
             return convertView;

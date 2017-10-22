@@ -214,8 +214,8 @@ public class SpSankalpListFragment extends SpFabBaseFragment implements SearchVi
                                 d.setTargetFragment(that, 300);
                                 Bundle args = new Bundle();
                                 args.putInt(SpSimpleAlertDialog.AD_LAYOUT_ID, R.layout.filter_dialog);
-                                args.putString(SpSimpleAlertDialog.AD_TITLE, getString(R.string.filterList));
-                                args.putInt(SpConstants.INTENT_KEY_SANKALP_LIST_FILTER, _listFilter);
+                                args.putString(SpSimpleAlertDialog.AD_TITLE, getString(R.string.sankalpType));
+                                args.putInt(SpConstants.INTENT_KEY_SANKALP_TYPE, _sankalpType);
                                 d.setArguments(args);
                                 d.show(getFragmentManager(), SpConstants.FRAGMENT_TAG_FILTER);
                                 break;
@@ -225,6 +225,7 @@ public class SpSankalpListFragment extends SpFabBaseFragment implements SearchVi
                                 Bundle args1 = new Bundle();
                                 args1.putInt(SpSimpleAlertDialog.AD_LAYOUT_ID, R.layout.sort_dialog);
                                 args1.putInt(SpConstants.INTENT_SORTID, _sortId);
+                                args1.putInt(SpConstants.INTENT_SORT_ORDER, _sortOrder);
                                 args1.putString(SpSimpleAlertDialog.AD_TITLE, getString(R.string.sort));
                                 d1.setArguments(args1);
                                 d1.show(getFragmentManager(), SpConstants.FRAGMENT_TAG_SORT);
@@ -277,6 +278,12 @@ public class SpSankalpListFragment extends SpFabBaseFragment implements SearchVi
     private void _filterList(int sankalpType, int listFilter) {
         //_listSummaryTv.setText(_getListSummary(sankalpType, listFilter));
         _sankalpAdapter.filter(sankalpType, listFilter);
+    }
+
+    public void filterList(int sankalpType)
+    {
+        _sankalpAdapter.filter(sankalpType);
+        _sankalpType = sankalpType;
     }
 
     public void sortList(int sortId) {
@@ -353,37 +360,37 @@ public class SpSankalpListFragment extends SpFabBaseFragment implements SearchVi
             if (sTRG == null) return;
             int id = sTRG.getCheckedRadioButtonId();
             sortList(id);
-        } else */if (tag.equals(SpConstants.FRAGMENT_TAG_FILTER)) {
-            RadioGroup sTRG = (RadioGroup) dialog.findViewById(R.id.rg_sankalpType);
-
-            int sankalpTypeRB = sTRG.getCheckedRadioButtonId();
-            int sankalpType;
-
-            if (sankalpTypeRB == R.id.rb_st_tyag) {
-                sankalpType = SpConstants.SANKALP_TYPE_TYAG;
-            } else if (sankalpTypeRB == R.id.rb_st_niyam) {
-                sankalpType = SpConstants.SANKALP_TYPE_NIYAM;
-            } else {
-                sankalpType = SpConstants.SANKALP_TYPE_BOTH;
-            }
-
-            int listFilter = -1;
-            RadioGroup sPRG = (RadioGroup) dialog.findViewById(R.id.rg_sankalpPeriod);
-            if (sPRG != null && sPRG.getVisibility() == View.VISIBLE) {
-                int period = sPRG.getCheckedRadioButtonId();
-                if (period == R.id.rb_sp_current) {
-                    listFilter = SpConstants.INTENT_VALUE_SANKALP_LIST_FILTER_CURRENT;
-                } else if (period == R.id.rb_sp_upcoming) {
-                    listFilter = SpConstants.INTENT_VALUE_SANKALP_LIST_FILTER_UPCOMING;
-                } else if (period == R.id.rb_sp_all) {
-                    listFilter = SpConstants.INTENT_VALUE_SANKALP_LIST_FILTER_ALL;
-                } else {
-                    listFilter = -1;
-                }
-            }
-            listFilter = SpConstants.INTENT_VALUE_SANKALP_LIST_FILTER_ALL;
-            _filterList(sankalpType, listFilter);
-        }
+//        } else if (tag.equals(SpConstants.FRAGMENT_TAG_FILTER)) {*/
+//            RadioGroup sTRG = (RadioGroup) dialog.findViewById(R.id.rg_sankalpType);
+//
+//            int sankalpTypeRB = sTRG.getCheckedRadioButtonId();
+//            int sankalpType;
+//
+//            if (sankalpTypeRB == R.id.rb_st_tyag) {
+//                sankalpType = SpConstants.SANKALP_TYPE_TYAG;
+//            } else if (sankalpTypeRB == R.id.rb_st_niyam) {
+//                sankalpType = SpConstants.SANKALP_TYPE_NIYAM;
+//            } else {
+//                sankalpType = SpConstants.SANKALP_TYPE_BOTH;
+//            }
+//
+//            int listFilter = -1;
+//            RadioGroup sPRG = (RadioGroup) dialog.findViewById(R.id.rg_sankalpPeriod);
+//            if (sPRG != null && sPRG.getVisibility() == View.VISIBLE) {
+//                int period = sPRG.getCheckedRadioButtonId();
+//                if (period == R.id.rb_sp_current) {
+//                    listFilter = SpConstants.INTENT_VALUE_SANKALP_LIST_FILTER_CURRENT;
+//                } else if (period == R.id.rb_sp_upcoming) {
+//                    listFilter = SpConstants.INTENT_VALUE_SANKALP_LIST_FILTER_UPCOMING;
+//                } else if (period == R.id.rb_sp_all) {
+//                    listFilter = SpConstants.INTENT_VALUE_SANKALP_LIST_FILTER_ALL;
+//                } else {
+//                    listFilter = -1;
+//                }
+//            }
+//            listFilter = SpConstants.INTENT_VALUE_SANKALP_LIST_FILTER_ALL;
+//            _filterList(sankalpType, listFilter);
+//        }
     }
 
     @Override

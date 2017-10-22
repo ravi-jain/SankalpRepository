@@ -50,6 +50,7 @@ public interface SpConstants {
     String FRAGMENT_TAG_DAILY_SANKALP = "dailySankalp";
 
     String INTENT_SORTID = "INTENT_SORTID";
+    String INTENT_SORT_ORDER = "INTENT_SORT_ORDER";
     int SORT_ORDER_ASCENDING = 1;
     int SORT_ORDER_DESCENDING = -1;
     String FRAGMENT_TAG_USER_PROFILE = "user_profile";

@@ -32,12 +32,9 @@ public class SpSankalpListRecyclerAdapter extends RecyclerView.Adapter<SpSankalp
     private Context _context;
     private RecyclerViewClickListener _clickListener;
     private SparseBooleanArray selectedItems = new SparseBooleanArray();
-    public interface RecyclerViewClickListener {
-        void onItemClicked(int position);
-        boolean onItemLongClicked(int position);
-    }
 
-    public SpSankalpListRecyclerAdapter(Context context, ArrayList<SpSankalp> sankalpList, RecyclerViewClickListener listener)  {
+
+    public SpSankalpListRecyclerAdapter(Context context, ArrayList<SpSankalp> sankalpList, RecyclerViewClickListener listener) {
         _originalSankalps = new ArrayList<SpSankalp>();
         loadAdapter(sankalpList);
 
@@ -45,42 +42,7 @@ public class SpSankalpListRecyclerAdapter extends RecyclerView.Adapter<SpSankalp
         _clickListener = listener;
     }
 
-    public class SankalpListViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener,
-            View.OnLongClickListener{
-
-        public TextView tvItem, tvPeriod, title, currentCountLabel, count, currentCount;
-        public View exceptionOrTargetContainer, listBar, container, rlContainer, selectedOverlay;
-        public SankalpListViewHolder(View itemView) {
-            super(itemView);
-            tvItem = (TextView) itemView.findViewById(R.id.list_item_item_textview);
-            tvPeriod = (TextView) itemView.findViewById(R.id.list_item_period_textview);
-            exceptionOrTargetContainer = itemView.findViewById(R.id.exceptionOrTarget_rl_container);
-            title = (TextView) itemView.findViewById(R.id.exceptionOrTarget_li_title);
-            currentCountLabel = (TextView) itemView.findViewById(R.id.exceptionOrTargetCurrentCount_li_label);
-            listBar = itemView.findViewById(R.id.listBar);
-            count = (TextView) itemView.findViewById(R.id.exceptionOrTargetCount_li_textView);
-            currentCount = (TextView) itemView.findViewById(R.id.exceptionOrTargetCurrentCount_li_tv);
-            container = itemView.findViewById(R.id.exceptionOrTargetCurrent_li_container);
-            rlContainer = itemView.findViewById(R.id.exceptionOrTarget_rl_container);
-            //selectedOverlay = itemView.findViewById(R.id.selected_overlay);
-
-            itemView.setOnClickListener(this);
-            itemView.setOnLongClickListener(this);
-        }
-
-        @Override
-        public void onClick(View v) {
-            _clickListener.onItemClicked(getAdapterPosition());
-        }
-
-        @Override
-        public boolean onLongClick(View v) {
-            return _clickListener.onItemLongClicked(getAdapterPosition());
-        }
-    }
-
-    public SpSankalp getSankalpByPosition(int position)
-    {
+    public SpSankalp getSankalpByPosition(int position) {
         return _currentSankalps.get(position);
     }
 
@@ -106,8 +68,7 @@ public class SpSankalpListRecyclerAdapter extends RecyclerView.Adapter<SpSankalp
         String period;
         if (isLifetime == SpConstants.SANKALP_IS_LIFTIME_TRUE) {
             period = _context.getString(R.string.Lifetime);
-        }
-        else {
+        } else {
             Date fromDate = sankalp.getFromDate();
             Date toDate = sankalp.getToDate();
 
@@ -122,15 +83,13 @@ public class SpSankalpListRecyclerAdapter extends RecyclerView.Adapter<SpSankalp
         SpExceptionOrTarget exceptionOrTarget = sankalp.getExceptionOrTarget();
         if (exceptionOrTarget.getId() == SpExceptionOrTarget.EXCEPTION_OR_TARGET_UNDEFINED) {
             holder.rlContainer.setVisibility(View.GONE);
-        }
-        else {
+        } else {
 
             if (sankalp.getSankalpType() == SpConstants.SANKALP_TYPE_TYAG) {
                 holder.title.setText(R.string.tyagExceptions);
                 holder.currentCountLabel.setText(R.string.exception_left_label);
                 holder.listBar.setBackgroundColor(_context.getResources().getColor(R.color.sankalp_tyag));
-            }
-            else if (sankalp.getSankalpType() == SpConstants.SANKALP_TYPE_NIYAM) {
+            } else if (sankalp.getSankalpType() == SpConstants.SANKALP_TYPE_NIYAM) {
                 holder.title.setText(R.string.niyamFrequency);
                 holder.currentCountLabel.setText(R.string.frequency_done_label);
                 holder.listBar.setBackgroundColor(_context.getResources().getColor(R.color.sankalp_niyam));
@@ -141,8 +100,7 @@ public class SpSankalpListRecyclerAdapter extends RecyclerView.Adapter<SpSankalp
                 holder.container.setVisibility(View.VISIBLE);
                 holder.currentCount.setText(String.valueOf(exceptionOrTarget.getExceptionOrTargetCountCurrent()));
 
-            }
-            else {
+            } else {
                 holder.container.setVisibility(View.GONE);
             }
         }
@@ -176,8 +134,7 @@ public class SpSankalpListRecyclerAdapter extends RecyclerView.Adapter<SpSankalp
         notifyDataSetChanged();
     }
 
-    public void filter(int sankalpType, int listFilter)
-    {
+    public void filter(int sankalpType, int listFilter) {
         ArrayList<SpSankalp> filteredList = new ArrayList<SpSankalp>();
         for (int i = 0; i < _originalSankalps.size(); i++) {
             SpSankalp s = _originalSankalps.get(i);
@@ -195,6 +152,19 @@ public class SpSankalpListRecyclerAdapter extends RecyclerView.Adapter<SpSankalp
         notifyDataSetChanged();
     }
 
+    public void filter(int sankalpType) {
+        ArrayList<SpSankalp> filteredList = new ArrayList<SpSankalp>();
+        for (int i = 0; i < _originalSankalps.size(); i++) {
+            SpSankalp s = _originalSankalps.get(i);
+            if (sankalpType == SpConstants.SANKALP_TYPE_BOTH || s.getSankalpType() == sankalpType) {
+                filteredList.add(s);
+            }
+        }
+        clearAdapter();
+        _currentSankalps = filteredList;
+        notifyDataSetChanged();
+    }
+
     public void search(String query) {
 //        getFilter().filter(query);
         clearAdapter();
@@ -202,12 +172,10 @@ public class SpSankalpListRecyclerAdapter extends RecyclerView.Adapter<SpSankalp
         notifyDataSetChanged();
     }
 
-    private ArrayList<SpSankalp> _getFilteredList(String query)
-    {
+    private ArrayList<SpSankalp> _getFilteredList(String query) {
         if (query == null || query.length() == 0) {
             return _originalSankalps;
-        }
-        else {
+        } else {
             ArrayList<SpSankalp> filteredList = new ArrayList<SpSankalp>();
             for (int i = 0; i < _originalSankalps.size(); i++) {
                 SpSankalp s = _originalSankalps.get(i);
@@ -228,12 +196,11 @@ public class SpSankalpListRecyclerAdapter extends RecyclerView.Adapter<SpSankalp
     }
 
     public void removeItem(int position) {
-       _remove(position);
+        _remove(position);
         notifyItemRemoved(position);
     }
 
-    private void _remove(int position)
-    {
+    private void _remove(int position) {
         SpSankalp s = _currentSankalps.get(position);
         _currentSankalps.remove(s);
         _originalSankalps.remove(s);
@@ -281,6 +248,7 @@ public class SpSankalpListRecyclerAdapter extends RecyclerView.Adapter<SpSankalp
 
     /**
      * Indicates if the item at position position is selected
+     *
      * @param position Position of the item to check
      * @return true if the item is selected, false otherwise
      */
@@ -290,6 +258,7 @@ public class SpSankalpListRecyclerAdapter extends RecyclerView.Adapter<SpSankalp
 
     /**
      * Toggle the selection status of the item at a given position
+     *
      * @param position Position of the item to toggle the selection status for
      */
     public void toggleSelection(int position) {
@@ -314,6 +283,7 @@ public class SpSankalpListRecyclerAdapter extends RecyclerView.Adapter<SpSankalp
 
     /**
      * Count the selected items
+     *
      * @return Selected items count
      */
     public int getSelectedItemCount() {
@@ -322,6 +292,7 @@ public class SpSankalpListRecyclerAdapter extends RecyclerView.Adapter<SpSankalp
 
     /**
      * Indicates the list of selected items
+     *
      * @return List of selected items ids
      */
     public List<Integer> getSelectedItems() {
@@ -330,5 +301,46 @@ public class SpSankalpListRecyclerAdapter extends RecyclerView.Adapter<SpSankalp
             items.add(selectedItems.keyAt(i));
         }
         return items;
+    }
+
+    public interface RecyclerViewClickListener {
+        void onItemClicked(int position);
+
+        boolean onItemLongClicked(int position);
+    }
+
+    public class SankalpListViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener,
+            View.OnLongClickListener {
+
+        public TextView tvItem, tvPeriod, title, currentCountLabel, count, currentCount;
+        public View exceptionOrTargetContainer, listBar, container, rlContainer, selectedOverlay;
+
+        public SankalpListViewHolder(View itemView) {
+            super(itemView);
+            tvItem = (TextView) itemView.findViewById(R.id.list_item_item_textview);
+            tvPeriod = (TextView) itemView.findViewById(R.id.list_item_period_textview);
+            exceptionOrTargetContainer = itemView.findViewById(R.id.exceptionOrTarget_rl_container);
+            title = (TextView) itemView.findViewById(R.id.exceptionOrTarget_li_title);
+            currentCountLabel = (TextView) itemView.findViewById(R.id.exceptionOrTargetCurrentCount_li_label);
+            listBar = itemView.findViewById(R.id.listBar);
+            count = (TextView) itemView.findViewById(R.id.exceptionOrTargetCount_li_textView);
+            currentCount = (TextView) itemView.findViewById(R.id.exceptionOrTargetCurrentCount_li_tv);
+            container = itemView.findViewById(R.id.exceptionOrTargetCurrent_li_container);
+            rlContainer = itemView.findViewById(R.id.exceptionOrTarget_rl_container);
+            //selectedOverlay = itemView.findViewById(R.id.selected_overlay);
+
+            itemView.setOnClickListener(this);
+            itemView.setOnLongClickListener(this);
+        }
+
+        @Override
+        public void onClick(View v) {
+            _clickListener.onItemClicked(getAdapterPosition());
+        }
+
+        @Override
+        public boolean onLongClick(View v) {
+            return _clickListener.onItemLongClicked(getAdapterPosition());
+        }
     }
 }
