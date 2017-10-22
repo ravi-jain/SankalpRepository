@@ -22,7 +22,7 @@ public class SpTableContract {
         public static final String TABLE_NAME = "spCategoryTable";
 
         public static final String COLUMN_CATEGORY_NAME = "name";
-        public static final String COLUMN_CATEGORY_DISPLAYNAME = "displayName";
+        public static final String COLUMN_SUB_CATEGORY = "subCategory";
         public static final String COLUMN_CATEGORY_TYPE = "type";
     }
 
@@ -31,7 +31,6 @@ public class SpTableContract {
         public static final String TABLE_NAME = "spItemTable";
 
         public static final String COLUMN_ITEM_NAME = "name";
-        public static final String COLUMN_ITEM_DISPLAYNAME = "displayName";
         public static final String COLUMN_ITEM_CATEGORY_ID = "categoryID";
     }
 

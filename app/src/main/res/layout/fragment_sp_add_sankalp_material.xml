@@ -59,7 +59,7 @@
 
         <include
             android:id="@+id/currentCount_view"
-            layout="@layout/icon_two_lines_list_item_layout" />
+            layout="@layout/icon_two_lines_icon_list_item_layout" />
 
         <View style="@style/SpHorizontalDividerMaterial" />
 

@@ -17,7 +17,7 @@
             android:paddingLeft="8dp"
             android:paddingRight="8dp">
 
-            <android.support.v7.widget.CardView
+            <!--<android.support.v7.widget.CardView
                 android:id="@+id/card_quote"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -48,7 +48,42 @@
                         android:textColor="?attr/colorAccent"
                          />
                 </LinearLayout>
-                </android.support.v7.widget.CardView>
+                </android.support.v7.widget.CardView>-->
+
+            <android.support.v7.widget.CardView
+                android:id="@+id/card_quickActions"
+                android:layout_width="match_parent"
+                android:layout_height="220dp"
+                card_view:cardCornerRadius="2dp"
+                card_view:cardUseCompatPadding="true">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/card_qa_header"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingBottom="12dp"
+                        android:paddingLeft="16dp"
+                        android:paddingRight="16dp"
+                        android:paddingTop="12dp"
+                        android:text="@string/quickActions" />
+
+                    <GridView
+                        android:id="@+id/quickActionsGrid"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:layout_margin="5dp"
+                        android:horizontalSpacing="10dp"
+                        android:numColumns="3"
+                        android:stretchMode="columnWidth"
+                        android:verticalSpacing="10dp" />
+                </LinearLayout>
+            </android.support.v7.widget.CardView>
 
             <android.support.v7.widget.CardView
                 android:id="@+id/card_pieChart"
@@ -64,7 +99,7 @@
                     android:orientation="vertical">
 
                     <TextView
-                        style="@style/CardHeadline"
+                        style="@style/SpCardHeadline"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:paddingBottom="16dp"
@@ -93,110 +128,12 @@
 
             </android.support.v7.widget.CardView>
 
-            <android.support.v7.widget.CardView
-                android:id="@+id/card_calendar"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                card_view:cardCornerRadius="2dp"
-                android:layout_marginBottom="20dp"
-                card_view:cardUseCompatPadding="true">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:id="@+id/card_calendar_header"
-                        style="@style/CardHeadline"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:paddingBottom="12dp"
-                        android:paddingLeft="16dp"
-                        android:paddingRight="16dp"
-                        android:paddingTop="24dp"
-                        android:text="@string/calendarHeader" />
-
-                    <!--<LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-
-                        android:gravity="center"
-                        android:paddingLeft="16dp">
-
-                        <View
-                            android:layout_width="12dp"
-                            android:layout_height="12dp"
-                            android:layout_marginRight="10dp"
-                            android:background="@drawable/circle_shape" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/monthViewLegend"
-                            />
-                    </LinearLayout>-->
-
-                    <com.prolificinteractive.materialcalendarview.MaterialCalendarView
-                        android:id="@+id/db_calendarView"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
-
-                    <Button
-                        android:id="@+id/viewMonthDetails_button"
-                        style="@style/Widget.AppCompat.Button.Borderless"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:paddingLeft="16dp"
-                        android:text="@string/Details"
-                        android:textColor="?attr/colorAccent" />
-
-
-                </LinearLayout>
-
-            </android.support.v7.widget.CardView>
-
-
-
 
         </LinearLayout>
 
     </ScrollView>
 
-    <com.getbase.floatingactionbutton.FloatingActionsMenu
-        android:id="@+id/right_labels"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:layout_margin="@dimen/fab_margin"
-        card_view:fab_addButtonColorNormal="@color/sankalp"
-        card_view:fab_addButtonColorPressed="@color/white_pressed"
-        card_view:fab_addButtonPlusIconColor="@color/black"
-        card_view:fab_labelStyle="@style/menu_labels_style"
-        card_view:fab_labelsPosition="left">
-
-        <com.getbase.floatingactionbutton.FloatingActionButton
-            android:id="@+id/chartCalendarDb_addTyagButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_add_black_24dp"
-            card_view:fab_colorNormal="@color/sankalp_tyag"
-
-            card_view:fab_colorPressed="@color/white_pressed"
-            card_view:fab_plusIconColor="@color/white"
-            card_view:fab_title="@string/tyag" />
-
-        <com.getbase.floatingactionbutton.FloatingActionButton
-            android:id="@+id/chartCalendarDb_addNiyamButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_add_black_24dp"
-            card_view:fab_colorNormal="@color/sankalp_niyam"
-            card_view:fab_colorPressed="@color/white_pressed"
-            card_view:fab_title="@string/niyam" />
-
-    </com.getbase.floatingactionbutton.FloatingActionsMenu>
+    <include layout="@layout/fab_layout" />
 
 
 </RelativeLayout>

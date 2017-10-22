@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
     <string-array name="rangeLabelsList">
         <item>@string/thisDay</item>
         <item>@string/tomorrow</item>
@@ -52,6 +51,29 @@
         <item>hi</item>
     </string-array>
 
+    <string-array name="pref_themes">
+        <item>@string/defaultTheme</item>
+        <item>@string/purpleTheme</item>
+        <item>@string/deepPurpleTheme</item>
+        <item>@string/tealTheme</item>
+        <item>@string/indigoTheme</item>
+        <item>@string/redTheme</item>
+        <item>@string/blueTheme</item>
+        <item>@string/lightBlueTheme</item>
+        <item>@string/cyanTheme</item>
+        <item>@string/greenTheme</item>
+        <item>@string/amberTheme</item>
+        <item>@string/orangeTheme</item>
+        <item>@string/deepOrangeTheme</item>
+    </string-array>
+
+    <string-array name="pref_themes_values">
+        <item>@style/DeepPurpleTheme</item>
+        <item>@style/PurpleTheme</item>
+        <item>@style/DeepPurpleTheme</item>
+        <item>@style/TealTheme</item>
+        <item>@style/IndigoTheme</item>
+    </string-array>
 
     <string name="Dashboard2">Summary Dashboard</string>
     <string name="CalendarView">Calendar View</string>
@@ -59,4 +81,17 @@
     <string name="english">English</string>
     <string name="hindi">Hindi</string>
     <string name="any">Any</string>
+    <string name="defaultTheme">Default</string>
+    <string name="purpleTheme">Purple</string>
+    <string name="deepPurpleTheme">Deep Purple</string>
+    <string name="tealTheme">Teal</string>
+    <string name="indigoTheme">Indigo</string>
+    <string name="redTheme">Red</string>
+    <string name="blueTheme">Blue</string>
+    <string name="lightBlueTheme">Light Blue</string>
+    <string name="cyanTheme">Cyan</string>
+    <string name="greenTheme">Green</string>
+    <string name="amberTheme">Amber</string>
+    <string name="orangeTheme">Orange</string>
+    <string name="deepOrangeTheme">Deep Orange</string>
 </resources>

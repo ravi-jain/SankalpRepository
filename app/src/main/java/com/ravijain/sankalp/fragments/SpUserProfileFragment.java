@@ -70,7 +70,7 @@ public class SpUserProfileFragment extends Fragment {
         _mMobileView = (EditText) v.findViewById(R.id.userMobile);
         _mEmailView = (EditText) v.findViewById(R.id.userEmail);
         _mCityView = (EditText) v.findViewById(R.id.userCity);
-        _languageRadio = (RadioGroup) v.findViewById(R.id.language_rg);
+        //_languageRadio = (RadioGroup) v.findViewById(R.id.language_rg);
 
         _inputLayoutName = (TextInputLayout) v.findViewById(R.id.input_layout_name);
         _inputLayoutEmail = (TextInputLayout) v.findViewById(R.id.input_layout_email);
@@ -82,18 +82,11 @@ public class SpUserProfileFragment extends Fragment {
         _mEmailView.addTextChangedListener(new FormInputTextWatcher(_mEmailView));
         _mCityView.addTextChangedListener(new FormInputTextWatcher(_mCityView));
 
-        /*Button mEmailSignInButton = (Button) v.findViewById(R.id.userRegister_button);
-        mEmailSignInButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                _registerUser();
-            }
-        });*/
-
         _mUserSetUpView = v.findViewById(R.id.userSetup_form);
         _mProgressView = v.findViewById(R.id.userSetup_progress);
 
         if (_isUserAlreadyCreated) {
+            v.findViewById(R.id.optionalUserFields).setVisibility(View.VISIBLE);
             _loadedUser = SpContentProvider.getInstance(getContext()).getUser();
             String name = _loadedUser.getName();
             String mobile = _loadedUser.getMobile();
@@ -114,11 +107,11 @@ public class SpUserProfileFragment extends Fragment {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.menu_user_profile, menu);
-        if (_isUserAlreadyCreated) {
-            menu.findItem(R.id.action_registerUser).setVisible(false);
-        } else {
-            menu.findItem(R.id.action_updateProfile).setVisible(false);
-        }
+//        if (_isUserAlreadyCreated) {
+//            menu.findItem(R.id.action_registerUser).setVisible(false);
+//        } else {
+//            menu.findItem(R.id.action_updateProfile).setVisible(false);
+//        }
     }
 
     @Override
@@ -126,9 +119,6 @@ public class SpUserProfileFragment extends Fragment {
         int id = item.getItemId();
         if (id == R.id.action_updateProfile) {
             _updateUser();
-            return true;
-        } else if (id == R.id.action_registerUser) {
-            _registerUser();
             return true;
         }
 
@@ -144,7 +134,7 @@ public class SpUserProfileFragment extends Fragment {
         }
     }
 
-    private void _registerUser() {
+    public void registerUser() {
         {
             if (mRegisterTask != null) {
                 return;
@@ -164,10 +154,6 @@ public class SpUserProfileFragment extends Fragment {
 
     private SpUser _getCurrentUser() {
         if (!_validateName()) {
-            return null;
-        }
-
-        if (!_validateEmail()) {
             return null;
         }
 
@@ -277,14 +263,14 @@ public class SpUserProfileFragment extends Fragment {
 
 
     private void _handleSuccessfulRegistration() {
-        String lang = _languageRadio.getCheckedRadioButtonId() == R.id.english_radio ? "en_US" : "hi";
+//        String lang = "en_US";//_languageRadio.getCheckedRadioButtonId() == R.id.english_radio ? "en_US" : "hi";
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putBoolean(SpSettingsFragment.KEY_USER_REGISTERED, true);
-        editor.putString(SpSettingsFragment.KEY_PREF_LANGUAGE, lang);
+//        editor.putString(SpSettingsFragment.KEY_PREF_LANGUAGE, lang);
         editor.commit();
-
-        SpUtils.updateLanguage(getContext(), lang);
+//
+//        SpUtils.updateLanguage(getContext(), lang);
         Intent intent = new Intent(getContext(), SpMaterialDashboardActivity.class);
         startActivity(intent);
         getActivity().finish();

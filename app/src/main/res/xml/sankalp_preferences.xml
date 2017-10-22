@@ -7,6 +7,14 @@
         android:entries="@array/pref_languages"
         android:entryValues="@array/pref_languages_values"
         android:defaultValue="en_US" />
+    <ListPreference
+        android:key="pref_themes"
+        android:title="@string/Themes"
+        android:dialogTitle="@string/selectTheme"
+        android:entries="@array/pref_themes"
+        android:entryValues="@array/pref_themes"
+        android:defaultValue="@string/defaultTheme" />
+        />
     <SwitchPreferenceCompat
         android:key="pref_reminders"
         android:title="@string/showReminders"

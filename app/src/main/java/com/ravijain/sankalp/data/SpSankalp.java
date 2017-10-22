@@ -2,6 +2,7 @@ package com.ravijain.sankalp.data;
 
 import android.content.Context;
 
+import com.ravijain.sankalp.R;
 import com.ravijain.sankalp.support.SpConstants;
 import com.ravijain.sankalp.support.SpDateUtils;
 
@@ -44,8 +45,7 @@ public class SpSankalp {
     public SpSankalp(Context context, int sankalpType) {
     }
 
-    public static SpSankalp getDefaultSankalp(int sankalpType, Context context)
-    {
+    public static SpSankalp getDefaultSankalp(int sankalpType, Context context) {
         return new SpSankalp();
     }
 
@@ -61,16 +61,16 @@ public class SpSankalp {
 
     @Override
     public boolean equals(Object obj) {
-        if (obj == null || ! (obj instanceof SpSankalp)) return false;
+        if (obj == null || !(obj instanceof SpSankalp)) return false;
         if (obj == this) return true;
-        SpSankalp s = (SpSankalp)obj;
+        SpSankalp s = (SpSankalp) obj;
         if (s.getId() == getId()) return true;
         return false;
     }
 
     public boolean isSame(Object obj) {
-        if (obj == null || ! (obj instanceof SpSankalp)) return false;
-        SpSankalp s = (SpSankalp)obj;
+        if (obj == null || !(obj instanceof SpSankalp)) return false;
+        SpSankalp s = (SpSankalp) obj;
         if (getSankalpType() != s.getSankalpType()) return false;
         if (getCategoryID() != s.getCategoryID()) return false;
         if (getItemId() != s.getItemId()) return false;
@@ -210,5 +210,20 @@ public class SpSankalp {
         this._categoryID = categoryID;
     }
 
+    public int compareTo(int compareCriteria, SpSankalp s) {
+        switch (compareCriteria) {
 
+            case R.string.startDate:
+                return this.getFromDate().compareTo(s.getFromDate());
+            case R.string.creationDate:
+                return this.getCreationDate().compareTo(s.getCreationDate());
+            case R.string.itemName:
+                return this.getItem().getCategoryItemName().compareTo(s.getItem().getCategoryItemName());
+            case R.string.endDate:
+            default:
+                if (s.getToDate() == null) return -1;
+                if (getToDate() == null) return 1;
+                return this.getToDate().compareTo(s.getToDate());
+        }
+    }
 }

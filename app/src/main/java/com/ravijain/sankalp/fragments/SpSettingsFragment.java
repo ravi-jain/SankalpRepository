@@ -1,9 +1,11 @@
 package com.ravijain.sankalp.fragments;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.preference.PreferenceFragment;
+import android.support.v4.content.IntentCompat;
 import android.support.v7.preference.ListPreference;
 import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceFragmentCompat;
@@ -20,6 +22,7 @@ import java.util.Locale;
 public class SpSettingsFragment extends PreferenceFragmentCompat implements SharedPreferences.OnSharedPreferenceChangeListener{
 
     public static final String KEY_PREF_LANGUAGE = "pref_language";
+    public static final String KEY_PREF_THEMES = "pref_themes";
     public static final String KEY_PREF_REMINDERS = "pref_reminders";
     public static final String KEY_PREF_ALARM_REGISTERED = "pref_alarm_registered";
     public static final String KEY_USER_REGISTERED = "pref_user_registered";
@@ -30,6 +33,7 @@ public class SpSettingsFragment extends PreferenceFragmentCompat implements Shar
 
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
         sharedPreferences.registerOnSharedPreferenceChangeListener(this);
+        _updateSummary(sharedPreferences, KEY_PREF_THEMES);
         _updateSummary(sharedPreferences, KEY_PREF_LANGUAGE);
         _updateSummary(sharedPreferences, KEY_PREF_REMINDERS);
     }
@@ -38,6 +42,7 @@ public class SpSettingsFragment extends PreferenceFragmentCompat implements Shar
                                           String key) {
         if (key.equals(KEY_PREF_LANGUAGE)) {
             SpUtils.updateLanguage(getContext(), sharedPreferences.getString(key, "en_US"));
+            _restartActivity();
         }
         else if (key.equals(KEY_PREF_REMINDERS)) {
             if (sharedPreferences.getBoolean(SpSettingsFragment.KEY_PREF_REMINDERS, true)) {
@@ -47,7 +52,20 @@ public class SpSettingsFragment extends PreferenceFragmentCompat implements Shar
                 SpUtils.stopAlarm(getContext());
             }
         }
+        else if (key.equals(KEY_PREF_THEMES)) {
+
+            _restartActivity();
+
+        }
         _updateSummary(sharedPreferences, key);
+    }
+
+    private void _restartActivity()
+    {
+        getActivity().finish();
+        final Intent intent = getActivity().getIntent();
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | IntentCompat.FLAG_ACTIVITY_CLEAR_TASK);
+        getActivity().startActivity(intent);
     }
 
     private void _updateSummary(SharedPreferences sharedPreferences,
@@ -67,6 +85,14 @@ public class SpSettingsFragment extends PreferenceFragmentCompat implements Shar
             }
             else {
                 findPreference(key).setSummary(getString(R.string.showRemindersDisabled));
+            }
+        }
+        else if (key.equals(KEY_PREF_THEMES)) {
+            ListPreference listPreference = (ListPreference) findPreference(key);
+            // Set summary to be the user-description for the selected value
+            int prefIndex = listPreference.findIndexOfValue(sharedPreferences.getString(key, getString(R.string.defaultTheme)));
+            if (prefIndex >= 0) {
+                listPreference.setSummary(listPreference.getEntries()[prefIndex]);
             }
         }
     }

@@ -10,7 +10,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 public class SpDBHelper extends SQLiteOpenHelper {
 
     // If you change the database schema, you must increment the database version.
-    private static final int DATABASE_VERSION = 17;
+    private static final int DATABASE_VERSION = 21;
 
     static final String DATABASE_NAME = "sankalp.db";
 
@@ -29,14 +29,13 @@ public class SpDBHelper extends SQLiteOpenHelper {
     final String SQL_CREATE_CATEGORY_TABLE = "CREATE TABLE " + SpTableContract.SpCategoryTable.TABLE_NAME + " (" +
             SpTableContract.SpCategoryTable._ID + " INTEGER PRIMARY KEY," +
             SpTableContract.SpCategoryTable.COLUMN_CATEGORY_NAME + " TEXT NOT NULL, " +
-            SpTableContract.SpCategoryTable.COLUMN_CATEGORY_DISPLAYNAME + " TEXT, " +
+            SpTableContract.SpCategoryTable.COLUMN_SUB_CATEGORY + " TEXT, " +
             SpTableContract.SpCategoryTable.COLUMN_CATEGORY_TYPE + " INTEGER NOT NULL " +
             " );";
 
     final String SQL_CREATE_ITEM_TABLE = "CREATE TABLE " + SpTableContract.SpItemTable.TABLE_NAME + " (" +
             SpTableContract.SpItemTable._ID + " INTEGER PRIMARY KEY," +
-            SpTableContract.SpItemTable.COLUMN_ITEM_NAME + " TEXT NOT NULL, " +
-            SpTableContract.SpItemTable.COLUMN_ITEM_DISPLAYNAME + " TEXT, " +
+            SpTableContract.SpItemTable.COLUMN_ITEM_NAME + " TEXT UNIQUE NOT NULL, " +
             SpTableContract.SpItemTable.COLUMN_ITEM_CATEGORY_ID + " INTEGER NOT NULL, " +
             // Set up the location column as a foreign key to location table.
             " FOREIGN KEY (" + SpTableContract.SpItemTable.COLUMN_ITEM_CATEGORY_ID + ") REFERENCES " +
@@ -90,7 +89,6 @@ public class SpDBHelper extends SQLiteOpenHelper {
         _createItemTable(sqLiteDatabase);
         sqLiteDatabase.execSQL(SQL_CREATE_SANKALP_TABLE);
         sqLiteDatabase.execSQL(SQL_CREATE_EXTAR_TABLE);
-//        sqLiteDatabase.execSQL(SQL_CREATE_TYAG_TABLE);
     }
 
     private void _createItemTable(SQLiteDatabase sqLiteDatabase) {

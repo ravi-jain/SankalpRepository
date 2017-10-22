@@ -36,10 +36,7 @@
     <color name="sankalp_primary_dark">#673AB7</color>
     <color name="sankalp_primary_light">#EDE7F6</color>
     <color name="sankalp_accent">#00BCD4</color>
-    <color name="sankalp_primary_text">#212121</color>
-    <color name="sankalp_secondary_text">#757575</color>
-    <color name="sankalp_icons">#FFFFFF</color>
-    <color name="sankalp_divider">#BDBDBD</color>
+
 
     <!-- Orange -->
     <color name="sankalp_primary_orange">#FF5722</color>
@@ -53,5 +50,102 @@
     <color name="sankalp_primary_dark_deep_purple">#512DA8</color>
     <color name="sankalp_primary_light_deep_purple">#D1C4E9</color>
     <color name="sankalp_accent_deep_purple">#00BCD4</color>
+
+    <!-- Red -->
+    <color name="primary_red">#DB4437</color>
+    <color name="primary_dark_red">#B93221</color>
+    <color name="primary_darker_red">#CC1D1D</color>
+    <color name="accent_red">#FFFFFF</color>
+    <color name="jet">#222222</color>
+    <color name="oil">#333333</color>
+    <color name="monsoon">#777777</color>
+    <color name="jumbo">#888888</color>
+    <color name="aluminum">#999999</color>
+    <color name="base">#AAAAAA</color>
+    <color name="iron">#CCCCCC</color>
+    <color name="red_white">#FFFFFF</color>
+
+    <!-- Light Green -->
+    <color name="lightGreen">#c5e1a5</color>
+    <color name="selected_overlay">#88673AB7</color>
+
+
+    <!-- Themes -->
+    <color name="sankalp_primary_text">#212121</color>
+    <color name="sankalp_secondary_text">#757575</color>
+    <color name="sankalp_icons">#FFFFFF</color>
+    <color name="sankalp_divider">#BDBDBD</color>
+
+    <!-- Indigo -->
+    <color name="indigo_primary">#3F51B5</color>
+    <color name="indigo_primary_dark">#303F9F</color>
+    <color name="indigo_primary_light">#C5CAE9</color>
+    <color name="indigo_accent">#536DFE</color>
+
+    <!-- Deep Purple -->
+    <color name="deep_purple_primary">#673AB7</color>
+    <color name="deep_purple_primary_dark">#512DA8</color>
+    <color name="deep_purple_primary_light">#D1C4E9</color>
+    <color name="deep_purple_accent">#7C4DFF</color>
+
+    <!-- Teal -->
+    <color name="teal_primary">#009688</color>
+    <color name="teal_primary_dark">#00796B</color>
+    <color name="teal_primary_light">#B2DFDB</color>
+    <color name="teal_accent">#009688</color>
+
+    <!-- Purple -->
+    <color name="purple_primary">#9C27B0</color>
+    <color name="purple_primary_dark">#7B1FA2</color>
+    <color name="purple_primary_light">#E1BEE7</color>
+    <color name="purple_accent">#E040FB</color>
+
+    <!-- Red -->
+    <color name="red_primary">#F44336</color>
+    <color name="red_primary_dark">#D32F2F</color>
+    <color name="red_primary_light">#FFCDD2</color>
+    <color name="red_accent">#FF5252</color>
+
+    <!-- Blue -->
+    <color name="blue_primary">#2196F3</color>
+    <color name="blue_primary_dark">#1976D2</color>
+    <color name="blue_primary_light">#BBDEFB</color>
+    <color name="blue_accent">#448AFF</color>
+
+    <!-- Light Blue -->
+    <color name="lblue_primary">#03A9F4</color>
+    <color name="lblue_primary_dark">#0288D1</color>
+    <color name="lblue_primary_light">#B3E5FC</color>
+    <color name="lblue_accent">#03A9F4</color>
+
+    <!-- Cyan -->
+    <color name="cyan_primary">#00BCD4</color>
+    <color name="cyan_primary_dark">#0097A7</color>
+    <color name="cyan_primary_light">#B2EBF2</color>
+    <color name="cyan_accent">#00BCD4</color>
+
+    <!-- Green -->
+    <color name="green_primary">#4CAF50</color>
+    <color name="green_primary_dark">#388E3C</color>
+    <color name="green_primary_light">#C8E6C9</color>
+    <color name="green_accent">#4CAF50</color>
+
+    <!-- Amber -->
+    <color name="amber_primary">#FFC107</color>
+    <color name="amber_primary_dark">#FFA000</color>
+    <color name="amber_primary_light">#FFECB3</color>
+    <color name="amber_accent">#FFC107</color>
+
+    <!-- Orange -->
+    <color name="orange_primary">#FF9800</color>
+    <color name="orange_primary_dark">#F57C00</color>
+    <color name="orange_primary_light">#FFE0B2</color>
+    <color name="orange_accent">#FF9800</color>
+
+    <!-- Deep Orange -->
+    <color name="dorange_primary">#FF5722</color>
+    <color name="dorange_primary_dark">#E64A19</color>
+    <color name="dorange_primary_light">#FFCCBC</color>
+    <color name="dorange_accent">#FF5722</color>
 
 </resources>

@@ -13,7 +13,7 @@
         android:layout_marginLeft="12dp"
         android:layout_marginRight="12dp"
         android:contentDescription="@string/Dashboard"
-        android:src="@drawable/ic_dashboard_black_24dp"
+        android:src="@drawable/ic_home_black_24dp"
         android:layout_gravity="center_vertical" />
 
     <TextView

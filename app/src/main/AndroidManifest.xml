@@ -8,7 +8,7 @@
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/SankalpTheme"
+        android:theme="@style/IndigoTheme"
         android:supportsRtl="true">
         <receiver
             android:name=".support.SpAlarmReceiver"
@@ -17,9 +17,6 @@
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
-
-        <!--<activity android:name=".activities.SpMainActivity">
-        </activity>-->
 
         <activity
             android:name=".activities.SpAddSankalpActivity"
@@ -40,15 +37,7 @@
         </activity>
         <activity
             android:name=".activities.SpUserSetupActivity"
-            android:label="@string/title_activity_user_setup"
             android:noHistory="true" />
-        <!--<activity
-            android:name=".activities.SpSankalpDetailsActivity"
-            android:label="@string/Details">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.ravijain.sankalp.activities.SpSankalpList" />
-        </activity>-->
         <activity
             android:name=".activities.SpMaterialDashboardActivity"
             android:label="@string/title_activity_sp_material_dashboard">

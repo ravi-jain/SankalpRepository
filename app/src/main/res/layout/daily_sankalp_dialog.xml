@@ -1,0 +1,65 @@
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:stretchColumns="1"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingLeft="?attr/dialogPreferredPadding"
+    android:paddingRight="?attr/dialogPreferredPadding">
+
+    <TableRow>
+
+        <TextView
+            android:layout_column="1"
+            android:padding="3dip"
+            android:text="@string/sankalpType" />
+
+        <TextView
+            android:id="@+id/sTypeValue"
+            android:gravity="right"
+            android:padding="3dip"
+             />
+    </TableRow>
+
+    <TableRow>
+
+        <TextView
+            android:layout_column="1"
+            android:padding="3dip"
+            android:text="@string/itemName" />
+
+        <TextView
+            android:id="@+id/iNameValue"
+            android:gravity="right"
+            android:padding="3dip"
+            />
+    </TableRow>
+
+    <TableRow>
+
+        <TextView
+            android:layout_column="1"
+            android:padding="3dip"
+            android:text="@string/categoryName" />
+
+        <TextView
+            android:id="@+id/cNameValue"
+            android:gravity="right"
+            android:padding="3dip"
+            />
+    </TableRow>
+
+    <TableRow>
+
+        <TextView
+            android:layout_column="1"
+            android:padding="3dip"
+            android:text="@string/singleDate" />
+
+        <TextView
+            android:id="@+id/dateValue"
+            android:gravity="right"
+            android:padding="3dip"
+            />
+    </TableRow>
+
+</TableLayout>

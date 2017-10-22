@@ -3,10 +3,12 @@ package com.ravijain.sankalp.support;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.support.design.widget.Snackbar;
 import android.view.View;
 import android.widget.Toast;
 
 import com.prolificinteractive.materialcalendarview.CalendarDay;
+import com.prolificinteractive.materialcalendarview.CalendarMode;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
 import com.prolificinteractive.materialcalendarview.OnMonthChangedListener;
@@ -34,6 +36,10 @@ public class SpCalendarViewHandler implements OnDateSelectedListener, OnMonthCha
     public static final int SELECTION_MODE_NONE = 0;
     public static final int SELECTION_MODE_SINGLE = 1;
     public static final int SELECTION_MODE_RANGE = 2;
+    public static final int SELECTION_MODE_EVENT = 3;
+
+    public static final int DISPLAY_MODE_MONTH = 4;
+    public static final int DISPLAY_MODE_WEEK = 5;
 
     public SpCalendarViewHandler(Context applicationContext, View view)
     {
@@ -43,14 +49,19 @@ public class SpCalendarViewHandler implements OnDateSelectedListener, OnMonthCha
 
     public void constructCalendar(int viewId, int selectionMode)
     {
+        constructCalendar(viewId, selectionMode, DISPLAY_MODE_MONTH);
+    }
+    public void constructCalendar(int viewId, int selectionMode, int displayMode)
+    {
         _selectionMode = selectionMode;
         _widget = (MaterialCalendarView) _view.findViewById(viewId);
         _widget.setOnDateChangedListener(this);
         _widget.setDynamicHeightEnabled(true);
 
-        if (selectionMode == SELECTION_MODE_NONE) {
+        if (selectionMode == SELECTION_MODE_EVENT) {
             _widget.setOnMonthChangedListener(this);
             loadCalendarEvents();
+            _widget.setSelectedDate(new Date());
         }
         else if (selectionMode == SELECTION_MODE_RANGE){
             _widget.setSelectionMode(MaterialCalendarView.SELECTION_MODE_RANGE);
@@ -67,24 +78,25 @@ public class SpCalendarViewHandler implements OnDateSelectedListener, OnMonthCha
         l.execute(Calendar.getInstance());
     }
 
-    private void _launchSankalpList(Date date)
+    public static void launchSankalpList(Date date, Context context)
     {
-        Intent intent = new Intent(_applicationContext, SpSankalpList.class);
+        Intent intent = new Intent(context, SpSankalpList.class);
         intent.putExtra(SpConstants.INTENT_KEY_SANKALP_TYPE, SpConstants.SANKALP_TYPE_BOTH);
         intent.putExtra(SpConstants.INTENT_KEY_SANKALP_LIST_FILTER, SpConstants.INTENT_VALUE_SANKALP_LIST_FILTER_DAY);
         intent.putExtra(SpConstants.INTENT_KEY_SANKALP_LIST_FILTER_DATE_VALUE, date.getTime());
-        _applicationContext.startActivity(intent);
+        context.startActivity(intent);
     }
 
     @Override
     public void onDateSelected(MaterialCalendarView widget, CalendarDay date, boolean selected) {
-        if (_selectionMode == SELECTION_MODE_NONE) {
+        if (_selectionMode == SELECTION_MODE_EVENT) {
             widget.clearSelection();
             if (_events.contains(date)) {
-                _launchSankalpList(date.getDate());
+                launchSankalpList(date.getDate(), _applicationContext);
             }
             else {
-                Toast.makeText(_applicationContext, _applicationContext.getString(R.string.EmptyList), Toast.LENGTH_SHORT).show();
+                Snackbar
+                        .make(_view, _applicationContext.getString(R.string.EmptyList), Snackbar.LENGTH_LONG).show();
             }
         }
 
@@ -93,7 +105,7 @@ public class SpCalendarViewHandler implements OnDateSelectedListener, OnMonthCha
     @Override
     public void onMonthChanged(MaterialCalendarView widget, CalendarDay date) {
 
-        if (_selectionMode == SELECTION_MODE_NONE) {
+        if (_selectionMode == SELECTION_MODE_EVENT) {
             // Add events
             EventsLoader l = new EventsLoader();
             l.execute(date.getCalendar());

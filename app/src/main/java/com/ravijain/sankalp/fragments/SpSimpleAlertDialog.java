@@ -45,30 +45,46 @@ public class SpSimpleAlertDialog extends DialogFragment {
 
             configureView(view);
 
-            builder.setTitle(title).setView(view)
-                    .setPositiveButton(okResourceId, new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            Fragment f = getTargetFragment();
-                            if (f != null && f instanceof SpSimpleAlertDialogListener) {
-                                ((SpSimpleAlertDialogListener) f).onSimpleAlertDialogPositiveClick((AlertDialog) dialog, getTag());
-                            }
-                            dismiss();
+            builder = builder.setTitle(title).setView(view);
+            if (hasOkButton()) {
+                builder = builder.setPositiveButton(okResourceId, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        Fragment f = getTargetFragment();
+                        if (f != null && f instanceof SpSimpleAlertDialogListener) {
+                            ((SpSimpleAlertDialogListener) f).onSimpleAlertDialogPositiveClick((AlertDialog) dialog, getTag());
                         }
-                    })
-                    .setNegativeButton(cancelResourceId, new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            Fragment f = getTargetFragment();
-                            if (f != null && f instanceof SpSimpleAlertDialogListener) {
-                                ((SpSimpleAlertDialogListener) f).onSimpleAlertDialogNegativeClick((AlertDialog) dialog, getTag());
-                            }
-                            dismiss();
+                        dismiss();
+                    }
+                });
+            }
+            if (hasCancelButton()) {
+                builder = builder.setNegativeButton(cancelResourceId, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        Fragment f = getTargetFragment();
+                        if (f != null && f instanceof SpSimpleAlertDialogListener) {
+                            ((SpSimpleAlertDialogListener) f).onSimpleAlertDialogNegativeClick((AlertDialog) dialog, getTag());
                         }
-                    });
+                        dismiss();
+                    }
+                });
+            }
+
+
 
             // Create the AlertDialog object and return it
             return builder.create();
         }
         return null;
+    }
+
+    protected boolean hasOkButton()
+    {
+        return true;
+    }
+
+    protected boolean hasCancelButton()
+    {
+        return true;
     }
 
     public void configureView(View view) {

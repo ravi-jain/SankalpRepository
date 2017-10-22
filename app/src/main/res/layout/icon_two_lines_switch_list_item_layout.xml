@@ -24,12 +24,13 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:text="Test name"
-            style="@style/Base.TextAppearance.AppCompat.Subhead"/>
+            />
         <TextView
             android:id="@+id/add_value"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
+            style="@style/Base.TextAppearance.AppCompat.Subhead"
             android:text="Test profession"/>
     </LinearLayout>
 

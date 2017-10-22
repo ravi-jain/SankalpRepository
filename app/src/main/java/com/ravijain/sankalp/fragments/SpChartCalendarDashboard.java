@@ -8,6 +8,7 @@ import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.PopupMenu;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
@@ -15,14 +16,16 @@ import android.text.style.RelativeSizeSpan;
 import android.text.style.StyleSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.GridView;
 import android.widget.ImageView;
 
-import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.Chart;
 import com.github.mikephil.charting.charts.PieChart;
@@ -38,29 +41,36 @@ import com.github.mikephil.charting.utils.ColorTemplate;
 import com.github.mikephil.charting.utils.ViewPortHandler;
 import com.ravijain.sankalp.R;
 import com.ravijain.sankalp.activities.SpAddSankalpActivity;
+import com.ravijain.sankalp.data.SpCategoryItem;
+import com.ravijain.sankalp.data.SpSankalp;
 import com.ravijain.sankalp.support.SpConstants;
 import com.ravijain.sankalp.activities.SpSankalpList;
 import com.ravijain.sankalp.data.SpContentProvider;
 import com.ravijain.sankalp.data.SpSankalpCountData;
 import com.ravijain.sankalp.support.SpCalendarViewHandler;
+import com.ravijain.sankalp.support.SpDateUtils;
+import com.ravijain.sankalp.support.SpUtils;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class SpChartCalendarDashboard extends Fragment implements View.OnClickListener {
+public class SpChartCalendarDashboard extends SpFabBaseFragment implements SpSimpleAlertDialog.SpSimpleAlertDialogListener {
 
 
     private PieChart mChart;
     private ImageView _menuView;
     private Button _viewDetailsButton;
-    private Button _viewMonthDetailsButton;
+
     private String[] _labels;
     private int _intentListFilter;
     private SpSankalpCountData _currentData;
-    private SpCalendarViewHandler _calendarView;
+    private SpSankalp _randomSankalp = null;
+
 
     public SpChartCalendarDashboard() {
         // Required empty public constructor
@@ -71,7 +81,7 @@ public class SpChartCalendarDashboard extends Fragment implements View.OnClickLi
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == SpConstants.ACTIVITY_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
             // referesh
-            _calendarView.loadCalendarEvents();
+            //_calendarView.loadCalendarEvents();
             _loadChartData();
 
         }
@@ -84,61 +94,87 @@ public class SpChartCalendarDashboard extends Fragment implements View.OnClickLi
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_sp_chart_calendar_dashboard, container, false);
 
-        _viewMonthDetailsButton = (Button) rootView.findViewById(R.id.viewMonthDetails_button);
-        _setUpCalendarCard(rootView);
+        getActivity().setTitle(R.string.title_activity_sp_sankalp_list);
+
+        _setUpQuickActions(rootView);
 
         _viewDetailsButton = (Button) rootView.findViewById(R.id.viewDetails_button);
         mChart = (PieChart) rootView.findViewById(R.id.db_pieChart);
         _setUpChartCard();
 
-        com.getbase.floatingactionbutton.FloatingActionButton fabTyag = (com.getbase.floatingactionbutton.FloatingActionButton) rootView.findViewById(R.id.chartCalendarDb_addTyagButton);
-        com.getbase.floatingactionbutton.FloatingActionButton niyamTyag = (com.getbase.floatingactionbutton.FloatingActionButton) rootView.findViewById(R.id.chartCalendarDb_addNiyamButton);
-        fabTyag.setOnClickListener(this);
-        niyamTyag.setOnClickListener(this);
+        setupFAB(rootView);
 
         return rootView;
     }
 
     @Override
-    public void onClick(View view) {
-        Intent intent = new Intent(getActivity(), SpAddSankalpActivity.class);
-        if (view.getId() == R.id.chartCalendarDb_addTyagButton) {
-            intent.putExtra(SpConstants.INTENT_KEY_SANKALP_TYPE, SpConstants.SANKALP_TYPE_TYAG);
-        } else if (view.getId() == R.id.chartCalendarDb_addNiyamButton) {
-            intent.putExtra(SpConstants.INTENT_KEY_SANKALP_TYPE, SpConstants.SANKALP_TYPE_NIYAM);
+    public void onSimpleAlertDialogPositiveClick(AlertDialog dialog, String tag) {
+        if (_randomSankalp != null) {
+            SpContentProvider.getInstance(getContext()).addSankalp(_randomSankalp);
+            _loadChartData();
         }
-        FloatingActionsMenu floatingActionsMenu = (FloatingActionsMenu) getView().findViewById(R.id.right_labels);
-        floatingActionsMenu.collapseImmediately();
-        startActivityForResult(intent, SpConstants.ACTIVITY_REQUEST_CODE);
+        _randomSankalp = null;
+    }
+
+    @Override
+    public void onSimpleAlertDialogNegativeClick(AlertDialog dialog, String tag) {
+        _randomSankalp = null;
+    }
+
+    private void _setUpQuickActions(View rootView)
+    {
+        GridView gridview = (GridView) rootView.findViewById(R.id.quickActionsGrid);
+        gridview.setAdapter(new SpQuickActionsAdapter(getContext()));
+        final SpChartCalendarDashboard that = this;
+        gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            public void onItemClick(AdapterView<?> parent, View v,
+                                    int position, long id) {
+                switch (position) {
+                    case 0 :
+                        getFragmentManager().beginTransaction().replace(R.id.content_frame, new SpCalendarFragment()).commit();
+                        break;
+                    case 1:
+                        SpDailySankalpDialog d = new SpDailySankalpDialog();
+                        d.setTargetFragment(that, 300);
+                        _randomSankalp = SpUtils.getRandomSankalp(getContext());
+                        d.setRandomSankalp(_randomSankalp);
+                        Bundle args = new Bundle();
+                        args.putInt(SpSimpleAlertDialog.AD_LAYOUT_ID, R.layout.daily_sankalp_dialog);
+                        args.putString(SpSimpleAlertDialog.AD_TITLE, getString(R.string.surprise));
+                        args.putInt(SpSimpleAlertDialog.AD_OK_RESOURCE_ID, R.string.acceptSankalp);
+                        args.putInt(SpSimpleAlertDialog.AD_CANCEL_RESOURCE_ID, R.string.declineSankalp);
+                        d.setArguments(args);
+                        d.show(getFragmentManager(), SpConstants.FRAGMENT_TAG_DAILY_SANKALP);
+                        break;
+                    case 2:
+                        SpCalendarViewHandler.launchSankalpList(new Date(), getContext());
+                        break;
+                    case 3:
+                        SpCalendarViewHandler.launchSankalpList(SpDateUtils.getTomorrow(), getContext());
+                        break;
+                    case 4:
+                        _launchSankalpList(SpConstants.SANKALP_TYPE_BOTH, SpConstants.INTENT_VALUE_SANKALP_LIST_FILTER_CURRENT);
+                        break;
+                }
+            }
+        });
     }
 
     private void _setUpViewButton() {
         _viewDetailsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getContext(), SpSankalpList.class);
-                intent.putExtra(SpConstants.INTENT_KEY_SANKALP_TYPE, SpConstants.SANKALP_TYPE_BOTH);
-                intent.putExtra(SpConstants.INTENT_KEY_SANKALP_LIST_FILTER, SpConstants.INTENT_VALUE_SANKALP_LIST_FILTER_CURRENT);
-                startActivity(intent);
+                _launchSankalpList(SpConstants.SANKALP_TYPE_BOTH, SpConstants.INTENT_VALUE_SANKALP_LIST_FILTER_CURRENT);
             }
         });
     }
 
-    private void _setUpCalendarCard(View rootView) {
-
-        _calendarView = new SpCalendarViewHandler(getContext(), rootView);
-        _calendarView.constructCalendar(R.id.db_calendarView, SpCalendarViewHandler.SELECTION_MODE_NONE);
-
-        _viewMonthDetailsButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getContext(), SpSankalpList.class);
-                intent.putExtra(SpConstants.INTENT_KEY_SANKALP_TYPE, SpConstants.SANKALP_TYPE_BOTH);
-                intent.putExtra(SpConstants.INTENT_KEY_SANKALP_LIST_FILTER, SpConstants.INTENT_VALUE_SANKALP_LIST_FILTER_MONTH);
-                intent.putExtra(SpConstants.INTENT_KEY_SANKALP_LIST_FILTER_DATE_VALUE, new Date().getTime());
-                startActivity(intent);
-            }
-        });
+    private void _launchSankalpList(int sankalpType, int listFilter)
+    {
+        Intent intent = new Intent(getContext(), SpSankalpList.class);
+        intent.putExtra(SpConstants.INTENT_KEY_SANKALP_TYPE, sankalpType);
+        intent.putExtra(SpConstants.INTENT_KEY_SANKALP_LIST_FILTER, listFilter);
+        startActivity(intent);
     }
 
     private void _setUpChartCard() {
@@ -197,10 +233,8 @@ public class SpChartCalendarDashboard extends Fragment implements View.OnClickLi
                         intentListFilter = SpConstants.INTENT_VALUE_SANKALP_LIST_FILTER_ALL;
                     }
 
-                    Intent intent = new Intent(getContext(), SpSankalpList.class);
-                    intent.putExtra(SpConstants.INTENT_KEY_SANKALP_TYPE, SpConstants.SANKALP_TYPE_BOTH);
-                    intent.putExtra(SpConstants.INTENT_KEY_SANKALP_LIST_FILTER, intentListFilter);
-                    startActivity(intent);
+                    _launchSankalpList(SpConstants.SANKALP_TYPE_BOTH, intentListFilter);
+
                 }
             }
 
@@ -334,217 +368,7 @@ public class SpChartCalendarDashboard extends Fragment implements View.OnClickLi
         return s;
     }
 
-    // Deprecated
-    private void _setUpPieChartOld() {
 
-        _labels = new String[]{getString(R.string.tyag), getString(R.string.niyam), getString(R.string.all)};
-
-        mChart.setUsePercentValues(false);
-        mChart.setDescription("");
-        mChart.setExtraOffsets(5, 10, 5, 5);
-
-        mChart.setDragDecelerationFrictionCoef(0.95f);
-
-        //mChart.setCenterTextTypeface(mTfLight);
-        mChart.setCenterText(generateCenterSpannableText(getString(R.string.current)));
-
-        mChart.setDrawHoleEnabled(true);
-        mChart.setHoleColor(Color.WHITE);
-
-        mChart.setTransparentCircleColor(Color.WHITE);
-        mChart.setTransparentCircleAlpha(110);
-
-        mChart.setHoleRadius(58f);
-        mChart.setTransparentCircleRadius(61f);
-
-        mChart.setDrawCenterText(true);
-
-        mChart.setRotationAngle(0);
-        // enable rotation of the chart by touch
-        mChart.setRotationEnabled(false);
-        mChart.setHighlightPerTapEnabled(true);
-
-        // mChart.setUnit(" €");
-        // mChart.setDrawUnitsInChart(true);
-
-        mChart.setTouchEnabled(true);
-        // add a selection listener
-        mChart.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
-            @Override
-            public void onValueSelected(Entry e, Highlight h) {
-                if (e instanceof PieEntry) {
-                    PieEntry pe = (PieEntry) e;
-                    int sankalpType = SpConstants.SANKALP_TYPE_BOTH;
-                    if (pe.getLabel().equals(_labels[0])) {
-                        // tyag;
-                        sankalpType = SpConstants.SANKALP_TYPE_TYAG;
-                    } else {
-                        // niyam
-                        sankalpType = SpConstants.SANKALP_TYPE_NIYAM;
-                    }
-
-                    Intent intent = new Intent(getContext(), SpSankalpList.class);
-                    intent.putExtra(SpConstants.INTENT_KEY_SANKALP_TYPE, sankalpType);
-                    intent.putExtra(SpConstants.INTENT_KEY_SANKALP_LIST_FILTER, _intentListFilter);
-                    startActivity(intent);
-                }
-            }
-
-            @Override
-            public void onNothingSelected() {
-
-                Log.i("chart", "nothing sle");
-
-            }
-        });
-
-        //setData(3, 100);
-
-        mChart.animateY(1400, Easing.EasingOption.EaseInOutQuad);
-        // mChart.spin(2000, 0, 360);
-
-
-        Legend l = mChart.getLegend();
-        l.setPosition(Legend.LegendPosition.BELOW_CHART_RIGHT);
-        l.setXEntrySpace(7f);
-        l.setYEntrySpace(7f);
-        l.setYOffset(25f);
-
-        // entry label styling
-        mChart.setEntryLabelColor(Color.WHITE);
-//        mChart.setEntryLabelTypeface(mTfRegular);
-        mChart.setEntryLabelTextSize(12f);
-
-        mChart.setNoDataText("No Sankalps found.");
-        mChart.setNoDataTextDescription("Use the '+' button at the bottom of the screen to add.");
-        mChart.getPaint(Chart.PAINT_INFO).setTextSize(40f);
-
-        DashboardLoaderTask t = new DashboardLoaderTask();
-        t.execute(DashboardLoaderTask.COMMAND_CHART_DATA, SpConstants.INTENT_VALUE_SANKALP_LIST_FILTER_CURRENT);
-
-    }
-
-    private void setDataOld(int t, int n) {
-
-        int a = t + n;
-
-        ArrayList<PieEntry> entries = new ArrayList<PieEntry>();
-
-        // NOTE: The order of the entries when being added to the entries array determines their position around the center of
-        // the chart.
-
-//        for (int i = 0; i < 3; i++) {
-//            entries.add(new PieEntry((float) ((Math.random() * mult) + mult / 5), labels[i]));
-//        }
-        entries.add(new PieEntry(t, _labels[0]));
-        entries.add(new PieEntry(n, _labels[1]));
-        //entries.add(new PieEntry(a, _labels[2]));
-
-        PieDataSet dataSet = new PieDataSet(entries, "");
-        dataSet.setSliceSpace(3f);
-        dataSet.setSelectionShift(5f);
-
-        // add a lot of colors
-
-        ArrayList<Integer> colors = new ArrayList<Integer>();
-
-//        for (int c : ColorTemplate.VORDIPLOM_COLORS)
-//            colors.add(c);
-//
-//        for (int c : ColorTemplate.JOYFUL_COLORS)
-//            colors.add(c);
-//
-//        for (int c : ColorTemplate.COLORFUL_COLORS)
-//            colors.add(c);
-//
-//        for (int c : ColorTemplate.LIBERTY_COLORS)
-//            colors.add(c);
-//
-//        for (int c : ColorTemplate.PASTEL_COLORS)
-//            colors.add(c);
-//
-//        colors.add(ColorTemplate.getHoloBlue());
-
-        colors.add(ColorTemplate.rgb("#f05858"));
-        colors.add(ColorTemplate.rgb("#32b181"));
-        //colors.add(ColorTemplate.rgb("#303F9F"));
-
-        dataSet.setColors(colors);
-        //dataSet.setSelectionShift(0f);
-
-//        dataSet.setValueLinePart1OffsetPercentage(20.f);
-//        dataSet.setValueLinePart1Length(1f);
-//        dataSet.setValueLinePart2Length(1f);
-//        dataSet.setXValuePosition(PieDataSet.ValuePosition.OUTSIDE_SLICE);
-//        dataSet.setYValuePosition(PieDataSet.ValuePosition.OUTSIDE_SLICE);
-
-        PieData data = new PieData(dataSet);
-        data.setValueFormatter(new ValueFormatter() {
-            @Override
-            public String getFormattedValue(float value, Entry entry, int dataSetIndex, ViewPortHandler viewPortHandler) {
-                return String.valueOf((int) value);
-            }
-        });
-        data.setValueTextSize(20f);
-        data.setValueTextColor(Color.WHITE);
-        //data.setValueTypeface(mTfLight);
-        mChart.setData(data);
-
-        // undo all highlights
-        mChart.highlightValues(null);
-
-        mChart.invalidate();
-    }
-
-    private void _setUpMenu() {
-
-        _menuView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                _showPopupMenu();
-            }
-        });
-    }
-
-    private void _showPopupMenu() {
-
-        PopupMenu popup = new PopupMenu(_menuView.getContext(), _menuView);
-        MenuInflater inflater = popup.getMenuInflater();
-        inflater.inflate(R.menu.menu_db_chart, popup.getMenu());
-        popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                DashboardLoaderTask t = new DashboardLoaderTask();
-                String centerText = null;
-                switch (item.getItemId()) {
-
-                    case R.id.action_chart_current:
-                        centerText = getString(R.string.current);
-                        _intentListFilter = SpConstants.INTENT_VALUE_SANKALP_LIST_FILTER_CURRENT;
-                        break;
-                    case R.id.action_chart_lifetime:
-                        centerText = getString(R.string.lifetime_db);
-                        _intentListFilter = SpConstants.INTENT_VALUE_SANKALP_LIST_FILTER_LIFETIME;
-                        break;
-                    case R.id.action_chart_upcoming:
-                        centerText = getString(R.string.upcoming);
-                        _intentListFilter = SpConstants.INTENT_VALUE_SANKALP_LIST_FILTER_UPCOMING;
-                        break;
-                    case R.id.action_chart_all:
-                        centerText = getString(R.string.all);
-                        _intentListFilter = SpConstants.INTENT_VALUE_SANKALP_LIST_FILTER_ALL;
-                        break;
-                }
-                if (centerText != null) {
-                    mChart.setCenterText(generateCenterSpannableText(centerText));
-                    t.execute(DashboardLoaderTask.COMMAND_CHART_DATA, _intentListFilter);
-                    return true;
-                }
-                return false;
-            }
-        });
-        popup.show();
-    }
 
     private class DashboardLoaderTask extends AsyncTask<Integer, Integer, Boolean> {
 

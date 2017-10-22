@@ -9,18 +9,27 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.content.res.Resources;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.support.v7.preference.PreferenceManager;
 import android.util.DisplayMetrics;
+import android.util.TypedValue;
 
 import com.ravijain.sankalp.R;
 import com.ravijain.sankalp.data.SpCategory;
+import com.ravijain.sankalp.data.SpCategoryItem;
+import com.ravijain.sankalp.data.SpContentProvider;
 import com.ravijain.sankalp.data.SpDataConstants;
+import com.ravijain.sankalp.data.SpExceptionOrTarget;
+import com.ravijain.sankalp.data.SpSankalp;
 import com.ravijain.sankalp.fragments.SpSettingsFragment;
 
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Locale;
+import java.util.Random;
 
 /**
  * Created by ravijain on 9/3/2016.
@@ -123,29 +132,153 @@ public class SpUtils {
         }
     }
 
+    public static int getThemeStyle(Context context)
+    {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+        String theme = sharedPreferences.getString(SpSettingsFragment.KEY_PREF_THEMES, context.getString(R.string.defaultTheme));
+
+        int appTheme = R.style.DeepPurpleTheme;
+
+        if (theme.equals(context.getString(R.string.defaultTheme)) || theme.equals(context.getString(R.string.deepPurpleTheme))) {
+            appTheme = R.style.DeepPurpleTheme;
+        }
+        else if (theme.equals(context.getString(R.string.purpleTheme))) {
+            appTheme = R.style.PurpleTheme;
+        }
+        else if (theme.equals(context.getString(R.string.indigoTheme))) {
+            appTheme = R.style.IndigoTheme;
+        }
+        else if (theme.equals(context.getString(R.string.tealTheme))) {
+            appTheme = R.style.TealTheme;
+        }
+        else if (theme.equals(context.getString(R.string.redTheme))) {
+            appTheme = R.style.RedTheme;
+        }
+        else if (theme.equals(context.getString(R.string.blueTheme))) {
+            appTheme = R.style.BlueTheme;
+        }
+        else if (theme.equals(context.getString(R.string.lightBlueTheme))) {
+            appTheme = R.style.LightBlueTheme;
+        }
+        else if (theme.equals(context.getString(R.string.cyanTheme))) {
+            appTheme = R.style.CyanTheme;
+        }
+        else if (theme.equals(context.getString(R.string.greenTheme))) {
+            appTheme = R.style.GreenTheme;
+        }
+        else if (theme.equals(context.getString(R.string.amberTheme))) {
+            appTheme = R.style.AmberTheme;
+        }
+        else if (theme.equals(context.getString(R.string.orangeTheme))) {
+            appTheme = R.style.OrangeTheme;
+        }
+        else if (theme.equals(context.getString(R.string.deepOrangeTheme))) {
+            appTheme = R.style.DeepOrangeTheme;
+        }
+
+        return appTheme;
+    }
+
+    public static int getColor(Context context, int attr)
+    {
+        final TypedValue value1 = new TypedValue();
+        context.getTheme ().resolveAttribute (attr, value1, true);
+        return value1.data;
+    }
+
+    public static int getPrimaryColor(Context context)
+    {
+        return getColor(context, R.attr.colorPrimary);
+    }
+
     public static Drawable getIconDrawable(SpCategory category, Context context)
     {
-        if (category.getCategoryName().equals(SpDataConstants.CATEGORY_NAME_FOOD)) {
+        /*if (category.getCategoryName().equals(SpDataConstants.CATEGORY_NAME_FOOD)) {
             return context.getResources().getDrawable(R.drawable.ic_restaurant_menu_black_24dp);
         }
-        else if (category.getCategoryName().equals(SpDataConstants.CATEGORY_NAME_ENTERTAINMENT)) {
+        else*/ if (category.getCategoryName().equals(SpDataConstants.CATEGORY_NAME_ENTERTAINMENT)) {
             return context.getResources().getDrawable(R.drawable.ic_local_movies_black_24dp);
         }
         else if (category.getCategoryName().equals(SpDataConstants.CATEGORY_NAME_TRAVEL)) {
             return context.getResources().getDrawable(R.drawable.ic_local_airport_black_24dp);
         }
         else if (category.getCategoryName().equals(SpDataConstants.CATEGORY_NAME_DHARMA)) {
-            return context.getResources().getDrawable(R.drawable.ic_dashboard_black_24dp);
+            return context.getResources().getDrawable(R.drawable.ic_home_black_24dp);
         }
         else {
             String letter = String.valueOf(category.getCategoryName().toCharArray()[0]).toUpperCase();
             SpColorGenerator generator = SpColorGenerator.MATERIAL;
             SpTextDrawable.Builder builder = SpTextDrawable.builder();
-//            builder.width(24).height(24);
             SpTextDrawable drawable = builder
                     .buildRoundRect(letter, generator.getRandomColor(), 2);
             return drawable;
         }
+    }
+
+    public static Drawable getDateDrawable(Calendar c, Context context)
+    {
+        SpTextDrawable.Builder builder = SpTextDrawable.builder();
+        builder.textColor(Color.BLACK);
+        builder.fontSize(50);
+        builder.width(60).height(60);
+        SpTextDrawable drawable = builder
+                .buildRound(SpDateUtils.getDayNumerical(c), Color.WHITE);
+        return drawable;
+    }
+
+    public static String getLocalizedString(Context context, String key)
+    {
+        if (context == null) return key;
+        String packageName = context.getPackageName();
+        int resId = context.getResources().getIdentifier(key, "string", packageName);
+        if (resId == 0) return key;
+        return context.getString(resId);
+    }
+
+    public static boolean isSankalpPast(SpSankalp s)
+    {
+        return s.getToDate() != null && s.getToDate().before(new Date());
+    }
+
+    public static SpSankalp getRandomSankalp(Context context)
+    {
+        ArrayList<SpCategoryItem> items = new ArrayList<SpCategoryItem>();
+        items.addAll(SpContentProvider.getInstance(context).getAllCategoryItems().values());
+        Random r = new Random();
+        int tries = 0;
+        while (tries < 3) {
+            int i = r.nextInt(items.size());
+            tries++;
+            if (i < items.size()) {
+                SpCategoryItem categoryItem = items.get(i);
+                int itemId = categoryItem.getId();
+                int categoryId = categoryItem.getCategoryId();
+                SpCategory category = SpContentProvider.getInstance(context).getAllCategories().get(categoryId);
+                SpSankalp s = new SpSankalp(category.getSankalpType(), categoryId, itemId);
+                s.setItem(categoryItem);
+                s.setCategory(category);
+                s.setLifetime(SpConstants.SANKALP_IS_LIFTIME_FALSE);
+                s.setNotification(SpConstants.SANKALP_IS_LIFTIME_TRUE);
+                Date d = SpDateUtils.getTomorrow();
+                s.setFromDate(SpDateUtils.beginOfDate(d));
+                s.setToDate(SpDateUtils.endOfDate(d));
+
+                if (category.getSankalpType() == SpConstants.SANKALP_TYPE_NIYAM) {
+                    SpExceptionOrTarget e = new SpExceptionOrTarget(SpExceptionOrTarget.EXCEPTION_OR_TARGET_TOTAL, context);
+                    e.setExceptionOrTargetCount(1);
+                    s.setExceptionOrTarget(e);
+                }
+
+                return s;
+            }
+        }
+        return null;
+    }
+
+    public static String getSankalpString(Context c, int sankalpType)
+    {
+        String s = sankalpType == SpConstants.SANKALP_TYPE_TYAG ? c.getString(R.string.tyag) : c.getString(R.string.niyam);
+        return s;
     }
 
 }
